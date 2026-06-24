@@ -20,10 +20,14 @@ export type AppointmentListItem = {
   endTime: Date;
   totalPrice: number;
   source: string;
-  staffName: string | null;
-  staffColor: string | null;
+  staffId:       string | null;
+  staffName:     string | null;
+  staffColor:    string | null;
+  internalNotes: string | null;
+  businessName:  string | null;
   services: { name: string; duration: number; price: number }[];
-  clientName: string | null;
+  clientName:  string | null;
+  clientPhone: string | null;
 };
 
 // Crea una cita desde el flujo público de reservas
@@ -107,7 +111,8 @@ export async function getAppointmentsForDashboard(
       startTime: { gte: from, lte: to },
     },
     include: {
-      staff: { select: { name: true, color: true } },
+      business: { select: { name: true } },
+      staff:    { select: { id: true, name: true, color: true } },
       services: {
         select: {
           serviceName: true,
@@ -117,7 +122,7 @@ export async function getAppointmentsForDashboard(
       },
       clients: {
         include: {
-          client: { select: { name: true } },
+          client: { select: { name: true, phone: true } },
         },
         take: 1,
       },
@@ -126,20 +131,24 @@ export async function getAppointmentsForDashboard(
   });
 
   return appts.map((a) => ({
-    id: a.id,
-    bookingCode: a.bookingCode,
-    status: a.status,
-    startTime: a.startTime,
-    endTime: a.endTime,
-    totalPrice: a.totalPrice,
-    source: a.source,
-    staffName: a.staff?.name ?? null,
-    staffColor: a.staff?.color ?? null,
+    id:            a.id,
+    bookingCode:   a.bookingCode,
+    status:        a.status,
+    startTime:     a.startTime,
+    endTime:       a.endTime,
+    totalPrice:    a.totalPrice,
+    source:        a.source,
+    staffId:       a.staff?.id    ?? null,
+    staffName:     a.staff?.name  ?? null,
+    staffColor:    a.staff?.color ?? null,
+    internalNotes: a.internalNotes,
+    businessName:  a.business?.name ?? null,
     services: a.services.map((s) => ({
-      name: s.serviceName,
+      name:     s.serviceName,
       duration: s.duration,
-      price: s.price,
+      price:    s.price,
     })),
-    clientName: a.clients[0]?.client.name ?? null,
+    clientName:  a.clients[0]?.client.name  ?? null,
+    clientPhone: a.clients[0]?.client.phone ?? null,
   }));
 }

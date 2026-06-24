@@ -218,6 +218,9 @@ model Business {
   campaigns      Campaign[]
   forms          Form[]
   reviews        Review[]
+  groupClasses   GroupClass[]
+  waitlist       Waitlist[]
+  timeBlocks     TimeBlock[]
   settings       BusinessSettings?
   customization  BusinessCustomization?
   subscription   Subscription?
@@ -361,6 +364,8 @@ model StaffMember {
   timeOff      StaffTimeOff[]
   services     StaffService[]
   appointments Appointment[]
+  groupClasses GroupClass[]
+  timeBlocks   TimeBlock[]
 
   @@index([businessId])
   @@index([userId])
@@ -439,6 +444,8 @@ model Service {
   color       String  @default("#6d28d9")
   requiresDeposit Boolean @default(false)
   depositAmount   Float?
+  bufferMinutes   Int     @default(0)
+  prepTime        Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -446,6 +453,7 @@ model Service {
   staff            StaffService[]
   appointmentItems AppointmentService[]
   addOns           ServiceAddOn[]
+  groupClasses     GroupClass[]
 
   @@index([businessId])
   @@index([categoryId])
@@ -496,6 +504,7 @@ model Client {
   payments     Payment[]
   giftCards    GiftCard[]   @relation("GiftCardRecipient")
   formResponses FormResponse[]
+  classEnrollments ClassEnrollment[]
 
   @@unique([businessId, email])
   @@index([businessId])
@@ -858,6 +867,118 @@ model Review {
   createdAt DateTime @default(now())
 
   @@index([businessId])
+}
+
+// ─────────────────────────────────────────────
+// AGENDA AVANZADA — Fase 8
+// ─────────────────────────────────────────────
+
+model GroupClass {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  staffId    String?
+  staff      StaffMember? @relation(fields: [staffId], references: [id])
+  serviceId  String?
+  service    Service?  @relation(fields: [serviceId], references: [id])
+
+  name        String
+  description String?
+  color       String  @default("#6FA89E")
+  maxCapacity Int
+  price       Float   @default(0)
+  requiresDeposit Boolean @default(false)
+  depositAmount   Float?
+
+  startTime DateTime
+  endTime   DateTime
+  isRecurring Boolean @default(false)
+  recurringRule String? // JSON: { frequency: "WEEKLY", days: [1,3,5] }
+
+  isActive  Boolean @default(true)
+  isPublic  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  enrollments ClassEnrollment[]
+
+  @@index([businessId])
+  @@index([startTime])
+}
+
+model ClassEnrollment {
+  id         String     @id @default(cuid())
+  classId    String
+  class      GroupClass @relation(fields: [classId], references: [id], onDelete: Cascade)
+  clientId   String?
+  client     Client?    @relation(fields: [clientId], references: [id])
+
+  clientName  String
+  clientEmail String?
+  clientPhone String?
+  status      EnrollmentStatus @default(ENROLLED)
+  checkedInAt DateTime?
+  paymentId   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([classId])
+}
+
+model Waitlist {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  serviceId  String?
+  staffId    String?
+  classId    String?
+
+  clientName  String
+  clientEmail String?
+  clientPhone String?
+  preferredDate DateTime?
+  notes       String?
+  status      WaitlistStatus @default(WAITING)
+  notifiedAt  DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([businessId])
+}
+
+model TimeBlock {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  staffId    String?
+  staff      StaffMember? @relation(fields: [staffId], references: [id])
+
+  title     String
+  startTime DateTime
+  endTime   DateTime
+  color     String  @default("#94a3b8")
+  reason    String? // vacaciones, reunión, descanso, limpieza, etc.
+
+  createdAt DateTime @default(now())
+
+  @@index([businessId])
+  @@index([startTime])
+}
+
+enum EnrollmentStatus {
+  ENROLLED
+  WAITLISTED
+  CANCELED
+  ATTENDED
+  NO_SHOW
+}
+
+enum WaitlistStatus {
+  WAITING
+  NOTIFIED
+  CONFIRMED
+  EXPIRED
 }
 
 // ─────────────────────────────────────────────

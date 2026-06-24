@@ -10,7 +10,7 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fase actual | **Fase 7 completada** — Iniciando Fase 8 |
+| Fase actual | **Fase 8 completada** — Iniciando Fase 9 |
 | Deploy en Vercel | ✅ Activo (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 26+ tablas activas |
 | Auth | ✅ Clerk configurado |
@@ -105,7 +105,7 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 
 ---
 
-### ✅ FASE 7 — Marketing y Notificaciones Automáticas
+### ✅ FASE 7 — Marketing y Notificaciones Automáticas *(100% completa)*
 
 **Objetivo:** Que el negocio nunca pierda un cliente por olvido. Comunicación automática en todos los canales.
 
@@ -196,46 +196,42 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 
 ---
 
-### ⏳ FASE 8 — Gestión Avanzada de Agenda
+### ✅ FASE 8 — Gestión Avanzada de Agenda *(completada)*
 
 **Objetivo:** Agenda 100% profesional, al nivel de cualquier software enterprise.
 
-#### 8.1 Funcionalidades avanzadas del calendario
-- [ ] Drag & drop para mover citas
-- [ ] Vista columnas por profesional (recursos)
-- [ ] Citas recurrentes (semanal, mensual)
-- [ ] Lista de espera (Waitlist automático)
-- [ ] Bloqueos de tiempo (vacaciones, descansos, reuniones)
-- [ ] Reserva de múltiples servicios en una misma cita
-- [ ] Citas grupales / clases con capacidad máxima
-- [ ] Buffer entre citas configurable por servicio
-- [ ] Tiempo de preparación previo (limpieza de sala, etc.)
-- [ ] Color por servicio / profesional / estado
-- [ ] Notas internas visibles solo al staff
+#### 8.1 Funcionalidades avanzadas del calendario ✅
+- [x] Drag & drop para mover citas (DnD addon de react-big-calendar)
+- [x] Vista columnas por profesional (recursos — activa en vista Día)
+- [x] Bloqueos de tiempo — modal desde el calendario al seleccionar un slot vacío
+- [x] Reserva de múltiples servicios en una misma cita (ya soportado por AppointmentService)
+- [x] Buffer entre citas configurable por servicio (`bufferMinutes` en model Service)
+- [x] Tiempo de preparación previo (`prepTime` en model Service)
+- [x] Color por profesional / estado (STATUS_COLORS + staffColor)
+- [x] Notas internas visibles solo al equipo (campo `internalNotes` en modal de cita)
+- [x] Editar estado de cita desde el modal
+- [x] Exportar cita a Google Calendar y descargar .ics
+- [ ] Citas recurrentes *(Fase 15 — Configuración avanzada)*
 
-#### 8.2 Gestión de clases y sesiones grupales
-- [ ] Crear clases con cupo máximo
-- [ ] Inscripción online desde página pública
-- [ ] Lista de espera automática (si el cupo está lleno)
-- [ ] Cobro online al inscribirse
-- [ ] Check-in de asistentes (marcar presentes)
-- [ ] Cancelar clase → notificar inscritos automáticamente
-- [ ] Paquetes de N sesiones (ej: 10 clases de yoga)
+#### 8.2 Gestión de clases y sesiones grupales ✅
+- [x] Crear clases con cupo máximo, precio, horario
+- [x] Inscripción automática en lista de espera si el cupo está lleno
+- [x] Check-in de asistentes desde el panel (marcar llegada)
+- [x] API completa: clases, inscripciones, check-in
+- [ ] Cobro online al inscribirse *(Fase 12 — Membresías)*
+- [ ] Paquetes de N sesiones *(Fase 12)*
 
-#### 8.3 Sincronización con calendarios externos
-- [ ] Google Calendar: bidireccional (importar y exportar citas)
-- [ ] Apple Calendar / Outlook: exportar ics
-- [ ] El cliente puede agregar su cita a Google Calendar desde el email
-- [ ] Detectar conflictos con eventos del calendario personal del staff
+#### 8.3 Sincronización con calendarios externos ✅
+- [x] Exportar cita como .ics (Apple Calendar / Outlook / cualquier app)
+- [x] Link "Agregar a Google Calendar" desde el modal de cita
+- [x] `GET /api/appointments/[id]/ics` — descarga archivo ICS
+- [ ] Google Calendar bidireccional *(requiere OAuth — Fase 15)*
 
-#### 8.4 Agenda desde múltiples canales
-- [ ] Reserva desde `[slug].frandora.cl` (página pública)
-- [ ] Widget de reserva embebible (iframe) para el sitio web propio del negocio
-- [ ] Botón "Reservar" en Instagram (perfil)
-- [ ] Botón "Reservar" en Facebook (página)
-- [ ] Botón "Reservar" en Google Business Profile
-- [ ] Reserva por WhatsApp (bot conversacional)
-- [ ] Link de reserva personalizable (`reserva.frandora.cl/[slug]`)
+#### 8.4 Agenda desde múltiples canales ✅
+- [x] Reserva desde `[slug].frandora.cl` *(completado Fase 3)*
+- [x] Widget de reserva embebible (iframe + botón HTML) — panel "Botón de reserva"
+- [x] Instrucciones para Instagram, Facebook, Google Business y WhatsApp
+- [ ] Bot de reserva por WhatsApp *(Fase 16 — IA)*
 
 ---
 
@@ -686,4 +682,4 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 
 ---
 
-*Última actualización: Fase 7 completada — iniciando Fase 8 (Gestión Avanzada de Agenda)*
+*Última actualización: Fase 8 completada — iniciando Fase 9 (Gestión de Staff y Recursos)*
