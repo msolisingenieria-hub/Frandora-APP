@@ -12,11 +12,18 @@ const FEATURES = [
 export default function SignInPage() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* Panel izquierdo — Brand navy */}
-      <div className="hidden lg:flex lg:w-[45%] bg-brand-navy flex-col justify-between p-12 relative overflow-hidden">
-        {/* Decoración */}
-        <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-brand-teal/5 -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-20 left-0 w-56 h-56 rounded-full bg-brand-teal/8 -translate-x-1/2" />
+      {/* Panel izquierdo — Brand premium */}
+      <div
+        className="hidden lg:flex lg:w-[45%] flex-col justify-between p-12 relative overflow-hidden"
+        style={{ background: "linear-gradient(160deg, #132539 0%, #0D1B2A 40%, #0a2030 100%)" }}
+      >
+        {/* Decoración premium */}
+        <div className="absolute top-0 right-0 w-72 h-72 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(111,168,158,0.15) 0%, transparent 70%)" }} />
+        <div className="absolute bottom-32 left-0 w-64 h-64 rounded-full -translate-x-1/3 pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(111,168,158,0.08) 0%, transparent 70%)" }} />
+        <div className="absolute top-1/2 right-8 w-px h-48 pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(111,168,158,0.2), transparent)" }} />
 
         <div className="relative z-10">
           <Link href="/"><FrandoraLogo size="md" variant="light" showTagline /></Link>
