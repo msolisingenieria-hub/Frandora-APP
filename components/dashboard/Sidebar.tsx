@@ -7,7 +7,7 @@ import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
 import {
   LayoutDashboard, CalendarDays, Users, Sparkles,
   Receipt, BarChart3, Megaphone, Settings2,
-  Zap, ChevronRight,
+  Zap, ChevronRight, Archive,
 } from "lucide-react";
 
 type NavItem = {
@@ -24,14 +24,15 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
       { href: "/dashboard",            label: "Inicio",      icon: LayoutDashboard },
       { href: "/dashboard/agenda",     label: "Agenda",      icon: CalendarDays },
       { href: "/dashboard/clientes",   label: "Clientes",    icon: Users },
-      { href: "/dashboard/servicios",  label: "Servicios",   icon: Sparkles,       soon: true },
+      { href: "/dashboard/servicios",   label: "Servicios",   icon: Sparkles,  soon: true },
+      { href: "/dashboard/inventario", label: "Inventario",  icon: Archive },
     ],
   },
   {
     title: "Finanzas",
     items: [
-      { href: "/dashboard/facturacion", label: "Facturación",  icon: Receipt },
-      { href: "/dashboard/reportes",   label: "Reportes",     icon: BarChart3, soon: true },
+      { href: "/dashboard/ventas",       label: "Ventas & POS",  icon: Receipt },
+      { href: "/dashboard/facturacion", label: "Facturación",  icon: BarChart3 },
     ],
   },
   {
