@@ -24,7 +24,7 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
       { href: "/dashboard",            label: "Inicio",      icon: LayoutDashboard },
       { href: "/dashboard/agenda",     label: "Agenda",      icon: CalendarDays },
       { href: "/dashboard/clientes",   label: "Clientes",    icon: Users },
-      { href: "/dashboard/servicios",   label: "Servicios",   icon: Sparkles,  soon: true },
+      { href: "/dashboard/servicios",  label: "Servicios",   icon: Sparkles },
       { href: "/dashboard/inventario", label: "Inventario",  icon: Archive },
     ],
   },
@@ -38,8 +38,8 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   {
     title: "Marketing",
     items: [
-      { href: "/dashboard/marketing", label: "Campañas",   icon: Megaphone,  soon: true },
-      { href: "/dashboard/ajustes",   label: "Ajustes",    icon: Settings2,  soon: true },
+      { href: "/dashboard/marketing", label: "Campañas",   icon: Megaphone, soon: true },
+      { href: "/dashboard/ajustes",   label: "Ajustes",    icon: Settings2 },
     ],
   },
 ];

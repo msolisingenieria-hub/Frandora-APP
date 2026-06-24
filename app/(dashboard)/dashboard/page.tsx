@@ -1,46 +1,75 @@
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/db/client";
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, Users, TrendingUp, ArrowRight, Sparkles, Clock } from "lucide-react";
+import { CalendarDays, Users, TrendingUp, ArrowRight, Sparkles, Clock, CheckCircle2 } from "lucide-react";
 import { PublicPageCard } from "@/components/dashboard/PublicPageCard";
 
-export const metadata = { title: "Dashboard | Frandora" };
+type Business = {
+  id: string;
+  name: string;
+  slug: string;
+  subscription?: {
+    status: string;
+    trialEndsAt?: string | null;
+    plan?: { name: string } | null;
+  } | null;
+};
+
+type Stats = { todayAppointments: number; totalClients: number; monthlyRevenue: number };
 
 const SETUP_ITEMS = [
-  { label: "Negocio configurado",        done: true  },
-  { label: "Servicios agregados",        done: true  },
-  { label: "Horarios definidos",         done: true  },
-  { label: "Foto de portada",            done: false },
-  { label: "Conectar redes sociales",    done: false },
-  { label: "Compartir página pública",   done: false },
+  { label: "Negocio configurado",      done: true  },
+  { label: "Servicios agregados",      done: true  },
+  { label: "Horarios definidos",       done: true  },
+  { label: "Foto de portada",          done: false },
+  { label: "Conectar redes sociales",  done: false },
+  { label: "Compartir página pública", done: false },
 ];
 
-export default async function DashboardPage() {
-  const { userId } = await auth();
-  if (!userId) redirect("/sign-in");
+const COMING_SOON = [
+  "Marketing y recordatorios automáticos",
+  "Programa de lealtad y cupones",
+  "Gift Cards digitales",
+  "Reportes y analytics avanzados",
+  "IA asistente de reservas",
+];
 
-  const user = await prisma.user.findUnique({
-    where: { clerkId: userId },
-    include: {
-      ownedBusinesses: {
-        include: {
-          subscription: { include: { plan: true } },
-          _count: { select: { clients: true, appointments: true } },
-        },
-      },
-    },
-  });
+export default function DashboardPage() {
+  const [business, setBusiness] = useState<Business | null>(null);
+  const [stats, setStats]       = useState<Stats>({ todayAppointments: 0, totalClients: 0, monthlyRevenue: 0 });
+  const [loading, setLoading]   = useState(true);
 
-  if (!user || user.ownedBusinesses.length === 0) redirect("/onboarding");
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/dashboard/business").then((r) => r.json()),
+      fetch("/api/dashboard/stats").then((r) => r.json()),
+    ]).then(([biz, st]) => {
+      setBusiness(biz);
+      setStats(st);
+      setLoading(false);
+    });
+  }, []);
 
-  const business = user.ownedBusinesses[0];
+  if (loading || !business) {
+    return (
+      <div className="min-h-screen p-6 md:p-8 space-y-4"
+        style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-20 rounded-2xl bg-slate-100 animate-pulse" />
+        ))}
+      </div>
+    );
+  }
+
   const sub = business.subscription;
   const trialDays = sub?.trialEndsAt
-    ? Math.max(0, Math.ceil((sub.trialEndsAt.getTime() - Date.now()) / 86400000))
+    ? Math.max(0, Math.ceil((new Date(sub.trialEndsAt).getTime() - Date.now()) / 86400000))
     : 14;
+  const isTrialing = !sub || sub.status === "TRIALING";
+
   const doneTasks = SETUP_ITEMS.filter((i) => i.done).length;
-  const progress = Math.round((doneTasks / SETUP_ITEMS.length) * 100);
+  const progress  = Math.round((doneTasks / SETUP_ITEMS.length) * 100);
 
   return (
     <div
@@ -63,7 +92,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* ── Trial banner ── */}
-        {sub?.status === "TRIALING" && (
+        {isTrialing && (
           <div
             className="mb-8 p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden"
             style={{ background: "linear-gradient(135deg, #0D1B2A 0%, #162d43 60%, #1a3d3a 100%)" }}
@@ -82,8 +111,8 @@ export default async function DashboardPage() {
               </p>
             </div>
             <Link
-              href="/dashboard/ajustes"
-              className="relative z-10 flex items-center gap-2 text-sm font-sans font-semibold text-white px-5 py-2.5 rounded-xl transition-all whitespace-nowrap"
+              href="/dashboard/facturacion"
+              className="relative z-10 flex items-center gap-2 text-sm font-sans font-semibold text-white px-5 py-2.5 rounded-xl transition-all whitespace-nowrap hover:-translate-y-px"
               style={{ background: "linear-gradient(135deg, #6FA89E 0%, #5a9990 100%)" }}
             >
               Activar plan <ArrowRight size={14} />
@@ -96,30 +125,33 @@ export default async function DashboardPage() {
           {[
             {
               label: "Citas hoy",
-              value: "0",
+              value: String(stats.todayAppointments),
               icon: CalendarDays,
               color: "text-brand-navy",
               bg: "from-brand-navy/8 to-brand-navy/4",
+              href: "/dashboard/agenda",
             },
             {
               label: "Clientes totales",
-              value: String(business._count.clients),
+              value: String(stats.totalClients),
               icon: Users,
               color: "text-brand-teal",
               bg: "from-brand-teal/10 to-brand-teal/5",
+              href: "/dashboard/clientes",
             },
             {
               label: "Ingresos del mes",
-              value: "$0",
+              value: `$${stats.monthlyRevenue.toLocaleString("es-CL")}`,
               icon: TrendingUp,
               color: "text-emerald-500",
               bg: "from-emerald-500/10 to-emerald-500/5",
+              href: "/dashboard/ventas",
             },
           ].map((stat) => {
             const Icon = stat.icon;
             return (
-              <div key={stat.label}
-                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-brand relative overflow-hidden"
+              <Link key={stat.label} href={stat.href}
+                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-brand relative overflow-hidden hover:-translate-y-0.5 transition-all group"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${stat.bg} pointer-events-none`} />
                 <div className="relative z-10">
@@ -127,11 +159,12 @@ export default async function DashboardPage() {
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br ${stat.bg} border border-white shadow-sm`}>
                       <Icon size={18} className={stat.color} />
                     </div>
+                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-teal transition-colors" />
                   </div>
                   <p className="text-brand-navy font-sans font-bold text-2xl">{stat.value}</p>
                   <p className="text-slate-400 text-sm mt-0.5 font-body">{stat.label}</p>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
@@ -145,7 +178,6 @@ export default async function DashboardPage() {
               <h2 className="text-brand-navy font-sans font-semibold text-base">Configuración inicial</h2>
               <span className="text-xs text-brand-teal font-sans font-semibold">{doneTasks}/{SETUP_ITEMS.length}</span>
             </div>
-            {/* Progress bar */}
             <div className="h-1.5 bg-slate-100 rounded-full mb-5 overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-700"
@@ -167,29 +199,30 @@ export default async function DashboardPage() {
                 </div>
               ))}
             </div>
+            <Link
+              href="/dashboard/ajustes"
+              className="mt-5 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-slate-200 text-slate-500 text-sm font-sans font-semibold hover:bg-slate-50 transition-colors"
+            >
+              <CheckCircle2 size={14} />
+              Completar configuración
+            </Link>
           </div>
 
-          {/* Public page + quick actions */}
+          {/* Columna derecha */}
           <div className="flex flex-col gap-4">
-            {/* Página pública */}
             <PublicPageCard slug={business.slug} />
 
-            {/* Próximas funciones */}
+            {/* Próximamente */}
             <div className="bg-white rounded-2xl border border-slate-100 shadow-brand p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Clock size={15} className="text-brand-teal" />
-                <h3 className="text-brand-navy font-sans font-semibold text-sm">Próximamente</h3>
+                <h3 className="text-brand-navy font-sans font-semibold text-sm">Próximamente en Frandora</h3>
               </div>
               <div className="space-y-2">
-                {[
-                  { label: "Pagos con Flow.cl",        done: false },
-                  { label: "POS e inventario",          done: false },
-                  { label: "Marketing y recordatorios", done: false },
-                  { label: "Reportes y analytics",      done: false },
-                ].map((feat) => (
-                  <div key={feat.label} className="flex items-center gap-2.5">
+                {COMING_SOON.map((feat) => (
+                  <div key={feat} className="flex items-center gap-2.5">
                     <div className="w-1.5 h-1.5 rounded-full bg-brand-teal/60 flex-shrink-0" />
-                    <span className="text-slate-500 text-xs font-body">{feat.label}</span>
+                    <span className="text-slate-500 text-xs font-body">{feat}</span>
                   </div>
                 ))}
               </div>
