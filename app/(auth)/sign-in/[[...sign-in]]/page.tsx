@@ -1,0 +1,67 @@
+import { SignIn } from "@clerk/nextjs";
+import Link from "next/link";
+
+const FEATURES = [
+  "Agenda inteligente con recordatorios automáticos",
+  "Pagos online integrados con Flow.cl",
+  "CRM de clientes con historial completo",
+  "Reportes y analytics en tiempo real",
+];
+
+export default function SignInPage() {
+  return (
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      {/* Panel izquierdo — Brand navy */}
+      <div className="hidden lg:flex lg:w-[45%] bg-brand-navy flex-col justify-between p-12 relative overflow-hidden">
+        {/* Decoración */}
+        <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-brand-teal/5 -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-20 left-0 w-56 h-56 rounded-full bg-brand-teal/8 -translate-x-1/2" />
+
+        <div className="relative z-10">
+          <Link href="/" className="inline-flex flex-col gap-0.5">
+            <span className="text-white font-sans font-bold text-2xl tracking-tight">Frandora</span>
+            <span className="text-brand-teal/70 text-xs tracking-[0.2em] uppercase">Schedule Smart. Grow More.</span>
+          </Link>
+        </div>
+
+        <div className="relative z-10 space-y-8">
+          <h2 className="text-white font-sans text-3xl font-semibold leading-snug">
+            Tu negocio, organizado.<br />
+            <span className="text-brand-teal">Tus clientes, felices.</span>
+          </h2>
+          <ul className="space-y-4">
+            {FEATURES.map((f) => (
+              <li key={f} className="flex items-start gap-3">
+                <span className="w-5 h-5 rounded-full bg-brand-teal/20 border border-brand-teal/40 flex items-center justify-center flex-shrink-0 mt-0.5 text-brand-teal text-xs">✓</span>
+                <span className="text-white/75 text-sm leading-relaxed">{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="relative z-10 text-white/25 text-xs">
+          © {new Date().getFullYear()} Frandora · Hecho con ♥ en Chile
+        </p>
+      </div>
+
+      {/* Panel derecho — Auth */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 min-h-screen bg-gradient-to-br from-brand-navy/5 via-white to-brand-mist/20">
+        {/* Logo móvil */}
+        <div className="lg:hidden mb-8 text-center">
+          <Link href="/" className="text-brand-navy font-sans font-bold text-2xl">Frandora</Link>
+          <p className="text-brand-teal text-xs tracking-widest uppercase mt-0.5">Schedule Smart. Grow More.</p>
+        </div>
+
+        <div className="w-full max-w-sm">
+          <SignIn />
+          <p className="mt-6 text-center text-sm text-slate-500">
+            ¿No tienes cuenta?{" "}
+            <Link href="/sign-up" className="text-brand-navy hover:text-brand-teal font-semibold transition-colors">
+              Empieza gratis 14 días
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

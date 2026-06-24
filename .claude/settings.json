@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Skill(deep-research)",
+      "Skill(deep-research:*)",
+      "WebSearch"
+    ]
+  },
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=lnybarrqefqywjfcuzmc"
+    }
+  }
+}
