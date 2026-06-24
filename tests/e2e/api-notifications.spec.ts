@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-const CRON_SECRET = process.env.CRON_SECRET ?? "laclaveesfrandora123456789";
+// CRON_SECRET debe definirse en la variable de entorno antes de correr los tests
+const CRON_SECRET = process.env.CRON_SECRET ?? "";
 
 test.describe("API de notificaciones", () => {
 

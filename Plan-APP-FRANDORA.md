@@ -145,21 +145,38 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 - [ ] Segmentación de clientes *(Fase 10)*
 - [ ] Métricas de apertura/clics *(requiere integración Resend webhooks)*
 
-#### 7.6 Programa de Lealtad — ⏳ Próxima iteración
-- [ ] Configurar puntos por reserva/compra/referido
-- [ ] Canjear puntos como descuento
+#### 7.6 Programa de Lealtad — ✅ Completado
+- [x] Configurar puntos por reserva completada
+- [x] Configurar puntos por compra en POS ($ por punto)
+- [x] Configurar valor de canje (N puntos = $1 de descuento)
+- [x] Panel de configuración en `/dashboard/marketing` → tab Puntos
+- [x] API: `GET/PATCH /api/loyalty`
+- [ ] Mostrar saldo de puntos en perfil del cliente *(Fase 9 — Gestión de Staff)*
 
-#### 7.7 Cupones y Descuentos — ⏳ Próxima iteración
-- [ ] Crear cupones por monto fijo o porcentaje
-- [ ] Validar al reservar y en POS
+#### 7.7 Cupones y Descuentos — ✅ Completado
+- [x] Crear cupones por monto fijo ($) o porcentaje (%)
+- [x] Código único por negocio, con usos máximos y fecha de vencimiento
+- [x] Activar/desactivar cupón sin eliminar
+- [x] Validación pública: `POST /api/coupons/validate`
+- [x] Panel en `/dashboard/marketing` → tab Cupones
 
-#### 7.8 Gift Cards Digitales — ⏳ Próxima iteración
-- [ ] Generar gift card con código único
-- [ ] Venta desde `[slug].frandora.cl`
+#### 7.8 Gift Cards Digitales — ✅ Completado
+- [x] Generar tarjetas con código único (GC-XXXXXXXX)
+- [x] Control de saldo inicial y restante
+- [x] Verificar saldo desde el panel
+- [x] Canjear: `PATCH /api/gift-cards/[code]` (reduce saldo)
+- [x] Panel en `/dashboard/marketing` → tab Tarjetas de regalo
+- [ ] Venta desde `[slug].frandora.cl` *(Fase 13 — Página pública premium)*
 
-#### 7.9 Reseñas y Reputación — ⏳ Próxima iteración
-- [ ] Formulario de reseña (1-5 estrellas + comentario)
-- [ ] Publicar en página pública del negocio
+#### 7.9 Reseñas y Reputación — ✅ Completado
+- [x] Formulario público de reseña: `/booking/[slug]/opinion/[appointmentId]`
+- [x] 1-5 estrellas + comentario + nombre + email opcional
+- [x] Reseñas verificadas (vinculadas a cita real)
+- [x] Panel en `/dashboard/marketing` → tab Opiniones
+- [x] Responder reseñas desde el panel
+- [x] Mostrar/ocultar reseñas individualmente
+- [x] Estadísticas: promedio, total, públicas
+- [ ] Mostrar reseñas en `[slug].frandora.cl` *(Fase 13)*
 
 ---
 

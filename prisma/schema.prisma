@@ -133,6 +133,11 @@ enum FormFieldType {
   SIGNATURE
 }
 
+enum CouponType {
+  FIXED_AMOUNT
+  PERCENTAGE
+}
+
 enum BusinessCategory {
   BARBERSHOP
   HAIR_SALON
@@ -209,6 +214,7 @@ model Business {
   products       Product[]
   productCategories ProductCategory[]
   giftCards      GiftCard[]
+  coupons        Coupon[]
   campaigns      Campaign[]
   forms          Form[]
   reviews        Review[]
@@ -287,6 +293,11 @@ model BusinessSettings {
   reminder1h         Boolean @default(false)
   reviewRequestEnabled Boolean @default(true)
   rebookingReminderDays Int   @default(30)
+
+  loyaltyEnabled          Boolean @default(false)
+  loyaltyPointsPerBooking Int     @default(10)
+  loyaltyPointsPerPurchase Int    @default(1)
+  loyaltyPointValue       Int     @default(100)
 
   socialInstagram String?
   socialFacebook  String?
@@ -524,6 +535,7 @@ model Appointment {
   services AppointmentService[]
   payment  Payment?
   formResponses FormResponse[]
+  review   Review?
 
   @@index([businessId])
   @@index([staffId])
@@ -694,6 +706,28 @@ model GiftCard {
   @@index([code])
 }
 
+model Coupon {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  code        String
+  description String?
+  type        CouponType
+  value       Float
+  minAmount   Float?
+  maxUses     Int?
+  usedCount   Int      @default(0)
+  isActive    Boolean  @default(true)
+  expiresAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([businessId, code])
+  @@index([businessId])
+}
+
 // ─────────────────────────────────────────────
 // MARKETING Y COMUNICACIONES
 // ─────────────────────────────────────────────
@@ -808,6 +842,9 @@ model Review {
   id         String   @id @default(cuid())
   businessId String
   business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  appointmentId String?     @unique
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
 
   clientName  String
   clientEmail String?
