@@ -111,7 +111,7 @@ export function ClientsTable({ onSelectClient, onNewClient, refreshTrigger }: Pr
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {clients.map((client, i) => (
+              {clients.map((client) => (
                 <tr
                   key={client.id}
                   onClick={() => onSelectClient(client)}
