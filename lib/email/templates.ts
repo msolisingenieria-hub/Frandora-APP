@@ -23,7 +23,7 @@ function baseLayout(content: string, businessName: string): string {
       <!-- Footer -->
       <tr><td style="background:#f8fafc;padding:24px 40px;text-align:center;border-top:1px solid #e2e8f0;">
         <p style="color:#94a3b8;font-size:12px;margin:0;">¿Necesitas ayuda? Contáctanos directamente.</p>
-        <p style="color:#cbd5e1;font-size:11px;margin:8px 0 0;">Este correo fue enviado por ${businessName} usando Frandora.</p>
+        <p style="color:#cbd5e1;font-size:11px;margin:8px 0 0;">Este correo fue enviado por ${businessName} a través de <a href="https://frandora.cl" style="color:#6FA89E;text-decoration:none;">frandora.cl</a></p>
       </td></tr>
     </table>
   </td></tr>
@@ -96,6 +96,7 @@ export function reminderEmail(data: AppointmentEmailData, hoursAhead: 24 | 2): s
       ${data.staffName ? pill("Tu profesional", data.staffName) : ""}
       ${pill("Fecha", data.date)}
       ${pill("Hora", data.time)}
+      ${pill("Código de reserva", `#${data.bookingCode}`)}
     </table>
     <div style="text-align:center;">
       ${btn("Ver mi reserva", data.publicUrl)}

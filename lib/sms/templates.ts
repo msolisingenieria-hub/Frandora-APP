@@ -6,8 +6,10 @@ export function smsConfirmacion(data: {
   serviceName: string;
   date: string;
   time: string;
+  bookingCode?: string;
 }): string {
-  return `✅ ¡Hola ${data.clientName}! Tu hora en ${data.businessName} está confirmada: ${data.serviceName} el ${data.date} a las ${data.time}. ¡Te esperamos!`;
+  const codigo = data.bookingCode ? ` Cód: #${data.bookingCode}.` : "";
+  return `✅ ¡Hola ${data.clientName}! Tu hora en ${data.businessName} está confirmada: ${data.serviceName} el ${data.date} a las ${data.time}.${codigo} ¡Te esperamos!`;
 }
 
 export function smsRecordatorio24h(data: {

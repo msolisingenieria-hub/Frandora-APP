@@ -10,7 +10,7 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fase actual | **Fase 6 completada** — Iniciando Fase 7 |
+| Fase actual | **Fase 7 completada** — Iniciando Fase 8 |
 | Deploy en Vercel | ✅ Activo (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 26+ tablas activas |
 | Auth | ✅ Clerk configurado |
@@ -47,8 +47,8 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 | Auth | Clerk | ✅ |
 | Suscripciones SaaS | Rebill (Latam) | ✅ Fase 5 |
 | Pagos reservas | Flow.cl (Chile) | ✅ Fase 5 |
-| Email | Resend + React Email | ⏳ Fase 7 |
-| SMS/WhatsApp | Twilio | ⏳ Fase 7 |
+| Email | Resend + React Email | ✅ Fase 7 |
+| SMS/WhatsApp | Twilio | ✅ Fase 7 |
 | Storage | Cloudflare R2 | ⏳ Fase 4+ |
 | Realtime | Supabase Realtime | ⏳ Fase 7 |
 | Deploy | Vercel | ✅ |
@@ -105,86 +105,77 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 
 ---
 
-### 🔄 FASE 7 — Marketing y Notificaciones Automáticas
+### ✅ FASE 7 — Marketing y Notificaciones Automáticas
 
 **Objetivo:** Que el negocio nunca pierda un cliente por olvido. Comunicación automática en todos los canales.
 
 #### 7.1 Recordatorios automáticos de citas
-- [ ] 24 horas antes: email + SMS + WhatsApp
-- [ ] 2 horas antes: SMS + WhatsApp push
-- [ ] Confirmación inmediata al reservar: email + SMS
-- [ ] Recordatorio de reprogramación al cancelar
-- [ ] Reducción de no-shows (meta: -40%)
+- [x] 24 horas antes: email + SMS
+- [x] 2 horas antes: SMS
+- [x] Confirmación inmediata al reservar: email + SMS
+- [ ] Recordatorio de reprogramación al cancelar *(próxima iteración)*
+- [ ] Reducción de no-shows (meta: -40%) *(se mide en producción)*
 
 #### 7.2 Emails automáticos (Resend + React Email)
-- [ ] Bienvenida al nuevo cliente del negocio
-- [ ] Confirmación de reserva (con QR code y detalle)
-- [ ] Cancelación con opción de reprogramar
-- [ ] Post-servicio: gracias + solicitud de reseña
-- [ ] Cumpleaños con cupón de regalo
-- [ ] Reactivación: "Te extrañamos, hace X días que no vienes"
-- [ ] Recordatorio de vencimiento de paquete/membresía
-- [ ] Factura / comprobante de pago
-- [ ] Bienvenida al crear cuenta en Frandora
-- [ ] Plan próximo a vencer
-- [ ] Confirmación de cambio de contraseña
+- [x] Bienvenida al nuevo cliente del negocio
+- [x] Confirmación de reserva (con detalle completo)
+- [x] Cancelación con opción de reprogramar
+- [x] Post-servicio: gracias + solicitud de reseña
+- [ ] Cumpleaños con cupón de regalo *(Fase 7 próxima iteración)*
+- [ ] Reactivación *(Fase 7 próxima iteración)*
+- [ ] Factura / comprobante de pago *(Fase 12)*
+- [ ] Plan próximo a vencer *(Fase 14)*
 
 #### 7.3 SMS (Twilio)
-- [ ] Confirmación de reserva
-- [ ] Recordatorio 24h y 2h antes
-- [ ] Cancelación
-- [ ] Mensaje de bienvenida personalizable
-- [ ] Campañas masivas segmentadas (por último servicio, sin cita en X días, etc.)
+- [x] Confirmación de reserva
+- [x] Recordatorio 24h y 2h antes
+- [x] Cancelación
+- [x] Mensaje de bienvenida
+- [ ] Campañas masivas segmentadas *(Fase 7.5 pendiente)*
 
 #### 7.4 WhatsApp Business (Twilio)
-- [ ] Notificaciones de reserva (confirmación, cancelación, recordatorio)
-- [ ] Bot de respuesta automática con horarios y servicios
-- [ ] Campañas de WhatsApp masivo
-- [ ] Conversación bidireccional (contestar desde el panel)
-- [ ] Plantillas aprobadas de WhatsApp Business API
+- [x] Estructura cliente preparada (sendWhatsApp en lib/sms/client.ts)
+- [ ] Notificaciones activas *(requiere cuenta WhatsApp Business aprobada)*
+- [ ] Bot de respuesta automática *(Fase 16 — IA)*
+- [ ] Campañas masivas WhatsApp *(Fase 7.5 pendiente)*
 
 #### 7.5 Campañas de Marketing
-- [ ] Builder visual de campañas de email
-- [ ] Segmentación por: último servicio, frecuencia, monto gastado, tags, sin cita en X días
-- [ ] Programación de envíos (fecha/hora futura)
-- [ ] Métricas: tasa de apertura, clics, conversiones
-- [ ] Campañas de SMS masivo
-- [ ] A/B testing de asuntos de email
-- [ ] Templates por industria (barbería, spa, clínica, fitness, etc.)
+- [x] Página `/dashboard/marketing` — vista de avisos activos y campañas
+- [ ] Builder visual de campañas *(requiere plan Profesional+)*
+- [ ] Segmentación de clientes *(Fase 10)*
+- [ ] Métricas de apertura/clics *(requiere integración Resend webhooks)*
 
-#### 7.6 Programa de Lealtad (Puntos Frandora)
-- [ ] Configurar puntos por: reserva completada, compra en POS, referido
-- [ ] Canjear puntos como descuento o servicios gratis
-- [ ] Tarjeta digital de fidelización (stamped card)
-- [ ] Niveles de membresía: Bronce / Plata / Oro / VIP
-- [ ] Historial de puntos por cliente
-- [ ] Notificación cuando acumula suficientes puntos
+#### 7.6 Programa de Lealtad — ⏳ Próxima iteración
+- [ ] Configurar puntos por reserva/compra/referido
+- [ ] Canjear puntos como descuento
 
-#### 7.7 Cupones y Descuentos
+#### 7.7 Cupones y Descuentos — ⏳ Próxima iteración
 - [ ] Crear cupones por monto fijo o porcentaje
-- [ ] Restricciones: servicio específico, profesional, fecha válida, usos máximos
-- [ ] Cupones de bienvenida automáticos
-- [ ] Cupones de cumpleaños automáticos
-- [ ] Descuentos por primera reserva online
-- [ ] Validar cupón al momento de cobrar en POS o en reserva pública
+- [ ] Validar al reservar y en POS
 
-#### 7.8 Gift Cards Digitales
-- [ ] Generar gift card con monto configurable
-- [ ] Envío por email con diseño premium
-- [ ] Código único de redención
-- [ ] Venta desde página pública `[slug].frandora.cl`
-- [ ] Redención en POS o en reserva online
-- [ ] Control de saldo restante
-- [ ] Historial de uso
+#### 7.8 Gift Cards Digitales — ⏳ Próxima iteración
+- [ ] Generar gift card con código único
+- [ ] Venta desde `[slug].frandora.cl`
 
-#### 7.9 Reseñas y Reputación
-- [ ] Solicitud automática post-servicio (email + WhatsApp)
-- [ ] Formulario de reseña interno (1-5 estrellas + comentario)
-- [ ] Publicar reseñas en la página pública del negocio
-- [ ] Redirigir reseñas 5★ a Google Maps / Tripadvisor
-- [ ] Filtrar reseñas negativas para gestión interna
-- [ ] Dashboard de NPS (Net Promoter Score)
-- [ ] Responder reseñas desde el panel
+#### 7.9 Reseñas y Reputación — ⏳ Próxima iteración
+- [ ] Formulario de reseña (1-5 estrellas + comentario)
+- [ ] Publicar en página pública del negocio
+
+---
+
+#### Lo que se construyó en esta fase (archivos creados)
+| Archivo | Qué hace |
+|---------|----------|
+| `lib/email/client.ts` | Wrapper Resend — init diferido, no falla sin API key |
+| `lib/email/templates.ts` | 5 plantillas HTML en español chileno con branding Frandora |
+| `lib/sms/client.ts` | Wrapper Twilio — SMS + WhatsApp, no falla sin credenciales |
+| `lib/sms/templates.ts` | 4 mensajes SMS cortos en español chileno |
+| `lib/services/notification.service.ts` | Orquestador central — email+SMS para todos los eventos |
+| `app/api/notifications/reminders/route.ts` | Endpoint cron (cada 30 min) — protegido por CRON_SECRET |
+| `app/api/notifications/send/route.ts` | Envío manual desde el panel |
+| `app/api/appointments/public/route.ts` | Dispara confirmación al crear reserva pública |
+| `app/(dashboard)/dashboard/marketing/page.tsx` | Página "Marketing y avisos" en el panel |
+| `vercel.json` | Cron Vercel cada 30 minutos apuntando al endpoint |
 
 ---
 
@@ -678,4 +669,4 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 
 ---
 
-*Última actualización: Fase 6 completada — iniciando Fase 7 (Marketing y Notificaciones)*
+*Última actualización: Fase 7 completada — iniciando Fase 8 (Gestión Avanzada de Agenda)*
