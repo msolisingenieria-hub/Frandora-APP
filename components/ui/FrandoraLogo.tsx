@@ -20,91 +20,61 @@ const SIZES: Record<Size, { mark: number; name: string; tagline: string; gap: st
 };
 
 /**
- * Isotipo Frandora con efecto 3D premium
- * variant="light" → logo blanco para fondos oscuros (sidebar, hero, footer)
- * variant="dark"  → logo navy para fondos claros (navbar, tarjetas, email)
+ * variant="light" → logo-light.png (F blanca) — para fondos oscuros: sidebar, hero, footer
+ * variant="dark"  → logo-dark.png  (F navy)   — para fondos claros:  navbar, tarjetas
  *
- * Archivos requeridos en /public/:
- *   logo-light.png → F blanca sobre fondo navy (para variant="light")
- *   logo-dark.png  → F navy sobre fondo blanco (para variant="dark")
+ * El efecto premium (iluminación + sombra) se aplica DIRECTAMENTE sobre la imagen.
+ * Sin contenedor, sin caja — solo el logo con las esquinas redondeadas y glow.
  */
 function FIsotipo({ size, variant = "dark" }: { size: number; variant?: Variant }) {
-  const src    = variant === "light" ? "/logo-light.png" : "/logo-dark.png";
-  const height = Math.round(size * 1.1);
+  const src = variant === "light" ? "/logo-light.png" : "/logo-dark.png";
 
-  // Sombras premium por variante
+  // Sombras y glow aplicados directamente sobre el PNG
   const shadowLight = [
-    "0 1px 0 rgba(255,255,255,0.35) inset",           // highlight superior
-    "0 -1px 0 rgba(0,0,0,0.25) inset",                // sombra inferior interna
-    "0 6px 16px rgba(13,27,42,0.55)",                  // sombra exterior profunda
-    "0 2px 4px rgba(13,27,42,0.35)",                   // sombra cercana
-    "0 0 0 1px rgba(255,255,255,0.12)",                // borde sutil
-    "0 0 24px rgba(111,168,158,0.22)",                 // glow teal
+    "0 0 0 0.5px rgba(255,255,255,0.12)",        // micro-borde superior para definición
+    "0 2px 6px rgba(13,27,42,0.5)",              // sombra cercana
+    "0 8px 24px rgba(13,27,42,0.55)",            // sombra principal
+    "0 0 40px rgba(111,168,158,0.35)",           // glow teal
+    "0 0 80px rgba(111,168,158,0.12)",           // halo amplio
   ].join(", ");
 
   const shadowDark = [
-    "0 1px 0 rgba(255,255,255,0.6) inset",
-    "0 -1px 0 rgba(0,0,0,0.12) inset",
-    "0 6px 20px rgba(13,27,42,0.22)",
+    "0 0 0 0.5px rgba(13,27,42,0.08)",
     "0 2px 6px rgba(13,27,42,0.12)",
-    "0 0 0 1px rgba(13,27,42,0.08)",
-    "0 0 20px rgba(111,168,158,0.18)",
+    "0 6px 20px rgba(13,27,42,0.18)",
+    "0 0 30px rgba(111,168,158,0.2)",
   ].join(", ");
 
-  const shadow = variant === "light" ? shadowLight : shadowDark;
+  // filter para el efecto de iluminación premium (brillo en los bordes del isotipo)
+  const filterLight = [
+    "drop-shadow(0 1px 2px rgba(255,255,255,0.25))",  // highlight blanco en bordes
+    "drop-shadow(0 -1px 1px rgba(111,168,158,0.3))",  // acento teal superior
+    "brightness(1.04)",
+    "contrast(1.02)",
+  ].join(" ");
 
-  // Fondo del contenedor: navy profundo para light, blanco para dark
-  const bg = variant === "light"
-    ? "linear-gradient(160deg, #1a3347 0%, #0D1B2A 50%, #091520 100%)"
-    : "linear-gradient(160deg, #ffffff 0%, #f4f8f7 100%)";
-
-  const border = variant === "light"
-    ? "1px solid rgba(111,168,158,0.3)"
-    : "1px solid rgba(13,27,42,0.12)";
+  const filterDark = [
+    "drop-shadow(0 1px 1px rgba(13,27,42,0.2))",
+    "brightness(1.0)",
+    "contrast(1.01)",
+  ].join(" ");
 
   return (
-    <div
+    <Image
+      src={src}
+      alt="Frandora"
+      width={size}
+      height={size}
+      priority
       style={{
-        width:        size,
-        height:       size,
-        borderRadius: "22%",
-        background:   bg,
-        border,
-        boxShadow:    shadow,
-        display:      "flex",
-        alignItems:   "center",
-        justifyContent: "center",
-        flexShrink:   0,
-        overflow:     "hidden",
-        position:     "relative",
+        borderRadius:  "22%",
+        display:       "block",
+        flexShrink:    0,
+        boxShadow:     variant === "light" ? shadowLight : shadowDark,
+        filter:        variant === "light" ? filterLight : filterDark,
+        transition:    "box-shadow 0.2s ease, filter 0.2s ease",
       }}
-    >
-      {/* Highlight superior (efecto 3D) */}
-      <div style={{
-        position: "absolute", top: 0, left: 0, right: 0,
-        height: "45%",
-        background: variant === "light"
-          ? "linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%)"
-          : "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, transparent 100%)",
-        borderRadius: "22% 22% 0 0",
-        pointerEvents: "none",
-        zIndex: 1,
-      }} />
-
-      <Image
-        src={src}
-        alt="Frandora"
-        width={size}
-        height={height}
-        style={{
-          objectFit: "contain",
-          padding:    size * 0.1,
-          position:  "relative",
-          zIndex:    0,
-        }}
-        priority
-      />
-    </div>
+    />
   );
 }
 
@@ -115,9 +85,9 @@ export function FrandoraLogo({
   iconOnly = false,
   className = "",
 }: Props) {
-  const s = SIZES[size];
-  const nameColor = variant === "light" ? "text-white"        : "text-brand-navy";
-  const tagColor  = variant === "light" ? "text-brand-teal/80" : "text-brand-teal";
+  const s         = SIZES[size];
+  const nameColor = variant === "light" ? "text-white"          : "text-brand-navy";
+  const tagColor  = variant === "light" ? "text-brand-teal/80"  : "text-brand-teal";
 
   if (iconOnly) return <FIsotipo size={s.mark} variant={variant} />;
 
