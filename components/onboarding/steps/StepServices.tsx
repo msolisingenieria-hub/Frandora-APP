@@ -8,9 +8,6 @@ type Props = {
   onChange: (partial: Partial<OnboardingData>) => void;
 };
 
-function formatPrice(value: number) {
-  return value > 0 ? value.toLocaleString("es-CL") : "";
-}
 
 export function StepServices({ data, onChange }: Props) {
   const updateService = (tempId: string, fields: Partial<ServiceInput>) => {
