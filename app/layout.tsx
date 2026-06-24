@@ -55,6 +55,12 @@ export const metadata: Metadata = {
     description: "La plataforma más completa para negocios de servicios.",
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

@@ -117,7 +117,7 @@ export function Sidebar() {
           )}
           {collapsed && (
             <Link href="/dashboard" className="mx-auto block">
-              <span className="text-white font-sans font-bold text-lg">F</span>
+              <FrandoraLogo size="xs" variant="light" iconOnly />
             </Link>
           )}
 

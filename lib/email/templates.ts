@@ -13,10 +13,19 @@ function baseLayout(content: string, businessName: string): string {
   <tr><td align="center">
     <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(13,27,42,0.08);">
       <!-- Header -->
-      <tr><td style="background:linear-gradient(135deg,#0D1B2A,#1a3347);padding:32px 40px;text-align:center;">
-        <p style="color:#6FA89E;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin:0 0 4px;">RESERVAS</p>
+      <tr><td style="background:linear-gradient(135deg,#0D1B2A,#1a3347);padding:28px 40px 24px;text-align:center;">
+        <!-- Isotipo Frandora SVG inline -->
+        <div style="margin-bottom:12px;">
+          <svg width="36" height="45" viewBox="0 0 90 113" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;">
+            <path d="M13 8 L65 8 Q80 8 80 24 Q80 41 64 44 L26 44 L16 57 L13 57 Z" fill="#FFFFFF"/>
+            <path d="M13 63 L25 63 L22 106 Q21 112 16 112 L12 112 Z" fill="#FFFFFF"/>
+            <path d="M9 63 Q36 49 84 66 Q67 77 38 73 Q20 69 9 63 Z" fill="#6FA89E"/>
+            <circle cx="80" cy="77" r="5.5" fill="#6FA89E"/>
+          </svg>
+        </div>
+        <p style="color:#6FA89E;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 4px;font-weight:600;">RESERVAS</p>
         <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0;">${businessName}</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:11px;margin:6px 0 0;">Powered by Frandora</p>
+        <p style="color:rgba(255,255,255,0.35);font-size:10px;margin:6px 0 0;letter-spacing:0.08em;">Powered by Frandora</p>
       </td></tr>
       <!-- Body -->
       <tr><td style="padding:40px;">${content}</td></tr>
