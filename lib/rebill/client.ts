@@ -1,6 +1,8 @@
 // Rebill — plataforma de suscripciones para Latam
 // Docs: https://rebill.com/docs
 
+import { createHmac } from "crypto";
+
 const REBILL_API_URL = "https://api.rebill.to/v2";
 const REBILL_API_KEY  = process.env.REBILL_API_KEY ?? "";
 const REBILL_ORG_ID   = process.env.REBILL_ORGANIZATION_ID ?? "";
@@ -96,9 +98,7 @@ export function verifyRebillWebhook(
 ): boolean {
   const secret = process.env.REBILL_WEBHOOK_SECRET ?? "";
   if (!secret) return false;
-  const crypto = require("crypto") as typeof import("crypto");
-  const expected = crypto
-    .createHmac("sha256", secret)
+  const expected = createHmac("sha256", secret)
     .update(payload)
     .digest("hex");
   return expected === signature;
