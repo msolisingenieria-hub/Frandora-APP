@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
+import { Calendar, dateFnsLocalizer, Views, type View } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { es } from "date-fns/locale";
 import type { AppointmentListItem } from "@/lib/services/appointment.service";
@@ -54,7 +54,7 @@ const MESSAGES = {
 };
 
 export function AgendaCalendar({ appointments, onSelectEvent }: Props) {
-  const [view, setView] = useState<string>(Views.WEEK);
+  const [view, setView] = useState<View>(Views.WEEK);
   const [date, setDate] = useState(new Date());
 
   const events: CalEvent[] = useMemo(() =>
@@ -107,11 +107,11 @@ export function AgendaCalendar({ appointments, onSelectEvent }: Props) {
       <Calendar
         localizer={localizer}
         events={events}
-        view={view as any}
+        view={view}
         date={date}
-        onView={(v) => setView(v)}
+        onView={(v: View) => setView(v)}
         onNavigate={(d) => setDate(d)}
-        onSelectEvent={(event: CalEvent) => onSelectEvent?.(event.resource)}
+        onSelectEvent={(event: CalEvent) => { onSelectEvent?.(event.resource); }}
         eventPropGetter={eventStyleGetter}
         messages={MESSAGES}
         culture="es"

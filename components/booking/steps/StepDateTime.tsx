@@ -7,7 +7,7 @@ import { DAY_NAMES_SHORT, MONTH_NAMES } from "@/types/booking";
 import { CalendarDays, ChevronLeft, ChevronRight, Clock } from "lucide-react";
 import {
   addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval,
-  getDay, format, isSameDay, isBefore, startOfDay, addDays,
+  getDay, format, isSameDay, isBefore, startOfDay,
 } from "date-fns";
 
 type Props = {

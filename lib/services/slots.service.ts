@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db/client";
 import {
-  addMinutes, startOfDay, endOfDay, parseISO,
-  setHours, setMinutes, format, getDay, isBefore, isAfter,
+  addMinutes, startOfDay, endOfDay,
+  format, getDay, isBefore, isAfter,
 } from "date-fns";
 
 export type SlotInput = {
@@ -89,7 +89,6 @@ export async function getAvailableSlots({
 
   for (let min = openMinutes; min + duration <= closeMinutes; min += INTERVAL) {
     const slotStart = minutesToDate(date, min);
-    const slotEnd   = addMinutes(slotStart, duration);
 
     // Verificar que no se solape con ninguna cita existente
     const blocked = existingAppts.some((a) =>
