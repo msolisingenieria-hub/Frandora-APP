@@ -20,8 +20,6 @@ export async function POST(req: NextRequest) {
   const parsed = InviteSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
-  const business = await prisma.business.findUnique({ where: { id: businessId }, select: { name: true } });
-
   // Crear el profesional como pendiente de vinculación
   const staff = await prisma.staffMember.create({
     data: {
