@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db/client";
 import Link from "next/link";
 import { CalendarDays, Users, TrendingUp, ArrowRight, Sparkles, Clock } from "lucide-react";
+import { PublicPageCard } from "@/components/dashboard/PublicPageCard";
 
 export const metadata = { title: "Dashboard | Frandora" };
 
@@ -171,30 +172,7 @@ export default async function DashboardPage() {
           {/* Public page + quick actions */}
           <div className="flex flex-col gap-4">
             {/* Página pública */}
-            <div
-              className="rounded-2xl p-5 border border-brand-navy/15 relative overflow-hidden"
-              style={{ background: "linear-gradient(135deg, #0D1B2A 0%, #1a3347 100%)" }}
-            >
-              <div className="absolute top-0 right-0 w-28 h-28 rounded-full pointer-events-none"
-                style={{ background: "radial-gradient(circle, rgba(111,168,158,0.2) 0%, transparent 70%)" }} />
-              <p className="text-brand-teal text-xs tracking-[0.15em] uppercase font-sans font-semibold mb-1 relative z-10">
-                Tu página pública
-              </p>
-              <p className="text-white font-sans font-semibold text-sm mb-3 relative z-10">
-                {business.slug}.frandora.cl
-              </p>
-              <div className="flex gap-2 relative z-10">
-                <button className="flex-1 text-xs font-sans font-semibold py-2 rounded-lg border border-white/20 text-white/70 hover:bg-white/8 transition-colors">
-                  Copiar enlace
-                </button>
-                <Link href={`/${business.slug}`}
-                  className="flex-1 flex items-center justify-center gap-1 text-xs font-sans font-semibold py-2 rounded-lg text-white transition-all"
-                  style={{ background: "linear-gradient(135deg, #6FA89E, #5a9990)" }}
-                >
-                  Previsualizar <ArrowRight size={11} />
-                </Link>
-              </div>
-            </div>
+            <PublicPageCard slug={business.slug} />
 
             {/* Próximas funciones */}
             <div className="bg-white rounded-2xl border border-slate-100 shadow-brand p-5">
@@ -203,10 +181,15 @@ export default async function DashboardPage() {
                 <h3 className="text-brand-navy font-sans font-semibold text-sm">Próximamente</h3>
               </div>
               <div className="space-y-2">
-                {["Módulo de agenda y calendario", "CRM de clientes", "Pagos con Flow.cl"].map((feat) => (
-                  <div key={feat} className="flex items-center gap-2.5">
+                {[
+                  { label: "Pagos con Flow.cl",        done: false },
+                  { label: "POS e inventario",          done: false },
+                  { label: "Marketing y recordatorios", done: false },
+                  { label: "Reportes y analytics",      done: false },
+                ].map((feat) => (
+                  <div key={feat.label} className="flex items-center gap-2.5">
                     <div className="w-1.5 h-1.5 rounded-full bg-brand-teal/60 flex-shrink-0" />
-                    <span className="text-slate-500 text-xs font-body">{feat}</span>
+                    <span className="text-slate-500 text-xs font-body">{feat.label}</span>
                   </div>
                 ))}
               </div>

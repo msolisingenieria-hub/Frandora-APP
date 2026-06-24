@@ -22,8 +22,8 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
     title: "Gestión",
     items: [
       { href: "/dashboard",            label: "Inicio",      icon: LayoutDashboard },
-      { href: "/dashboard/agenda",     label: "Agenda",      icon: CalendarDays,   soon: true },
-      { href: "/dashboard/clientes",   label: "Clientes",    icon: Users,          soon: true },
+      { href: "/dashboard/agenda",     label: "Agenda",      icon: CalendarDays },
+      { href: "/dashboard/clientes",   label: "Clientes",    icon: Users },
       { href: "/dashboard/servicios",  label: "Servicios",   icon: Sparkles,       soon: true },
     ],
   },
