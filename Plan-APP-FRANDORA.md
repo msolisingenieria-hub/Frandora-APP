@@ -2,6 +2,7 @@
 
 > Archivo de referencia permanente. Actualizar al completar cada fase.
 > Repositorio: `Frandora-APP` | Rama principal: `main`
+> **URL base: `*.frandora.cl` — SIEMPRE subdominio. Nunca paths de frandora.cl.**
 
 ---
 
@@ -9,11 +10,26 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fase actual | **Fase 2 completada** — Iniciando Fase 3 |
-| Deploy en Vercel | `frandora-system` (conectar env vars) |
-| Base de datos | Supabase PostgreSQL — 26 tablas activas |
-| Auth | Clerk — configurado |
-| UI base | Next.js 14, Tailwind, shadcn/ui, Lucide icons |
+| Fase actual | **Fase 6 completada** — Iniciando Fase 7 |
+| Deploy en Vercel | ✅ Activo (`frandora-system`) |
+| Base de datos | ✅ Supabase PostgreSQL — 26+ tablas activas |
+| Auth | ✅ Clerk configurado |
+| UI base | ✅ Next.js 14, Tailwind, shadcn/ui, Lucide icons |
+
+---
+
+## Arquitectura de URLs — REGLA ABSOLUTA
+
+| Subdominio | Qué es |
+|-----------|--------|
+| `frandora.cl` | Landing page pública de Frandora |
+| `app.frandora.cl` | Panel del negocio (dashboard) |
+| `admin.frandora.cl` | Super Admin de Frandora |
+| `api.frandora.cl` | API pública / webhooks |
+| `[slug].frandora.cl` | Página pública de reservas del negocio |
+| `[slug].frandora.cl` (dominio propio) | CNAME → plan Business+ |
+
+Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-yoga-paz.frandora.cl`
 
 ---
 
@@ -21,60 +37,22 @@
 
 | Capa | Tecnología | Estado |
 |------|-----------|--------|
-| Framework | Next.js 14+ (App Router) | ✅ Instalado |
-| Lenguaje | TypeScript strict | ✅ Configurado |
-| Estilos | Tailwind CSS + shadcn/ui | ✅ Configurado |
-| Animaciones | Framer Motion | ✅ Instalado |
-| Base de datos | PostgreSQL via Supabase | ✅ Conectado |
-| ORM | Prisma (26 tablas) | ✅ Schema publicado |
-| Cache | Upstash Redis | ⏳ Pendiente config |
-| Auth | Clerk | ✅ Configurado |
-| Suscripciones | Rebill (Latam SaaS) | ⏳ Fase 5 |
-| Pagos reservas | Flow.cl (Chile) | ⏳ Fase 5 |
+| Framework | Next.js 14+ (App Router) | ✅ |
+| Lenguaje | TypeScript strict | ✅ |
+| Estilos | Tailwind CSS + shadcn/ui | ✅ |
+| Animaciones | Framer Motion | ✅ |
+| Base de datos | PostgreSQL via Supabase | ✅ |
+| ORM | Prisma | ✅ |
+| Cache | Upstash Redis | ⏳ |
+| Auth | Clerk | ✅ |
+| Suscripciones SaaS | Rebill (Latam) | ✅ Fase 5 |
+| Pagos reservas | Flow.cl (Chile) | ✅ Fase 5 |
 | Email | Resend + React Email | ⏳ Fase 7 |
 | SMS/WhatsApp | Twilio | ⏳ Fase 7 |
-| Storage | Cloudflare R2 | ⏳ Fase 4 |
-| Deploy | Vercel | ⏳ Conectando |
+| Storage | Cloudflare R2 | ⏳ Fase 4+ |
+| Realtime | Supabase Realtime | ⏳ Fase 7 |
+| Deploy | Vercel | ✅ |
 | Monitoreo | Sentry + PostHog | ⏳ Fase 10 |
-
----
-
-## Variables de Entorno Necesarias en Vercel
-
-```env
-# Base de datos (Supabase pooler — NO cambiar a dirección directa)
-DATABASE_URL=postgresql://postgres.lnybarrqefqywjfcuzmc:PASSWORD@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true
-DIRECT_URL=postgresql://postgres.lnybarrqefqywjfcuzmc:PASSWORD@aws-1-sa-east-1.pooler.supabase.com:5432/postgres
-
-# Auth (Clerk)
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
-CLERK_SECRET_KEY=sk_live_...
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-
-# App URLs (producción)
-NEXT_PUBLIC_APP_URL=https://app.frandora.cl
-NEXT_PUBLIC_ROOT_DOMAIN=frandora.cl
-
-# Fases futuras:
-# REBILL_API_KEY=
-# FLOW_API_KEY=
-# RESEND_API_KEY=
-# TWILIO_ACCOUNT_SID=
-```
-
----
-
-## Arquitectura de URLs
-
-| Subdominio | Qué es |
-|-----------|--------|
-| `frandora.cl` | Landing page pública |
-| `app.frandora.cl` | Dashboard del negocio |
-| `admin.frandora.cl` | Super admin Frandora |
-| `[slug].frandora.cl` | Página pública de reservas |
-
-Middleware en `middleware.ts` enruta por host. En desarrollo local y Codespaces usa rutas normales.
 
 ---
 
@@ -84,165 +62,592 @@ Middleware en `middleware.ts` enruta por host. En desarrollo local y Codespaces 
 - Next.js 14, TypeScript, Tailwind, shadcn/ui, Framer Motion
 - Prisma + Supabase PostgreSQL (26 tablas)
 - Clerk auth configurado
-- Middleware multi-tenant por subdominio
+- Middleware multi-tenant por subdominio `*.frandora.cl`
 - Deploy base en Vercel
-- Identidad de marca: colores, tipografía, design system
+- Design system: Deep Navy + Sage Teal + Poppins + Inter
 
 ### ✅ FASE 1 — Landing Page Premium
 - Hero animado con Framer Motion
 - Secciones: Features, Industrias, Precios, Testimonios, FAQ, Footer
-- Botones Navy como primario, Sage Teal como acento
 - Responsive mobile-first
-- Gradientes navy → blanco en toda la infraestructura
+- Gradientes navy → blanco
 
 ### ✅ FASE 2 — Auth y Onboarding
 - Sign-in / Sign-up con Clerk
-- Wizard de onboarding 5 pasos:
-  1. Tipo de negocio (17 categorías)
-  2. Datos del negocio
-  3. Servicios iniciales
-  4. Horario de atención
-  5. Selección de plan
-- API `/api/onboarding/complete` con Zod validation
+- Wizard de onboarding 5 pasos
 - Dashboard inicial con trial banner, stats, setup checklist
-- Sidebar premium: gradiente, Lucide icons, secciones agrupadas
-- Logo SVG cursiva F + swoosh teal + punto teal
+- Sidebar premium con gradiente y secciones
+
+### ✅ FASE 3 — Agenda y Reservas (Core)
+- Calendario semanal/mensual (react-big-calendar)
+- Crear/editar/cancelar citas desde dashboard
+- Página pública de reservas en `[slug].frandora.cl`
+- Flujo de reserva: servicio → profesional → fecha/hora → datos → confirmación
+- Slots de disponibilidad con bloqueo de solapamiento
+
+### ✅ FASE 4 — CRM de Clientes
+- Lista de clientes con búsqueda y paginación
+- Perfil: historial de citas, notas, alergias, preferencias
+- Drawer lateral: ver / editar / crear cliente
+- Historial de atenciones
+
+### ✅ FASE 5 — Pagos y Facturación
+- Rebill — suscripciones de planes Frandora (Starter → Scale)
+- Flow.cl — cobros en reservas (depósito / pago completo)
+- Webhooks Rebill y Flow.cl
+- Dashboard de facturación con selector de plan mensual/anual
+
+### ✅ FASE 6 — POS e Inventario
+- Inventario: catálogo, stock real, alertas stock bajo, ajuste manual
+- POS Terminal: grilla de productos, carrito, descuento, propina, método de pago
+- Venta → descuenta inventario automáticamente
+- Resumen del día: KPIs + desglose por método de pago
 
 ---
 
-### ⏳ FASE 3 — Agenda y Reservas (PRÓXIMA)
+### 🔄 FASE 7 — Marketing y Notificaciones Automáticas
 
-**Objetivo:** Sistema completo de agendamiento — panel del negocio + página pública de reservas.
+**Objetivo:** Que el negocio nunca pierda un cliente por olvido. Comunicación automática en todos los canales.
 
-#### Panel del negocio (`/dashboard/agenda`)
-- [ ] Calendario semanal/mensual (FullCalendar o react-big-calendar)
-- [ ] Vista de columnas por profesional
-- [ ] Crear cita manual desde dashboard
-- [ ] Editar / cancelar / reprogramar cita
-- [ ] Bloqueos de tiempo (vacaciones, descansos)
-- [ ] Estado de cita: SCHEDULED / CONFIRMED / IN_PROGRESS / COMPLETED / CANCELLED / NO_SHOW
+#### 7.1 Recordatorios automáticos de citas
+- [ ] 24 horas antes: email + SMS + WhatsApp
+- [ ] 2 horas antes: SMS + WhatsApp push
+- [ ] Confirmación inmediata al reservar: email + SMS
+- [ ] Recordatorio de reprogramación al cancelar
+- [ ] Reducción de no-shows (meta: -40%)
 
-#### Página pública de reservas (`/[slug]`)
-- [ ] Diseño premium personalizable
-- [ ] Selección de servicio
-- [ ] Selección de profesional (o "cualquiera disponible")
-- [ ] Calendario interactivo con slots disponibles
-- [ ] Formulario del cliente (nombre, email, teléfono)
-- [ ] Confirmación con código de reserva
-- [ ] Email de confirmación (Resend)
+#### 7.2 Emails automáticos (Resend + React Email)
+- [ ] Bienvenida al nuevo cliente del negocio
+- [ ] Confirmación de reserva (con QR code y detalle)
+- [ ] Cancelación con opción de reprogramar
+- [ ] Post-servicio: gracias + solicitud de reseña
+- [ ] Cumpleaños con cupón de regalo
+- [ ] Reactivación: "Te extrañamos, hace X días que no vienes"
+- [ ] Recordatorio de vencimiento de paquete/membresía
+- [ ] Factura / comprobante de pago
+- [ ] Bienvenida al crear cuenta en Frandora
+- [ ] Plan próximo a vencer
+- [ ] Confirmación de cambio de contraseña
 
-#### API necesaria
-- `GET /api/business/[slug]` — datos del negocio
-- `GET /api/slots?businessId&staffId&date` — disponibilidad
-- `POST /api/appointments` — crear cita
-- `PATCH /api/appointments/[id]` — actualizar cita
-- `DELETE /api/appointments/[id]` — cancelar cita
+#### 7.3 SMS (Twilio)
+- [ ] Confirmación de reserva
+- [ ] Recordatorio 24h y 2h antes
+- [ ] Cancelación
+- [ ] Mensaje de bienvenida personalizable
+- [ ] Campañas masivas segmentadas (por último servicio, sin cita en X días, etc.)
 
----
+#### 7.4 WhatsApp Business (Twilio)
+- [ ] Notificaciones de reserva (confirmación, cancelación, recordatorio)
+- [ ] Bot de respuesta automática con horarios y servicios
+- [ ] Campañas de WhatsApp masivo
+- [ ] Conversación bidireccional (contestar desde el panel)
+- [ ] Plantillas aprobadas de WhatsApp Business API
 
-### ⏳ FASE 4 — CRM de Clientes
+#### 7.5 Campañas de Marketing
+- [ ] Builder visual de campañas de email
+- [ ] Segmentación por: último servicio, frecuencia, monto gastado, tags, sin cita en X días
+- [ ] Programación de envíos (fecha/hora futura)
+- [ ] Métricas: tasa de apertura, clics, conversiones
+- [ ] Campañas de SMS masivo
+- [ ] A/B testing de asuntos de email
+- [ ] Templates por industria (barbería, spa, clínica, fitness, etc.)
 
-- [ ] Lista de clientes del negocio
-- [ ] Perfil completo: nombre, foto, historial, notas, preferencias
-- [ ] Historial de citas y pagos
-- [ ] Tags y segmentación
-- [ ] Fotos antes/después
-- [ ] Importar CSV
+#### 7.6 Programa de Lealtad (Puntos Frandora)
+- [ ] Configurar puntos por: reserva completada, compra en POS, referido
+- [ ] Canjear puntos como descuento o servicios gratis
+- [ ] Tarjeta digital de fidelización (stamped card)
+- [ ] Niveles de membresía: Bronce / Plata / Oro / VIP
+- [ ] Historial de puntos por cliente
+- [ ] Notificación cuando acumula suficientes puntos
 
----
+#### 7.7 Cupones y Descuentos
+- [ ] Crear cupones por monto fijo o porcentaje
+- [ ] Restricciones: servicio específico, profesional, fecha válida, usos máximos
+- [ ] Cupones de bienvenida automáticos
+- [ ] Cupones de cumpleaños automáticos
+- [ ] Descuentos por primera reserva online
+- [ ] Validar cupón al momento de cobrar en POS o en reserva pública
 
-### ⏳ FASE 5 — Pagos y Facturación
+#### 7.8 Gift Cards Digitales
+- [ ] Generar gift card con monto configurable
+- [ ] Envío por email con diseño premium
+- [ ] Código único de redención
+- [ ] Venta desde página pública `[slug].frandora.cl`
+- [ ] Redención en POS o en reserva online
+- [ ] Control de saldo restante
+- [ ] Historial de uso
 
-- [ ] **Rebill** — suscripciones de planes Frandora (Starter/Professional/Business/Scale)
-- [ ] **Flow.cl** — cobro en reservas (depósito o pago completo)
-- [ ] Webhook Rebill para actualizar estado de suscripción
-- [ ] Webhook Flow.cl para confirmar pagos
-- [ ] Facturas digitales PDF
-- [ ] Gift cards básicas
-
----
-
-### ⏳ FASE 6 — POS e Inventario
-
-- [ ] Punto de venta (cobro rápido de servicios)
-- [ ] Catálogo de productos
-- [ ] Control de stock
-- [ ] Cierre de caja diario
-
----
-
-### ⏳ FASE 7 — Marketing y Notificaciones
-
-- [ ] Recordatorios automáticos (24h, 1h antes)
-- [ ] Email marketing con Resend
-- [ ] SMS con Twilio
-- [ ] WhatsApp Business
-- [ ] Campañas de cumpleaños
-- [ ] Reseñas automáticas post-servicio
-- [ ] Programa de lealtad (puntos)
-- [ ] Cupones y descuentos
-
----
-
-### ⏳ FASE 8 — Reportes y Analytics
-
-- [ ] Dashboard ejecutivo (día/semana/mes)
-- [ ] Ingresos por servicio y profesional
-- [ ] Tasa de ocupación del calendario
-- [ ] Exportación PDF/Excel
-- [ ] Integración PostHog
-
----
-
-### ⏳ FASE 9 — Super Admin
-
-- [ ] Panel `admin.frandora.cl`
-- [ ] Gestión de todos los negocios
-- [ ] MRR / ARR / churn metrics
-- [ ] Gestión de planes globales
-- [ ] Logs de actividad
+#### 7.9 Reseñas y Reputación
+- [ ] Solicitud automática post-servicio (email + WhatsApp)
+- [ ] Formulario de reseña interno (1-5 estrellas + comentario)
+- [ ] Publicar reseñas en la página pública del negocio
+- [ ] Redirigir reseñas 5★ a Google Maps / Tripadvisor
+- [ ] Filtrar reseñas negativas para gestión interna
+- [ ] Dashboard de NPS (Net Promoter Score)
+- [ ] Responder reseñas desde el panel
 
 ---
 
-### ⏳ FASE 10 — Pulido y Lanzamiento
+### ⏳ FASE 8 — Gestión Avanzada de Agenda
 
-- [ ] Tests E2E con Playwright
-- [ ] Lighthouse ≥ 90 en todas las páginas
-- [ ] Modo oscuro
-- [ ] PWA (Progressive Web App)
-- [ ] Beta con negocios reales
-- [ ] Launch público en frandora.cl
+**Objetivo:** Agenda 100% profesional, al nivel de cualquier software enterprise.
+
+#### 8.1 Funcionalidades avanzadas del calendario
+- [ ] Drag & drop para mover citas
+- [ ] Vista columnas por profesional (recursos)
+- [ ] Citas recurrentes (semanal, mensual)
+- [ ] Lista de espera (Waitlist automático)
+- [ ] Bloqueos de tiempo (vacaciones, descansos, reuniones)
+- [ ] Reserva de múltiples servicios en una misma cita
+- [ ] Citas grupales / clases con capacidad máxima
+- [ ] Buffer entre citas configurable por servicio
+- [ ] Tiempo de preparación previo (limpieza de sala, etc.)
+- [ ] Color por servicio / profesional / estado
+- [ ] Notas internas visibles solo al staff
+
+#### 8.2 Gestión de clases y sesiones grupales
+- [ ] Crear clases con cupo máximo
+- [ ] Inscripción online desde página pública
+- [ ] Lista de espera automática (si el cupo está lleno)
+- [ ] Cobro online al inscribirse
+- [ ] Check-in de asistentes (marcar presentes)
+- [ ] Cancelar clase → notificar inscritos automáticamente
+- [ ] Paquetes de N sesiones (ej: 10 clases de yoga)
+
+#### 8.3 Sincronización con calendarios externos
+- [ ] Google Calendar: bidireccional (importar y exportar citas)
+- [ ] Apple Calendar / Outlook: exportar ics
+- [ ] El cliente puede agregar su cita a Google Calendar desde el email
+- [ ] Detectar conflictos con eventos del calendario personal del staff
+
+#### 8.4 Agenda desde múltiples canales
+- [ ] Reserva desde `[slug].frandora.cl` (página pública)
+- [ ] Widget de reserva embebible (iframe) para el sitio web propio del negocio
+- [ ] Botón "Reservar" en Instagram (perfil)
+- [ ] Botón "Reservar" en Facebook (página)
+- [ ] Botón "Reservar" en Google Business Profile
+- [ ] Reserva por WhatsApp (bot conversacional)
+- [ ] Link de reserva personalizable (`reserva.frandora.cl/[slug]`)
+
+---
+
+### ⏳ FASE 9 — Gestión de Staff y Recursos
+
+**Objetivo:** Control profesional de cada integrante del equipo.
+
+#### 9.1 Perfil de profesionales
+- [ ] Foto, bio, especialidades, años de experiencia
+- [ ] Portfolio de trabajos (antes/después)
+- [ ] Calificación promedio de reseñas
+- [ ] Servicios que ofrece (asignar por profesional)
+- [ ] Visibilidad en página pública (on/off)
+- [ ] Múltiples roles por persona (staff + recepcionista)
+
+#### 9.2 Horarios y disponibilidad
+- [ ] Horario base semanal (por día y hora)
+- [ ] Excepciones: días libre individuales, feriados
+- [ ] Vacaciones con rango de fechas
+- [ ] Turnos rotativos
+- [ ] Disponibilidad por ubicación (si tiene múltiples sedes)
+
+#### 9.3 Comisiones y rendimiento
+- [ ] Configurar comisión por porcentaje o monto fijo por servicio
+- [ ] Comisión sobre ventas de productos en POS
+- [ ] Reporte de comisiones por período
+- [ ] Ranking de staff por ingresos generados
+- [ ] Metas mensuales con seguimiento visual
+- [ ] Exportar liquidación de comisiones (PDF/Excel)
+
+#### 9.4 Control de acceso por rol
+- [ ] BUSINESS_OWNER: todo el sistema
+- [ ] MANAGER: agenda + clientes + reportes (sin facturación)
+- [ ] STAFF: solo su agenda y clientes asignados
+- [ ] RECEPTIONIST: crear/editar citas y clientes
+- [ ] Invitar staff por email desde el panel
+- [ ] Revocar acceso con un click
+
+---
+
+### ⏳ FASE 10 — Reportes y Analytics
+
+**Objetivo:** Datos para decisiones. Cada número tiene contexto.
+
+#### 10.1 Dashboard ejecutivo
+- [ ] Ingresos del día / semana / mes con comparativa vs período anterior
+- [ ] Ticket promedio
+- [ ] Nuevos clientes vs recurrentes
+- [ ] Tasa de ocupación del calendario (%)
+- [ ] Tasa de cancelación y no-show
+- [ ] Top servicios más vendidos
+- [ ] Top profesionales por ingreso
+- [ ] Horas pico de demanda (mapa de calor)
+- [ ] Proyección del mes basada en tendencia
+
+#### 10.2 Reportes financieros
+- [ ] Ingresos por servicio, profesional, período, método de pago
+- [ ] Gastos registrables (proveedor, categoría, fecha)
+- [ ] Rentabilidad neta (ingresos - gastos - comisiones)
+- [ ] Cierre de caja diario con detalle por método
+- [ ] Comparativa mes a mes
+- [ ] Exportar a Excel / PDF / CSV
+
+#### 10.3 Reportes de clientes
+- [ ] Clientes nuevos por período
+- [ ] LTV (valor de vida del cliente)
+- [ ] Frecuencia de visita promedio
+- [ ] Clientes en riesgo de abandono (sin visita en X días)
+- [ ] Segmentos por gasto total
+- [ ] Mapa de clientes por zona geográfica (Google Maps)
+
+#### 10.4 Reportes de inventario
+- [ ] Productos más vendidos
+- [ ] Rotación de stock
+- [ ] Valor total del inventario en tiempo real
+- [ ] Historial de movimientos por producto
+- [ ] Alerta de productos vencidos (si aplica)
+
+#### 10.5 Reportes de marketing
+- [ ] Tasas de apertura y clics de campañas de email
+- [ ] Cupones más utilizados y su impacto en ingresos
+- [ ] Reseñas: promedio, evolución, NPS
+- [ ] Tasa de conversión de la página pública (visitas → reservas)
+- [ ] Canales de origen de nuevas reservas
+
+#### 10.6 Integración PostHog
+- [ ] Funnel de conversión en página pública
+- [ ] Grabaciones de sesión del flujo de reserva
+- [ ] Feature flags para rollout gradual
+- [ ] Análisis de cohorts de clientes
+
+---
+
+### ⏳ FASE 11 — Formularios, Consentimientos y Fichas Clínicas
+
+**Objetivo:** Módulo esencial para clínicas estéticas, tattoo, salud y bienestar.
+
+#### 11.1 Builder de formularios
+- [ ] Drag & drop para crear formularios personalizados
+- [ ] Tipos de campo: texto, número, fecha, sí/no, selector, escala, firma
+- [ ] Formularios de intake (pre-cita): datos del cliente, antecedentes médicos
+- [ ] Consentimientos informados con firma digital
+- [ ] Asignar formulario a servicio específico
+- [ ] Envío automático por email/WhatsApp antes de la cita
+
+#### 11.2 SOAP Notes (clínicas y bienestar)
+- [ ] Template estándar: Subjetivo / Objetivo / Evaluación / Plan
+- [ ] Templates personalizables por tipo de servicio
+- [ ] Adjuntar fotos a la nota
+- [ ] Historial de notas por cliente (privadas, solo staff)
+- [ ] Exportar ficha clínica en PDF
+
+#### 11.3 Galería de resultados
+- [ ] Fotos antes/después por cita (privadas por defecto)
+- [ ] Compartir con cliente por link seguro
+- [ ] Galería pública en página del profesional (si el cliente consiente)
+
+---
+
+### ⏳ FASE 12 — Membresías y Paquetes
+
+**Objetivo:** Ingresos recurrentes para el negocio más allá de las reservas.
+
+#### 12.1 Membresías del negocio a sus clientes
+- [ ] Crear planes: mensual, trimestral, anual
+- [ ] Incluir: N sesiones, descuento sobre tarifa, acceso a servicios exclusivos
+- [ ] Cobro recurrente automático (Flow.cl / Rebill)
+- [ ] Pausa y cancelación desde el panel
+- [ ] Notificación de renovación automática
+- [ ] Tarjeta digital de membresía
+
+#### 12.2 Paquetes de sesiones
+- [ ] Comprar 10 clases y usar durante 3 meses
+- [ ] Seguimiento de sesiones usadas vs disponibles
+- [ ] Transferir sesiones a otro cliente (con permiso)
+- [ ] Paquete compartido (pareja / familia)
+- [ ] Vencimiento automático si no se usan
+
+#### 12.3 Suscripciones y cobros recurrentes del negocio
+- [ ] El negocio puede crear sus propios planes de membresía
+- [ ] Dashboard de suscriptores activos
+- [ ] Gestión de pagos fallidos (reintentos automáticos)
+
+---
+
+### ⏳ FASE 13 — Página Pública Premium (`[slug].frandora.cl`)
+
+**Objetivo:** La página pública debe ser tan buena que el cliente quiera quedarse.
+
+#### 13.1 Personalización visual por negocio
+- [ ] Color primario, secundario y acento configurables
+- [ ] Tipografía elegible (Poppins, Inter, Playfair, etc.)
+- [ ] Foto de portada o video de fondo (16:9)
+- [ ] Logo propio
+- [ ] Bio del negocio (texto + emojis)
+- [ ] Links a redes sociales (Instagram, TikTok, Facebook, YouTube)
+- [ ] Layout editable: servicios verticales u horizontales, galería, etc.
+
+#### 13.2 Contenido de la página
+- [ ] Hero con foto + nombre + botón "Reservar ahora"
+- [ ] Galería de fotos del local (carrusel)
+- [ ] Lista de servicios con foto, descripción, duración y precio
+- [ ] Perfiles de profesionales con foto y especialidades
+- [ ] Reseñas verificadas con promedio de estrellas
+- [ ] Ubicación con Google Maps integrado
+- [ ] Horarios de atención
+- [ ] FAQ personalizable del negocio
+
+#### 13.3 Flujo de reserva en página pública
+- [ ] Selección de servicio → selección de profesional (o "cualquiera disponible") → fecha y hora → datos del cliente → pago (si aplica) → confirmación
+- [ ] Reservar como invitado o registrarse
+- [ ] Confirmación por email + WhatsApp + SMS
+- [ ] Botón "Agregar a Google Calendar / Apple Calendar"
+- [ ] Política de cancelación visible antes de confirmar
+- [ ] Código de reserva único
+
+#### 13.4 Widget embebible
+- [ ] Botón/widget de reserva para el sitio web propio del negocio
+- [ ] Personalizable (color, texto, tamaño)
+- [ ] Código `<script>` de una línea para copiar y pegar
+- [ ] Modo popup o inline
+
+#### 13.5 Dominio propio (plan Business+)
+- [ ] El negocio puede usar `reservas.miempresa.cl`
+- [ ] Instrucciones claras de configuración CNAME
+- [ ] SSL automático via Vercel
+
+---
+
+### ⏳ FASE 14 — Super Admin Frandora (`admin.frandora.cl`)
+
+**Objetivo:** Control total de la plataforma desde un solo lugar.
+
+#### 14.1 Dashboard de negocio de Frandora
+- [ ] MRR (Monthly Recurring Revenue) en tiempo real
+- [ ] ARR anualizado
+- [ ] Churn rate mensual
+- [ ] Nuevos negocios registrados (día / semana / mes)
+- [ ] Negocios activos vs en trial vs cancelados
+- [ ] LTV promedio por plan
+- [ ] Proyección de ingresos próximo mes
+
+#### 14.2 Gestión de negocios
+- [ ] Listado de todos los negocios (búsqueda, filtro por plan, estado)
+- [ ] Ver panel completo de cualquier negocio (impersonar)
+- [ ] Suspender / reactivar negocio
+- [ ] Cambiar plan manualmente
+- [ ] Historial de pagos por negocio
+- [ ] Notas internas de soporte
+
+#### 14.3 Gestión de planes y precios
+- [ ] Crear / editar / archivar planes globales
+- [ ] Cambiar precios sin afectar suscriptores actuales
+- [ ] Cupones de descuento globales para captación
+- [ ] Periodos de prueba configurables
+- [ ] Descuentos especiales para planes anuales
+
+#### 14.4 Comunicaciones globales
+- [ ] Broadcast email a todos los negocios (o segmento)
+- [ ] Anuncios en el dashboard de todos los negocios
+- [ ] Notificaciones de mantenimiento programado
+- [ ] Changelog de nuevas funcionalidades
+
+#### 14.5 Configuración técnica
+- [ ] Gestión de proveedores (Rebill, Flow.cl, Twilio, Resend)
+- [ ] Logs de webhooks y errores
+- [ ] Monitor de health del sistema
+- [ ] Feature flags por plan o por negocio
+- [ ] Gestión de integraciones y API keys
+
+#### 14.6 Soporte
+- [ ] Sistema de tickets de soporte
+- [ ] Historial de conversaciones por negocio
+- [ ] Base de conocimiento interna
+- [ ] Tiempo de respuesta promedio
+
+---
+
+### ⏳ FASE 15 — Configuración del Negocio (Settings)
+
+**Objetivo:** El negocio configura Frandora exactamente como necesita su industria.
+
+#### 15.1 Datos del negocio
+- [ ] Nombre, logo, banner, descripción
+- [ ] Categoría de negocio (barbería, spa, clínica, fitness, etc.)
+- [ ] Dirección, teléfono, email, sitio web
+- [ ] Múltiples ubicaciones (plan Business+)
+- [ ] Zona horaria y moneda
+- [ ] Redes sociales
+
+#### 15.2 Política de reservas
+- [ ] Tiempo mínimo de anticipación para reservar (ej: 2 horas antes)
+- [ ] Máximo de días hacia adelante para reservar (ej: 60 días)
+- [ ] Política de cancelación (ej: cancelar hasta 24h antes sin costo)
+- [ ] Cargo por cancelación tardía (% del servicio)
+- [ ] Cargo por no-show (% del servicio)
+- [ ] Requiere confirmación manual de la cita (no automática)
+- [ ] Acepta reservas fuera de horario (lista de espera)
+
+#### 15.3 Métodos de pago aceptados
+- [ ] Efectivo / Tarjeta / Transferencia / QR / Online
+- [ ] Configurar si se cobra al reservar (depósito o total) o al finalizar
+- [ ] Moneda del negocio
+- [ ] Configurar Flow.cl (API key propia o compartida con Frandora)
+
+#### 15.4 Notificaciones del negocio
+- [ ] Activar/desactivar cada tipo de notificación por canal
+- [ ] Personalizar textos de emails y SMS (templates editables)
+- [ ] Horario de silencio para no enviar SMS de madrugada
+- [ ] Firma personalizada en emails
+
+#### 15.5 Integraciones externas
+- [ ] Google Calendar sync
+- [ ] Google Analytics (insertar ID)
+- [ ] Meta Pixel (insertar ID)
+- [ ] Webhook personalizado (para integraciones propias)
+- [ ] Zapier / Make (plan Scale+)
+- [ ] QuickBooks / Xero exportación (plan Business+)
+
+---
+
+### ⏳ FASE 16 — IA y Automatización Avanzada
+
+**Objetivo:** Que Frandora trabaje solo mientras el negocio atiende clientes.
+
+#### 16.1 Asistente IA del negocio
+- [ ] Responde mensajes de clientes automáticamente (WhatsApp / email)
+- [ ] Convierte consultas en reservas confirmadas en < 60 segundos
+- [ ] Conoce el catálogo de servicios, precios y disponibilidad en tiempo real
+- [ ] Responde preguntas frecuentes del negocio (horarios, ubicación, precios)
+- [ ] Agenda/cancela/reprograma citas por conversación natural
+- [ ] Tono personalizable (formal, casual, etc.)
+- [ ] Historial de conversaciones en el panel
+
+#### 16.2 Automatizaciones configurables (Workflows)
+- [ ] Builder visual de flujos: trigger → condición → acción
+- [ ] Triggers: nueva reserva, cancelación, X días sin visita, cumpleaños, pago recibido
+- [ ] Acciones: enviar email, enviar SMS, crear tarea, añadir tag, enviar cupón
+- [ ] Templates de workflows preconfigurados por industria
+- [ ] Workflows activos/inactivos con estadísticas
+
+#### 16.3 Sugerencias IA para el negocio
+- [ ] "3 clientes sin cita en 30+ días — enviar campaña de reactivación"
+- [ ] "Tu tasa de no-show esta semana es 18% — activa recordatorio 2h antes"
+- [ ] "El martes 3-6pm es tu hora pico — considera precio dinámico"
+- [ ] "Producto X lleva 15 días sin venderse — considera un descuento"
+
+---
+
+### ⏳ FASE 17 — Pulido, Performance y Lanzamiento
+
+#### 17.1 Performance
+- [ ] Lighthouse ≥ 90 en todas las páginas (Performance, Accessibility, SEO)
+- [ ] Core Web Vitals en verde
+- [ ] Lazy loading de imágenes
+- [ ] CDN para assets (Cloudflare R2)
+- [ ] Edge caching en Vercel
+
+#### 17.2 Modo oscuro
+- [ ] Toggle dark/light en el dashboard
+- [ ] Persistencia por usuario (localStorage + preferencia del sistema)
+- [ ] Página pública respeta preferencia del sistema
+
+#### 17.3 PWA (Progressive Web App)
+- [ ] Instalar app desde el navegador (iPhone + Android)
+- [ ] Notificaciones push
+- [ ] Funcionalidad básica offline (ver agenda sin internet)
+- [ ] Splash screen y ícono de app con branding Frandora
+
+#### 17.4 App móvil nativa (futuro)
+- [ ] React Native con Expo
+- [ ] Mismas funcionalidades que el dashboard web
+- [ ] Publicar en App Store + Google Play
+- [ ] Notificaciones push nativas
+
+#### 17.5 Legal y cumplimiento
+- [ ] Términos y Condiciones para negocios
+- [ ] Términos para clientes finales (en página pública)
+- [ ] Política de Privacidad (GDPR/LGPD compatible)
+- [ ] Política de Cookies con banner
+- [ ] Política de Reembolsos
+- [ ] Acuerdo de Procesador de Datos (DPA)
+- [ ] Derecho al olvido (eliminar cuenta + datos)
+- [ ] Exportación de datos personales (GDPR art. 20)
+
+#### 17.6 SEO para páginas públicas
+- [ ] Meta tags dinámicos por negocio (slug.frandora.cl)
+- [ ] Open Graph y Twitter Cards con foto del negocio
+- [ ] Schema.org `LocalBusiness` + `Service` + `Review`
+- [ ] Sitemap dinámico de todos los negocios públicos
+- [ ] Google Business Profile: botón "Reservar" directo
+- [ ] Slug personalizable por el propietario (SEO-friendly)
+
+#### 17.7 Testing y QA
+- [ ] Tests E2E con Playwright (flujo completo de reserva)
+- [ ] Tests unitarios de servicios críticos
+- [ ] Beta con 10 negocios reales en Chile
+- [ ] Monitoreo de errores con Sentry
+- [ ] Analytics de comportamiento con PostHog
+
+#### 17.8 Launch público
+- [ ] Anuncio en redes sociales de Frandora
+- [ ] Plan de contenido: TikTok, Instagram, LinkedIn
+- [ ] Alianzas con gremios (barberos, esteticistas, etc.)
+- [ ] Programa de referidos para negocios (descuento por recomendar)
+- [ ] Product Hunt launch
+
+---
+
+## Industrias Objetivo (Personalización por tipo de negocio)
+
+| Industria | Personalización específica |
+|-----------|---------------------------|
+| Barberías | Vista de sillas, tiempo de corte, combo de servicios |
+| Salones de belleza | Galería de trabajos, extensiones, tinte |
+| Spas / Masajes | Salas de tratamiento, terapeutas, paquetes relajación |
+| Clínicas estéticas | SOAP notes, consentimientos, fotos antes/después |
+| Centros de fitness | Clases grupales, cupos, entrenadores, paquetes |
+| Yoga / Pilates | Series de sesiones, niveles, instructor favorito |
+| Tattoo / Piercing | Formulario de diseño, galería portfolio, depósito obligatorio |
+| Veterinarias | Ficha de mascota, historial médico, recordatorio vacunas |
+| Clínicas dentales / médicas | Historia clínica, recetas, código médico |
+| Fotógrafos / Videógrafos | Moodboard, entrega digital, sesiones |
+| Coaches / Consultores | Sesiones virtuales, Zoom link automático, notas de sesión |
+| Peluquerías caninas | Ficha de mascota, fotos antes/después |
+| Nutricionistas / Psicólogos | Formularios clínicos, notas de sesión, video llamada |
 
 ---
 
 ## Planes de Frandora
 
-| Plan | Precio mes | Staff | Ubicaciones |
-|------|-----------|-------|-------------|
-| Starter | $19 USD | 1 | 1 |
-| Professional | $49 USD | 3 | 1 |
-| Business | $99 USD | 10 | 3 |
-| Scale | $179 USD | ∞ | ∞ |
-| Enterprise | Custom | ∞ | ∞ |
-
-Descuento 20% pago anual. Trial gratuito 14 días sin tarjeta.
+| Característica | Starter | Professional | Business | Scale | Enterprise |
+|---|---|---|---|---|---|
+| **Precio mensual** | $19 USD | $49 USD | $99 USD | $179 USD | Custom |
+| **Precio anual (20% off)** | $15/m | $39/m | $79/m | $143/m | Custom |
+| Staff incluidos | 1 | 3 | 10 | ∞ | ∞ |
+| Ubicaciones | 1 | 1 | 3 | ∞ | ∞ |
+| Reservas/mes | 200 | 1.000 | ∞ | ∞ | ∞ |
+| Recordatorios auto | Email | Email+SMS | Email+SMS+WA | Email+SMS+WA | Email+SMS+WA |
+| Campañas marketing | ✗ | Email | Email+SMS | Email+SMS+WA | Custom |
+| POS | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Inventario | ✗ | ✓ | ✓ | ✓ | ✓ |
+| Gift cards | ✗ | ✓ | ✓ | ✓ | ✓ |
+| Membresías | ✗ | ✗ | ✓ | ✓ | ✓ |
+| Programa de lealtad | ✗ | ✗ | ✓ | ✓ | ✓ |
+| Formularios/consentimientos | ✗ | ✓ | ✓ | ✓ | ✓ |
+| Dominio propio | ✗ | ✗ | ✓ | ✓ | ✓ |
+| Widget embebible | ✗ | ✓ | ✓ | ✓ | ✓ |
+| Reportes avanzados | ✗ | ✓ | ✓ | ✓ | ✓ |
+| Comisiones staff | ✗ | ✗ | ✓ | ✓ | ✓ |
+| IA asistente | ✗ | ✗ | ✗ | ✓ | ✓ |
+| Workflows automáticos | ✗ | ✗ | ✓ | ✓ | ✓ |
+| API acceso | ✗ | ✗ | ✗ | ✓ | ✓ |
+| White-label | ✗ | ✗ | ✗ | ✗ | ✓ |
+| Soporte | Chat | Chat | Prioritario | Prioritario | Dedicado |
+| Prueba gratis | 14 días | 14 días | 14 días | 14 días | Demo |
 
 ---
 
-## Roles del Sistema
-
-| Rol | Acceso |
-|-----|--------|
-| SUPER_ADMIN | Todo Frandora |
-| BUSINESS_OWNER | Todo su negocio |
-| MANAGER | Agenda, clientes, reportes (sin facturación) |
-| STAFF | Solo su agenda y clientes asignados |
-| RECEPTIONIST | Crear/editar reservas y clientes |
-| CLIENT | Página pública de reservas |
-
----
-
-## Reglas Técnicas Críticas
+## Reglas Técnicas Críticas (Recordatorio)
 
 1. **Máximo 400 líneas por archivo** — sin excepciones
 2. **Mobile-first responsive** — 320px / 768px / 1024px
@@ -250,22 +655,27 @@ Descuento 20% pago anual. Trial gratuito 14 días sin tarjeta.
 4. **API routes delgadas** — lógica en `lib/services/`
 5. **No Stripe** — Flow.cl para cobros, Rebill para suscripciones SaaS
 6. **Nunca commitear `.env` o `.env.local`**
+7. **SIEMPRE `*.frandora.cl`** — cada módulo es un subdominio, nunca un path de frandora.cl
 
 ---
 
-## Identidad de Marca
+## Proveedores Clave
 
-| Color | Hex | Uso |
-|-------|-----|-----|
-| Deep Navy | `#0D1B2A` | Fondo, sidebar, botones primarios |
-| Sage Teal | `#6FA89E` | Acento, links, swoosh del logo |
-| Mist | `#CFE3DF` | Fondos suaves, hover |
-| Light Gray | `#F2F4F6` | Backgrounds claros |
-
-- **Tipografía:** Poppins (títulos) + Inter (cuerpo)
-- **Tagline:** SCHEDULE SMART. GROW MORE.
-- **Logo:** F cursiva blanca + swoosh teal + punto teal + estrella 4 puntas
+| Servicio | Proveedor | Por qué |
+|---|---|---|
+| Hosting | Vercel | Mejor para Next.js, CDN global |
+| Base de datos | Supabase | PostgreSQL + realtime + storage |
+| Auth | Clerk | Premium, seguro, fácil |
+| Suscripciones SaaS | Rebill | Líder en Latam para SaaS |
+| Pagos en reservas | Flow.cl | Pasarela chilena, todas las tarjetas |
+| Email transaccional | Resend | Moderno, $0/3K emails |
+| SMS/WhatsApp | Twilio | Estándar global, API confiable |
+| Cache/Colas | Upstash Redis | Serverless, paga por uso |
+| Storage | Cloudflare R2 | Sin egress fees |
+| Monitoreo errores | Sentry | Error tracking en tiempo real |
+| Analytics | PostHog | Open source, feature flags, grabaciones |
+| IA | Claude Haiku 4.5 | Asistente conversacional del negocio |
 
 ---
 
-*Última actualización: Fase 2 completada — preparando Fase 3 (Agenda)*
+*Última actualización: Fase 6 completada — iniciando Fase 7 (Marketing y Notificaciones)*
