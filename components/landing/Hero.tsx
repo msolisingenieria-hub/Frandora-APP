@@ -45,7 +45,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-10">
               <Link
-                href="https://app.frandora.cl/sign-up"
+                href="/sign-up"
                 className="btn-brand flex items-center justify-center gap-2 text-base"
               >
                 Empieza gratis 14 días

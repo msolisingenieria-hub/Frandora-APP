@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
+import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
 
 const NAV = [
   { href: "/dashboard",           label: "Inicio",       icon: "⊞" },
@@ -21,9 +22,11 @@ export function Sidebar() {
   return (
     <aside className="w-64 flex-shrink-0 bg-brand-navy flex flex-col min-h-screen">
       {/* Logo */}
-      <div className="px-6 py-6 border-b border-white/10">
-        <span className="text-white font-sans font-bold text-xl">Frandora</span>
-        <p className="text-brand-teal/60 text-[10px] tracking-[0.2em] uppercase mt-0.5">Panel del negocio</p>
+      <div className="px-5 py-5 border-b border-white/10">
+        <Link href="/dashboard">
+          <FrandoraLogo size="sm" variant="light" showTagline={false} />
+        </Link>
+        <p className="text-brand-teal/50 text-[9px] tracking-[0.2em] uppercase mt-2 pl-1">Panel del negocio</p>
       </div>
 
       {/* Nav */}

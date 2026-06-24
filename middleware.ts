@@ -16,7 +16,11 @@ const isProtectedRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const url = req.nextUrl;
   const hostname = req.headers.get("host") ?? "";
-  const isLocalhost = hostname.includes("localhost") || hostname.includes("127.0.0.1");
+  const isLocalhost =
+    hostname.includes("localhost") ||
+    hostname.includes("127.0.0.1") ||
+    hostname.includes(".app.github.dev") ||   // GitHub Codespaces
+    hostname.includes(".preview.app.github.dev");
 
   // En local: todo va a la raíz — landing en /, auth en /sign-in|sign-up
   if (isLocalhost) {

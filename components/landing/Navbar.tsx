@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
 
 const NAV_LINKS = [
   { label: "Funciones", href: "#features" },
@@ -30,10 +31,8 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <span className="text-2xl font-sans font-bold text-brand-navy group-hover:text-brand-teal transition-colors">
-            Frandora
-          </span>
+        <Link href="/" className="flex items-center">
+          <FrandoraLogo size="sm" variant="dark" />
         </Link>
 
         {/* Desktop links */}
@@ -52,13 +51,13 @@ export default function Navbar() {
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
           <Link
-            href="https://app.frandora.cl/sign-in"
+            href="/sign-in"
             className="text-sm font-body font-medium text-brand-navy hover:text-brand-teal transition-colors px-4 py-2"
           >
             Iniciar sesión
           </Link>
           <Link
-            href="https://app.frandora.cl/sign-up"
+            href="/sign-up"
             className="btn-brand text-sm py-2 px-5"
           >
             Empieza gratis
@@ -90,13 +89,13 @@ export default function Navbar() {
           ))}
           <hr className="border-brand-mist my-1" />
           <Link
-            href="https://app.frandora.cl/sign-in"
+            href="/sign-in"
             className="text-base font-body font-medium text-brand-navy py-1"
           >
             Iniciar sesión
           </Link>
           <Link
-            href="https://app.frandora.cl/sign-up"
+            href="/sign-up"
             className="btn-brand text-center text-sm"
           >
             Empieza gratis — 14 días sin costo

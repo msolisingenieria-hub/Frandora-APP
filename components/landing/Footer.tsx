@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
 
 const LINKS = {
   Producto: [
@@ -29,7 +30,7 @@ export default function Footer() {
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-block mb-4">
-              <span className="font-sans font-bold text-xl text-white">Frandora</span>
+              <FrandoraLogo size="sm" variant="light" />
             </Link>
             <p className="font-body text-white/40 text-sm leading-relaxed mb-5 max-w-xs">
               La plataforma más completa para negocios de servicios. Schedule Smart. Grow More.

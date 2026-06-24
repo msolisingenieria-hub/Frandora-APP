@@ -38,7 +38,7 @@ export default function CTAFinal() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="https://app.frandora.cl/sign-up"
+            href="/sign-up"
             className="btn-brand flex items-center justify-center gap-2 text-base px-8 py-3.5"
           >
             Crear mi cuenta gratis

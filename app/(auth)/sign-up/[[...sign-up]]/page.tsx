@@ -1,5 +1,6 @@
 import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
+import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
 
 const BENEFITS = [
   { emoji: "🎯", title: "14 días gratis", desc: "Sin tarjeta de crédito requerida" },
@@ -16,10 +17,7 @@ export default function SignUpPage() {
         <div className="absolute bottom-20 left-0 w-56 h-56 rounded-full bg-brand-teal/8 -translate-x-1/2" />
 
         <div className="relative z-10">
-          <Link href="/" className="inline-flex flex-col gap-0.5">
-            <span className="text-white font-sans font-bold text-2xl tracking-tight">Frandora</span>
-            <span className="text-brand-teal/70 text-xs tracking-[0.2em] uppercase">Schedule Smart. Grow More.</span>
-          </Link>
+          <Link href="/"><FrandoraLogo size="md" variant="light" showTagline /></Link>
         </div>
 
         <div className="relative z-10 space-y-8">
@@ -48,9 +46,8 @@ export default function SignUpPage() {
 
       {/* Panel derecho — Auth */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 min-h-screen bg-gradient-to-br from-brand-navy/5 via-white to-brand-mist/20">
-        <div className="lg:hidden mb-8 text-center">
-          <Link href="/" className="text-brand-navy font-sans font-bold text-2xl">Frandora</Link>
-          <p className="text-brand-teal text-xs tracking-widest uppercase mt-0.5">Schedule Smart. Grow More.</p>
+        <div className="lg:hidden mb-8 flex justify-center">
+          <Link href="/"><FrandoraLogo size="md" variant="dark" showTagline /></Link>
         </div>
 
         <div className="w-full max-w-sm">

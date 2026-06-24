@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
+
 type Step = { title: string; description: string };
 
 type Props = {
@@ -14,7 +17,7 @@ export function OnboardingProgress({ currentStep, totalSteps, steps }: Props) {
       <div className="max-w-2xl mx-auto">
         {/* Logo */}
         <div className="mb-6">
-          <span className="text-white font-sans font-bold text-xl">Frandora</span>
+          <Link href="/"><FrandoraLogo size="sm" variant="light" /></Link>
         </div>
 
         {/* Step info */}

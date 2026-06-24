@@ -75,7 +75,7 @@ export default function PricingCard({
 
       {/* CTA */}
       <Link
-        href="https://app.frandora.cl/sign-up"
+        href="/sign-up"
         className={`text-center text-sm font-sans font-semibold py-3 rounded-xl transition-all duration-200 mb-6 block ${
           isPopular
             ? "bg-brand-teal text-white hover:bg-brand-teal/90 shadow-teal"
