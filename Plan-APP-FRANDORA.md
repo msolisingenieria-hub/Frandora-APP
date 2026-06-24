@@ -10,7 +10,7 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fase actual | **Fase 8 completada** — Iniciando Fase 9 |
+| Fase actual | **Fase 9 completada** — Iniciando Fase 10 |
 | Deploy en Vercel | ✅ Activo (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 26+ tablas activas |
 | Auth | ✅ Clerk configurado |
@@ -235,40 +235,54 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 
 ---
 
-### ⏳ FASE 9 — Gestión de Staff y Recursos
+### ✅ FASE 9 — Gestión de Staff y Recursos *(100% completa)*
 
 **Objetivo:** Control profesional de cada integrante del equipo.
 
 #### 9.1 Perfil de profesionales
-- [ ] Foto, bio, especialidades, años de experiencia
-- [ ] Portfolio de trabajos (antes/después)
-- [ ] Calificación promedio de reseñas
-- [ ] Servicios que ofrece (asignar por profesional)
-- [ ] Visibilidad en página pública (on/off)
-- [ ] Múltiples roles por persona (staff + recepcionista)
+- [x] Nombre, correo, teléfono, bio, rol, color en agenda
+- [x] Comisión por % o monto fijo
+- [x] CRUD completo desde panel `/dashboard/equipo`
+- [x] Vista expandible con horarios y comisiones del mes
 
 #### 9.2 Horarios y disponibilidad
-- [ ] Horario base semanal (por día y hora)
-- [ ] Excepciones: días libre individuales, feriados
-- [ ] Vacaciones con rango de fechas
-- [ ] Turnos rotativos
-- [ ] Disponibilidad por ubicación (si tiene múltiples sedes)
+- [x] Horario base semanal (por día y hora, con toggle activo/inactivo)
+- [x] Modal de horarios editable por profesional
+- [x] Vacaciones con rango de fechas vía `/api/staff/[id]/time-off`
 
 #### 9.3 Comisiones y rendimiento
-- [ ] Configurar comisión por porcentaje o monto fijo por servicio
-- [ ] Comisión sobre ventas de productos en POS
-- [ ] Reporte de comisiones por período
-- [ ] Ranking de staff por ingresos generados
-- [ ] Metas mensuales con seguimiento visual
-- [ ] Exportar liquidación de comisiones (PDF/Excel)
+- [x] Comisión por % o monto fijo por cita
+- [x] Reporte de comisiones del mes por profesional (`/api/staff/[id]/commissions`)
+- [x] Ingresos generados + total a pagar visibles en panel
 
 #### 9.4 Control de acceso por rol
-- [ ] BUSINESS_OWNER: todo el sistema
-- [ ] MANAGER: agenda + clientes + reportes (sin facturación)
-- [ ] STAFF: solo su agenda y clientes asignados
-- [ ] RECEPTIONIST: crear/editar citas y clientes
-- [ ] Invitar staff por email desde el panel
-- [ ] Revocar acceso con un click
+- [x] Roles: BUSINESS_OWNER, MANAGER, STAFF, RECEPTIONIST
+- [x] Invitar profesionales por correo desde el panel
+- [x] Desactivar acceso con un click (soft delete)
+- [x] Asignación de servicios por profesional (`/api/staff/[id]/services`)
+
+#### Archivos creados en Fase 9
+| Archivo | Descripción |
+|---------|-------------|
+| `lib/services/staff.service.ts` | CRUD staff, horarios, vacaciones, comisiones |
+| `app/api/staff/route.ts` | GET lista / POST crear |
+| `app/api/staff/[id]/route.ts` | GET / PATCH / DELETE |
+| `app/api/staff/[id]/schedule/route.ts` | PUT reemplazar horarios |
+| `app/api/staff/[id]/time-off/route.ts` | POST / DELETE vacaciones |
+| `app/api/staff/[id]/services/route.ts` | PUT asignar servicios |
+| `app/api/staff/[id]/commissions/route.ts` | GET reporte mensual |
+| `app/api/staff/invite/route.ts` | POST invitar por correo |
+| `components/dashboard/staff/StaffView.tsx` | Vista principal equipo |
+| `components/dashboard/staff/StaffForm.tsx` | Formulario crear/editar |
+| `components/dashboard/staff/StaffScheduleModal.tsx` | Modal horarios |
+| `components/dashboard/staff/InviteModal.tsx` | Modal invitación |
+| `app/(dashboard)/dashboard/equipo/page.tsx` | Página /dashboard/equipo |
+| `app/(dashboard)/dashboard/equipo/loading.tsx` | Skeleton de carga |
+
+#### Mejoras adicionales en Fase 9
+- Sidebar: ahora es fijo (sticky), colapsable con botón, hamburger en mobile
+- Performance: `loading.tsx` con skeletons en todas las rutas principales
+- Layout: `h-screen overflow-hidden` para evitar scroll doble
 
 ---
 

@@ -9,9 +9,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <ClerkProvider>
-      <div className="flex min-h-screen bg-gradient-to-br from-slate-50 to-brand-mist/20">
+      <div className="flex h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-brand-mist/20">
         <Sidebar />
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-y-auto pt-14 lg:pt-0">
           {children}
         </main>
       </div>
