@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createPublicAppointment } from "@/lib/services/appointment.service";
+import { notifyConfirmacion } from "@/lib/services/notification.service";
 
 const BodySchema = z.object({
   businessId:  z.string().min(1),
@@ -29,6 +30,9 @@ export async function POST(req: NextRequest) {
       ...parsed.data,
       staffId: parsed.data.staffId ?? null,
     });
+
+    // Enviar confirmación sin bloquear la respuesta
+    notifyConfirmacion(result.appointmentId).catch(() => null);
 
     return NextResponse.json(result, { status: 201 });
   } catch (err) {

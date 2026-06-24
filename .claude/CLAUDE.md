@@ -115,6 +115,45 @@ ORDER · FLOW · INTELLIGENCE · TRUST · EXCLUSIVITY
 
 ---
 
+## Lenguaje — REGLA OBLIGATORIA
+
+**Todo texto visible al usuario debe estar en español chileno simple, directo y sin tecnicismos.**
+
+Esta regla aplica a: botones, labels, mensajes de error, placeholders, títulos, descripciones, tooltips, emails, SMS, y cualquier texto que el usuario final o el dueño del negocio pueda leer.
+
+### Vocabulario prohibido (usar la alternativa en su lugar)
+| ❌ No usar | ✅ Usar en cambio |
+|---|---|
+| Dashboard | Panel / Mi negocio |
+| Widget | Botón de reserva |
+| Webhook | Conexión automática |
+| Deploy / deployment | Publicar / subir |
+| Feature | Función / opción |
+| Toggle | Activar / desactivar |
+| Input / field | Casilla / campo |
+| Modal | Ventana emergente |
+| Backend / frontend | — (no mencionar) |
+| API / endpoint | — (no mencionar) |
+| Token | Código de acceso |
+| Cache | — (no mencionar) |
+| Slug | Dirección web / URL |
+| Plan (de software) | Plan / suscripción |
+| Staff | Equipo / profesionales |
+| Check-in | Marcar llegada |
+| Checkout | Cobrar / pagar |
+| Buffer | Tiempo entre citas |
+| Template | Plantilla |
+| Analytics | Estadísticas / reportes |
+| KPI | Indicador / resultado |
+
+### Tono de escritura
+- Hablar de tú (no de usted, no de vos)
+- Frases cortas y directas
+- Ejemplos concretos cuando ayuden ("Ej: 30 minutos")
+- Nunca explicar cómo funciona la tecnología — solo qué hace por el usuario
+
+---
+
 ## Reglas de Código — OBLIGATORIAS
 
 ### 1. Límite de 400 líneas por archivo
@@ -327,4 +366,4 @@ chore: tareas de mantenimiento
 9. Super admin
 10. Pulido y lanzamiento
 
-**Fase actual:** 0 — Setup inicial
+**Fase actual:** 7 — Marketing y notificaciones (en progreso)

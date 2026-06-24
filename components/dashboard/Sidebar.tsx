@@ -38,7 +38,7 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   {
     title: "Marketing",
     items: [
-      { href: "/dashboard/marketing", label: "Campañas",   icon: Megaphone, soon: true },
+      { href: "/dashboard/marketing", label: "Marketing",  icon: Megaphone },
       { href: "/dashboard/ajustes",   label: "Ajustes",    icon: Settings2 },
     ],
   },
