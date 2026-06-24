@@ -30,8 +30,8 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   {
     title: "Finanzas",
     items: [
-      { href: "/dashboard/ventas",    label: "Ventas & POS",  icon: Receipt,   soon: true },
-      { href: "/dashboard/reportes",  label: "Reportes",      icon: BarChart3, soon: true },
+      { href: "/dashboard/facturacion", label: "Facturación",  icon: Receipt },
+      { href: "/dashboard/reportes",   label: "Reportes",     icon: BarChart3, soon: true },
     ],
   },
   {
