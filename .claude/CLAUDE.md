@@ -27,7 +27,7 @@
 | Light Gray | `#F2F4F6` | hsl(210, 19%, 96%) | Fondo claro, inputs |
 | White | `#FFFFFF` | hsl(0, 0%, 100%) | Texto sobre oscuro, fondos |
 
-**Regla de uso de colores:** Deep Navy para fondo del sidebar y secciones oscuras. Sage Teal como color interactivo principal (botones, links, highlights). Mist para fondos suaves y estados hover. Nunca mezclar colores fuera de esta paleta.
+**Regla de uso de colores:** Deep Navy es el color principal e interactivo de toda la app (botones primarios, headers, sidebar, CTAs). Sage Teal como color de acento (íconos activos, checkmarks, detalles decorativos, highlights). El fondo predominante en toda la infraestructura es un gradiente elegante Navy → Blanco. Mist para fondos suaves y hover states. Nunca mezclar colores fuera de esta paleta.
 
 ### Tipografía
 
