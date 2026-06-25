@@ -22,6 +22,36 @@ const TIMEZONES = [
   "America/Lima", "America/Mexico_City", "America/Caracas", "America/Montevideo",
 ];
 
+// ─── Field fuera del componente principal para que no pierda el foco ───
+type FieldProps = {
+  label: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  icon?: React.ElementType;
+  type?: string;
+  placeholder?: string;
+};
+
+function Field({ label, value, onChange, icon: Icon, type = "text", placeholder }: FieldProps) {
+  return (
+    <div>
+      <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+        {label}
+      </label>
+      <div className="relative">
+        {Icon && <Icon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />}
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className={`w-full ${Icon ? "pl-9" : "pl-3"} pr-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal font-body text-brand-navy transition-colors`}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function AjustesPage() {
   const [form,    setForm]    = useState<FormData>(EMPTY);
   const [saving,  setSaving]  = useState(false);
@@ -32,16 +62,16 @@ export default function AjustesPage() {
     fetch("/api/settings").then((r) => r.json()).then((data) => {
       if (data && !data.error) {
         setForm({
-          name:      data.name        ?? "",
-          slug:      data.slug        ?? "",
+          name:        data.name        ?? "",
+          slug:        data.slug        ?? "",
           description: data.description ?? "",
-          phone:     data.phone       ?? "",
-          website:   data.website     ?? "",
-          timezone:  data.timezone    ?? "America/Santiago",
-          instagram: data.instagram   ?? "",
-          facebook:  data.facebook    ?? "",
-          tiktok:    data.tiktok      ?? "",
-          whatsapp:  data.whatsapp    ?? "",
+          phone:       data.phone       ?? "",
+          website:     data.website     ?? "",
+          timezone:    data.timezone    ?? "America/Santiago",
+          instagram:   data.instagram   ?? "",
+          facebook:    data.facebook    ?? "",
+          tiktok:      data.tiktok      ?? "",
+          whatsapp:    data.whatsapp    ?? "",
         });
       }
       setLoading(false);
@@ -54,38 +84,25 @@ export default function AjustesPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    const payload = {
-      name:        form.name        || undefined,
-      description: form.description || null,
-      phone:       form.phone       || null,
-      website:     form.website     || null,
-      timezone:    form.timezone,
-      instagram:   form.instagram   || null,
-      facebook:    form.facebook    || null,
-      tiktok:      form.tiktok      || null,
-      whatsapp:    form.whatsapp    || null,
-    };
     await fetch("/api/settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        name:        form.name        || undefined,
+        description: form.description || null,
+        phone:       form.phone       || null,
+        website:     form.website     || null,
+        timezone:    form.timezone,
+        instagram:   form.instagram   || null,
+        facebook:    form.facebook    || null,
+        tiktok:      form.tiktok      || null,
+        whatsapp:    form.whatsapp    || null,
+      }),
     });
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
-
-  const Field = ({ label, id, icon: Icon, type = "text" }: { label: string; id: keyof FormData; icon?: React.ElementType; type?: string }) => (
-    <div>
-      <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{label}</label>
-      <div className="relative">
-        {Icon && <Icon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />}
-        <input type={type} value={form[id]} onChange={set(id)}
-          className={`w-full ${Icon ? "pl-9" : "pl-3"} pr-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal font-body text-brand-navy`}
-        />
-      </div>
-    </div>
-  );
 
   if (loading) return (
     <div className="min-h-screen p-6 md:p-8 space-y-4"
@@ -111,16 +128,17 @@ export default function AjustesPage() {
         </div>
 
         <div className="space-y-6">
+
           {/* Datos básicos */}
           <section className="bg-white rounded-2xl border border-slate-100 shadow-brand p-6">
             <h2 className="text-brand-navy font-sans font-semibold text-sm uppercase tracking-wider mb-5">Datos del negocio</h2>
             <div className="space-y-4">
-              <Field label="Nombre del negocio *" id="name" />
+              <Field label="Nombre del negocio *" value={form.name} onChange={set("name")} />
               <div>
                 <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
                   URL pública (slug)
                 </label>
-                <div className="flex items-center gap-0 border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+                <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
                   <span className="px-3 py-2.5 text-xs text-slate-400 font-body border-r border-slate-200 whitespace-nowrap bg-slate-100">
                     slug.frandora.cl/
                   </span>
@@ -131,7 +149,7 @@ export default function AjustesPage() {
               <div>
                 <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Descripción</label>
                 <textarea value={form.description} onChange={set("description")} rows={3}
-                  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 font-body text-brand-navy resize-none" />
+                  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 font-body text-brand-navy resize-none transition-colors" />
               </div>
             </div>
           </section>
@@ -140,14 +158,14 @@ export default function AjustesPage() {
           <section className="bg-white rounded-2xl border border-slate-100 shadow-brand p-6">
             <h2 className="text-brand-navy font-sans font-semibold text-sm uppercase tracking-wider mb-5">Contacto</h2>
             <div className="space-y-4">
-              <Field label="Teléfono / WhatsApp de contacto" id="phone" icon={Phone} />
-              <Field label="Sitio web" id="website" icon={Globe} />
+              <Field label="Teléfono / WhatsApp de contacto" value={form.phone} onChange={set("phone")} icon={Phone} placeholder="+56 9 xxxx xxxx" />
+              <Field label="Sitio web" value={form.website} onChange={set("website")} icon={Globe} placeholder="https://minegocio.cl" />
               <div>
                 <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
                   <Clock size={12} className="inline mr-1" />Zona horaria
                 </label>
                 <select value={form.timezone} onChange={set("timezone")}
-                  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 font-body text-brand-navy">
+                  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 font-body text-brand-navy transition-colors">
                   {TIMEZONES.map((tz) => <option key={tz} value={tz}>{tz}</option>)}
                 </select>
               </div>
@@ -158,10 +176,10 @@ export default function AjustesPage() {
           <section className="bg-white rounded-2xl border border-slate-100 shadow-brand p-6">
             <h2 className="text-brand-navy font-sans font-semibold text-sm uppercase tracking-wider mb-5">Redes sociales</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Instagram" id="instagram" icon={Instagram} />
-              <Field label="Facebook" id="facebook" icon={Facebook} />
-              <Field label="TikTok" id="tiktok" />
-              <Field label="WhatsApp Business" id="whatsapp" icon={Phone} />
+              <Field label="Instagram" value={form.instagram} onChange={set("instagram")} icon={Instagram} placeholder="@minegocio" />
+              <Field label="Facebook" value={form.facebook} onChange={set("facebook")} icon={Facebook} placeholder="facebook.com/minegocio" />
+              <Field label="TikTok" value={form.tiktok} onChange={set("tiktok")} placeholder="@minegocio" />
+              <Field label="WhatsApp Business" value={form.whatsapp} onChange={set("whatsapp")} icon={Phone} placeholder="+56 9 xxxx xxxx" />
             </div>
           </section>
 
@@ -189,6 +207,7 @@ export default function AjustesPage() {
               "Guardar cambios"
             )}
           </button>
+
         </div>
       </div>
     </div>
