@@ -1,6 +1,7 @@
 import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
+import { ROOT_URL, SIGN_UP_URL } from "@/lib/urls";
 
 const FEATURES = [
   "Agenda inteligente con recordatorios automáticos",
@@ -26,7 +27,7 @@ export default function SignInPage() {
           style={{ background: "linear-gradient(to bottom, transparent, rgba(111,168,158,0.2), transparent)" }} />
 
         <div className="relative z-10">
-          <Link href="/"><FrandoraLogo size="md" variant="light" showTagline /></Link>
+          <Link href={ROOT_URL}><FrandoraLogo size="md" variant="light" showTagline /></Link>
         </div>
 
         <div className="relative z-10 space-y-8">
@@ -53,14 +54,14 @@ export default function SignInPage() {
       <div className="flex-1 flex flex-col items-center justify-center p-6 min-h-screen bg-gradient-to-br from-brand-navy/5 via-white to-brand-mist/20">
         {/* Logo móvil */}
         <div className="lg:hidden mb-8 flex justify-center">
-          <Link href="/"><FrandoraLogo size="md" variant="dark" showTagline /></Link>
+          <Link href={ROOT_URL}><FrandoraLogo size="md" variant="dark" showTagline /></Link>
         </div>
 
         <div className="w-full max-w-sm">
           <SignIn />
           <p className="mt-6 text-center text-sm text-slate-500">
             ¿No tienes cuenta?{" "}
-            <Link href="/sign-up" className="text-brand-navy hover:text-brand-teal font-semibold transition-colors">
+            <Link href={SIGN_UP_URL} className="text-brand-navy hover:text-brand-teal font-semibold transition-colors">
               Empieza gratis 14 días
             </Link>
           </p>

@@ -1,6 +1,7 @@
 import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
+import { ROOT_URL, SIGN_IN_URL } from "@/lib/urls";
 
 const BENEFITS = [
   { emoji: "🎯", title: "14 días gratis", desc: "Sin tarjeta de crédito requerida" },
@@ -24,7 +25,7 @@ export default function SignUpPage() {
           style={{ background: "linear-gradient(to bottom, transparent, rgba(111,168,158,0.2), transparent)" }} />
 
         <div className="relative z-10">
-          <Link href="/"><FrandoraLogo size="md" variant="light" showTagline /></Link>
+          <Link href={ROOT_URL}><FrandoraLogo size="md" variant="light" showTagline /></Link>
         </div>
 
         <div className="relative z-10 space-y-8">
@@ -54,14 +55,14 @@ export default function SignUpPage() {
       {/* Panel derecho — Auth */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 min-h-screen bg-gradient-to-br from-brand-navy/5 via-white to-brand-mist/20">
         <div className="lg:hidden mb-8 flex justify-center">
-          <Link href="/"><FrandoraLogo size="md" variant="dark" showTagline /></Link>
+          <Link href={ROOT_URL}><FrandoraLogo size="md" variant="dark" showTagline /></Link>
         </div>
 
         <div className="w-full max-w-sm">
           <SignUp />
           <p className="mt-6 text-center text-sm text-slate-500">
             ¿Ya tienes cuenta?{" "}
-            <Link href="/sign-in" className="text-brand-navy hover:text-brand-teal font-semibold transition-colors">
+            <Link href={SIGN_IN_URL} className="text-brand-navy hover:text-brand-teal font-semibold transition-colors">
               Inicia sesión
             </Link>
           </p>

@@ -6,6 +6,7 @@ import { getSettings, updateSettings } from "@/lib/services/settings.service";
 
 const schema = z.object({
   name:        z.string().min(1).optional(),
+  slug:        z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).optional(),
   description: z.string().optional().nullable(),
   phone:       z.string().optional().nullable(),
   website:     z.string().optional().nullable(),
@@ -38,6 +39,12 @@ export async function PATCH(req: Request) {
   const parsed = schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
 
-  await updateSettings(businessId, parsed.data);
-  return NextResponse.json({ success: true });
+  try {
+    await updateSettings(businessId, parsed.data);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "No se pudieron guardar los cambios";
+    const status = message.includes("ya esta en uso") ? 409 : 400;
+    return NextResponse.json({ error: message }, { status });
+  }
 }

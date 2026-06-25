@@ -4,6 +4,26 @@ import type { NextRequest } from "next/server";
 
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "frandora.cl";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.frandora.cl";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? `https://api.${ROOT_DOMAIN}`;
+
+function copySearch(from: URL, to: URL) {
+  to.search = from.search;
+  return to;
+}
+
+function redirectRootBookingPath(url: URL) {
+  const segments = url.pathname.split("/").filter(Boolean);
+
+  if (segments[0] !== "booking") return null;
+  if (segments[1] === "widget" && segments[2]) {
+    return copySearch(url, new URL(`/widget/${segments[2]}`, `https://${segments[2]}.${ROOT_DOMAIN}`));
+  }
+  if (!segments[1]) return null;
+
+  const slug = segments[1];
+  const path = segments.slice(2).join("/");
+  return copySearch(url, new URL(path ? `/${path}` : "/", `https://${slug}.${ROOT_DOMAIN}`));
+}
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
@@ -15,7 +35,11 @@ const isProtectedRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const url = req.nextUrl;
-  const hostname = req.headers.get("host") ?? "";
+  const rawHostname =
+    req.headers.get("x-forwarded-host") ??
+    req.headers.get("host") ??
+    "";
+  const hostname = rawHostname.split(":")[0] ?? "";
   const isLocalhost =
     hostname.includes("localhost") ||
     hostname.includes("127.0.0.1") ||
@@ -40,7 +64,31 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   const isRootDomain = hostname === ROOT_DOMAIN || hostname === `www.${ROOT_DOMAIN}`;
 
   // ── 1. frandora.cl → Landing ──
-  if (isRootDomain) return NextResponse.next();
+  if (isRootDomain) {
+    const bookingRedirect = redirectRootBookingPath(url);
+    if (bookingRedirect) return NextResponse.redirect(bookingRedirect);
+
+    if (
+      url.pathname.startsWith("/dashboard") ||
+      url.pathname.startsWith("/onboarding") ||
+      url.pathname.startsWith("/settings") ||
+      url.pathname.startsWith("/sign-in") ||
+      url.pathname.startsWith("/sign-up")
+    ) {
+      return NextResponse.redirect(copySearch(url, new URL(url.pathname, APP_URL)));
+    }
+
+    if (url.pathname.startsWith("/admin")) {
+      const adminPath = url.pathname.replace(/^\/admin/, "") || "/";
+      return NextResponse.redirect(copySearch(url, new URL(adminPath, `https://admin.${ROOT_DOMAIN}`)));
+    }
+
+    if (url.pathname.startsWith("/api")) {
+      return NextResponse.redirect(copySearch(url, new URL(url.pathname, API_URL)));
+    }
+
+    return NextResponse.next();
+  }
 
   // ── 2. app.frandora.cl → Dashboard ──
   if (subdomain === "app") {
@@ -52,7 +100,10 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
         return NextResponse.redirect(signInUrl);
       }
     }
-    return NextResponse.rewrite(new URL(`/app${url.pathname}`, req.url));
+    if (url.pathname === "/") {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+    return NextResponse.next();
   }
 
   // ── 3. admin.frandora.cl → Super Admin ──
@@ -63,7 +114,15 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   }
 
   // ── 4. [slug].frandora.cl → Página pública del negocio ──
+  if (subdomain === "api") {
+    if (url.pathname.startsWith("/api")) return NextResponse.next();
+    return NextResponse.rewrite(new URL(`/api${url.pathname}`, req.url));
+  }
+
   if (subdomain && subdomain !== "www") {
+    if (url.pathname.startsWith("/widget/")) {
+      return NextResponse.rewrite(new URL(`/booking${url.pathname}`, req.url));
+    }
     return NextResponse.rewrite(new URL(`/booking/${subdomain}${url.pathname}`, req.url));
   }
 

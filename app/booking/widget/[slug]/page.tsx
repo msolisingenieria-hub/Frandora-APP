@@ -3,6 +3,7 @@
 // Esto renderiza el formulario de reserva en modo compacto sin el layout del dashboard
 
 import { prisma } from "@/lib/db/client";
+import { businessUrl } from "@/lib/urls";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -21,7 +22,7 @@ export default async function WidgetPage({ params }: { params: Promise<{ slug: s
   if (!business) redirect("/");
 
   // El widget redirige al flujo de reserva completo en la misma ventana/iframe
-  const bookingUrl = `/booking/${slug}`;
+  const bookingUrl = businessUrl(slug);
 
   return (
     <div style={{ margin: 0, padding: 0, fontFamily: "'Inter', sans-serif", background: "transparent" }}>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { SIGN_UP_URL } from "@/lib/urls";
 
 interface PricingCardProps {
   name: string;
@@ -75,7 +76,7 @@ export default function PricingCard({
 
       {/* CTA */}
       <Link
-        href="/sign-up"
+        href={SIGN_UP_URL}
         className={`text-center text-sm font-sans font-semibold py-3 rounded-xl transition-all duration-200 mb-6 block ${
           isPopular
             ? "bg-brand-teal text-white hover:bg-brand-teal/90 shadow-teal"

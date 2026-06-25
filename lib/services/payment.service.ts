@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/client";
 import { createFlowPayment, getFlowPaymentStatus, getFlowPaymentUrl } from "@/lib/flow/client";
+import { API_URL, businessUrl } from "@/lib/urls";
 
 export type InitiateBookingPaymentInput = {
   appointmentId: string;
@@ -7,7 +8,6 @@ export type InitiateBookingPaymentInput = {
   clientEmail: string;
   amount: number;
   description: string;
-  baseUrl: string;
 };
 
 export type BookingPaymentResult = {
@@ -20,15 +20,20 @@ export type BookingPaymentResult = {
 export async function initiateBookingPayment(
   input: InitiateBookingPaymentInput
 ): Promise<BookingPaymentResult> {
-  const { appointmentId, businessId, clientEmail, amount, description, baseUrl } = input;
+  const { appointmentId, businessId, clientEmail, amount, description } = input;
+  const business = await prisma.business.findUnique({
+    where: { id: businessId },
+    select: { slug: true },
+  });
+  if (!business) throw new Error("Negocio no encontrado");
 
   const response = await createFlowPayment({
     commerceOrder: appointmentId,
     subject: description,
     amount,
     email: clientEmail,
-    urlConfirmation: `${baseUrl}/api/webhooks/flow`,
-    urlReturn: `${baseUrl}/booking/confirmacion?appointmentId=${appointmentId}`,
+    urlConfirmation: `${API_URL}/webhooks/flow`,
+    urlReturn: `${businessUrl(business.slug)}?appointmentId=${appointmentId}`,
   });
 
   // Guardar el pago en la BD

@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { Copy, Check, Code, ExternalLink } from "lucide-react";
+import { businessUrl, businessWidgetUrl } from "@/lib/urls";
 
 type Props = { slug: string };
 
 export function WidgetPanel({ slug }: Props) {
   const [copied, setCopied] = useState<"iframe" | "script" | null>(null);
 
-  const widgetUrl = `https://${slug}.frandora.cl/widget/${slug}`;
-  const bookingUrl = `https://${slug}.frandora.cl`;
+  const widgetUrl = businessWidgetUrl(slug);
+  const bookingUrl = businessUrl(slug);
 
   const iframeCode = `<iframe
   src="${widgetUrl}"

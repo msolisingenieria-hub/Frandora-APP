@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, CalendarCheck, Star } from "lucide-react";
 import BookingMockup from "./BookingMockup";
+import { SIGN_UP_URL } from "@/lib/urls";
 
 export default function Hero() {
   return (
@@ -45,7 +46,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-10">
               <Link
-                href="/sign-up"
+                href={SIGN_UP_URL}
                 className="btn-brand flex items-center justify-center gap-2 text-base"
               >
                 Empieza gratis 14 días

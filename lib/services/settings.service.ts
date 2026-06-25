@@ -42,6 +42,16 @@ export async function getSettings(businessId: string): Promise<SettingsData> {
 export async function updateSettings(businessId: string, data: SettingsData) {
   const businessUpdate: Record<string, unknown> = {};
   if (data.name        !== undefined) businessUpdate.name        = data.name;
+  if (data.slug        !== undefined) {
+    const existing = await prisma.business.findUnique({
+      where: { slug: data.slug },
+      select: { id: true },
+    });
+    if (existing && existing.id !== businessId) {
+      throw new Error("La URL publica ya esta en uso");
+    }
+    businessUpdate.slug = data.slug;
+  }
   if (data.description !== undefined) businessUpdate.description = data.description;
   if (data.phone       !== undefined) businessUpdate.phone       = data.phone;
   if (data.website     !== undefined) businessUpdate.website     = data.website;

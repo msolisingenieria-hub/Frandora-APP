@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { SIGN_UP_URL } from "@/lib/urls";
 
 export default function CTAFinal() {
   return (
@@ -38,7 +39,7 @@ export default function CTAFinal() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/sign-up"
+            href={SIGN_UP_URL}
             className="btn-brand flex items-center justify-center gap-2 text-base px-8 py-3.5"
           >
             Crear mi cuenta gratis

@@ -48,12 +48,25 @@ export async function getAvailableSlots({
   const dayOfWeek = getDay(date); // 0=Dom, 6=Sáb
 
   // 1. Obtener servicio para saber la duración
-  const service = await prisma.service.findUnique({
-    where: { id: serviceId },
-    select: { duration: true, isActive: true },
+  const service = await prisma.service.findFirst({
+    where: { id: serviceId, businessId, isActive: true, isOnline: true },
+    select: { duration: true },
   });
-  if (!service || !service.isActive) return [];
+  if (!service) return [];
   const duration = service.duration;
+
+  if (staffId) {
+    const staff = await prisma.staffMember.findFirst({
+      where: {
+        id: staffId,
+        businessId,
+        isActive: true,
+        services: { some: { serviceId } },
+      },
+      select: { id: true },
+    });
+    if (!staff) return [];
+  }
 
   // 2. Obtener horario de la ubicación para ese día
   const location = await prisma.businessLocation.findFirst({

@@ -169,7 +169,7 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 - [ ] Venta desde `[slug].frandora.cl` *(Fase 13 — Página pública premium)*
 
 #### 7.9 Reseñas y Reputación — ✅ Completado
-- [x] Formulario público de reseña: `/booking/[slug]/opinion/[appointmentId]`
+- [x] Formulario público de reseña: `[slug].frandora.cl/opinion/[appointmentId]`
 - [x] 1-5 estrellas + comentario + nombre + email opcional
 - [x] Reseñas verificadas (vinculadas a cita real)
 - [x] Panel en `/dashboard/marketing` → tab Opiniones
@@ -696,4 +696,4 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 
 ---
 
-*Última actualización: Fase 8 completada — iniciando Fase 9 (Gestión de Staff y Recursos)*
+*Última actualización: Fase 9 completada — iniciando Fase 10 (Reportes y Analytics)*

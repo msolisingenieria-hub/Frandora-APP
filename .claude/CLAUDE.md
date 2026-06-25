@@ -7,7 +7,7 @@
 - **Repositorio:** `Frandora-APP`
 - **URL pública de reservas:** `https://[slug].frandora.cl` — Ej: `https://barberia-don-pepe.frandora.cl`
 - **Panel del negocio:** `https://app.frandora.cl/dashboard`
-- **Super Admin:** `https://app.frandora.cl/admin`
+- **Super Admin:** `https://admin.frandora.cl`
 - **Landing pública:** `https://frandora.cl`
 
 ---
@@ -197,6 +197,69 @@ types/         ← Tipos TypeScript globales
 
 ---
 
+## Reglas de Deploy, Push y Vercel — OBLIGATORIAS
+
+### Verificacion antes de push
+Antes de hacer push o abrir PR debe pasar:
+
+```bash
+npm run verify
+```
+
+Si el cambio toca UI publica, landing, reservas, auth, middleware o responsive, tambien debe pasar:
+
+```bash
+npm run verify:e2e
+```
+
+`npm run build` requiere variables reales de Clerk y base de datos. Si falla por variables faltantes, no se debe subir el cambio hasta configurar esas variables localmente o confirmar que Vercel las tiene.
+
+### Variables obligatorias en Vercel
+Vercel debe tener, como minimo:
+
+```env
+NEXT_PUBLIC_APP_URL=https://app.frandora.cl
+NEXT_PUBLIC_API_URL=https://api.frandora.cl
+NEXT_PUBLIC_ROOT_DOMAIN=frandora.cl
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+DATABASE_URL=
+DIRECT_URL=
+REBILL_API_KEY=
+REBILL_ORGANIZATION_ID=
+REBILL_WEBHOOK_SECRET=
+FLOW_API_KEY=
+FLOW_SECRET_KEY=
+FLOW_API_URL=https://sandbox.flow.cl/api
+RESEND_API_KEY=
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+```
+
+### URLs de produccion
+En produccion, los modulos se exponen por subdominio:
+
+- `frandora.cl` - landing publica.
+- `app.frandora.cl` - panel, auth y onboarding.
+- `admin.frandora.cl` - super admin.
+- `api.frandora.cl` - API y webhooks.
+- `[slug].frandora.cl` - pagina publica del negocio.
+
+No crear enlaces publicos a `frandora.cl/booking/...`, `frandora.cl/dashboard`, `frandora.cl/sign-in` o `frandora.cl/sign-up`. Esos paths solo son implementacion interna de Next o desarrollo local. Usar siempre `lib/urls.ts` para generar URLs.
+
+### Seguridad multi-tenant
+- Toda API autenticada debe obtener `businessId` con `getBusinessId(userId)`.
+- No usar `findUnique({ id })` para modificar citas, pagos, clientes, equipo, servicios, productos, cupones o gift cards sin filtrar por `businessId`.
+- Las reservas publicas deben revalidar en backend que servicio/profesional pertenecen al negocio, que el profesional ofrece el servicio, que el horario no esta tomado y que no esta en el pasado.
+
+### Dependencias y pagos
+- No introducir Stripe.
+- Suscripciones SaaS: Rebill.
+- Pagos de reservas: Flow.cl.
+- No correr `npm audit fix --force` sin revisar, porque puede subir versiones mayores de Next/React o librerias criticas.
+
+---
+
 ## Estructura de Directorios
 
 ```
@@ -220,7 +283,8 @@ types/         ← Tipos TypeScript globales
 ├── lib/
 │   ├── db/                     ← Prisma client singleton
 │   ├── auth/                   ← Clerk helpers
-│   ├── stripe/                 ← Stripe helpers + webhooks
+│   ├── rebill/                 ← Rebill helpers + webhooks
+│   ├── flow/                   ← Flow.cl helpers + pagos de reservas
 │   ├── email/                  ← Resend + templates
 │   ├── sms/                    ← Twilio helpers
 │   └── services/               ← Lógica de negocio
@@ -333,6 +397,7 @@ CLOUDFLARE_R2_BUCKET_NAME=
 
 # App
 NEXT_PUBLIC_APP_URL=https://app.frandora.cl
+NEXT_PUBLIC_API_URL=https://api.frandora.cl
 NEXT_PUBLIC_ROOT_DOMAIN=frandora.cl
 ```
 
@@ -366,4 +431,4 @@ chore: tareas de mantenimiento
 9. Super admin
 10. Pulido y lanzamiento
 
-**Fase actual:** 7 — Marketing y notificaciones (en progreso)
+**Fase actual:** Fase 9 completada — iniciando Fase 10 (Reportes y Analytics)

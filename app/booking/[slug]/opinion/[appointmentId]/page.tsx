@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Star } from "lucide-react";
+import { businessUrl } from "@/lib/urls";
 
 type ApptInfo = {
   businessName: string;
@@ -78,7 +79,7 @@ export default function OpinionPage({
           <p className="text-slate-400 font-body text-sm mb-6">
             Tu comentario ayuda a {businessName} a seguir mejorando.
           </p>
-          <a href={`/booking/${resolved?.slug ?? ""}`}
+          <a href={resolved ? businessUrl(resolved.slug) : "/"}
             className="block w-full py-3 rounded-xl text-sm font-sans font-semibold text-white text-center"
             style={{ background: "linear-gradient(135deg,#0D1B2A,#1a3347)" }}>
             Volver al inicio

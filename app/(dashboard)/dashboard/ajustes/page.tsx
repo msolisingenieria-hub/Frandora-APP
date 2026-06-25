@@ -57,6 +57,7 @@ export default function AjustesPage() {
   const [saving,  setSaving]  = useState(false);
   const [saved,   setSaved]   = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/settings").then((r) => r.json()).then((data) => {
@@ -82,24 +83,41 @@ export default function AjustesPage() {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm((p) => ({ ...p, [key]: e.target.value }));
 
+  const setSlug = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const slug = e.target.value
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+    setForm((p) => ({ ...p, slug }));
+  };
+
   const handleSave = async () => {
     setSaving(true);
-    await fetch("/api/settings", {
+    setError(null);
+    const payload = {
+      name:        form.name        || undefined,
+      slug:        form.slug        || undefined,
+      description: form.description || null,
+      phone:       form.phone       || null,
+      website:     form.website     || null,
+      timezone:    form.timezone,
+      instagram:   form.instagram   || null,
+      facebook:    form.facebook    || null,
+      tiktok:      form.tiktok      || null,
+      whatsapp:    form.whatsapp    || null,
+    };
+    const res = await fetch("/api/settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name:        form.name        || undefined,
-        description: form.description || null,
-        phone:       form.phone       || null,
-        website:     form.website     || null,
-        timezone:    form.timezone,
-        instagram:   form.instagram   || null,
-        facebook:    form.facebook    || null,
-        tiktok:      form.tiktok      || null,
-        whatsapp:    form.whatsapp    || null,
-      }),
+      body: JSON.stringify(payload),
     });
     setSaving(false);
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      setError(data?.error || "No se pudieron guardar los cambios");
+      return;
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
@@ -142,7 +160,7 @@ export default function AjustesPage() {
                   <span className="px-3 py-2.5 text-xs text-slate-400 font-body border-r border-slate-200 whitespace-nowrap bg-slate-100">
                     slug.frandora.cl/
                   </span>
-                  <input type="text" value={form.slug} onChange={set("slug")}
+                  <input type="text" value={form.slug} onChange={setSlug}
                     className="flex-1 px-3 py-2.5 text-sm bg-slate-50 font-body text-brand-navy focus:outline-none" />
                 </div>
               </div>
@@ -196,6 +214,9 @@ export default function AjustesPage() {
           </section>
 
           {/* Guardar */}
+          {error && (
+            <p className="text-sm text-red-500 font-body text-center">{error}</p>
+          )}
           <button onClick={handleSave} disabled={saving}
             className="w-full py-3.5 rounded-2xl font-sans font-bold text-sm text-white flex items-center justify-center gap-2 transition-all hover:-translate-y-px disabled:opacity-60"
             style={{ background: "linear-gradient(135deg, #0D1B2A, #1a3347)" }}>

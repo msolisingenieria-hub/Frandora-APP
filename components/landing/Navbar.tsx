@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
+import { SIGN_IN_URL, SIGN_UP_URL } from "@/lib/urls";
 
 const NAV_LINKS = [
   { label: "Funciones", href: "#features" },
@@ -51,13 +52,13 @@ export default function Navbar() {
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
           <Link
-            href="/sign-in"
+            href={SIGN_IN_URL}
             className="text-sm font-body font-medium text-brand-navy hover:text-brand-teal transition-colors px-4 py-2"
           >
             Iniciar sesión
           </Link>
           <Link
-            href="/sign-up"
+            href={SIGN_UP_URL}
             className="btn-brand text-sm py-2 px-5"
           >
             Empieza gratis
@@ -89,13 +90,13 @@ export default function Navbar() {
           ))}
           <hr className="border-brand-mist my-1" />
           <Link
-            href="/sign-in"
+            href={SIGN_IN_URL}
             className="text-base font-body font-medium text-brand-navy py-1"
           >
             Iniciar sesión
           </Link>
           <Link
-            href="/sign-up"
+            href={SIGN_UP_URL}
             className="btn-brand text-center text-sm"
           >
             Empieza gratis — 14 días sin costo

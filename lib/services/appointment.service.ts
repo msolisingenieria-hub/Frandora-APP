@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/db/client";
+import { Prisma } from "@prisma/client";
 import { addMinutes } from "date-fns";
 
 export type CreatePublicAppointmentInput = {
   businessId: string;
   serviceId: string;
   staffId: string | null;
-  startTime: string;        // ISO string
+  startTime: string;
   clientName: string;
   clientEmail: string;
   clientPhone: string;
@@ -20,73 +21,110 @@ export type AppointmentListItem = {
   endTime: Date;
   totalPrice: number;
   source: string;
-  staffId:       string | null;
-  staffName:     string | null;
-  staffColor:    string | null;
+  staffId: string | null;
+  staffName: string | null;
+  staffColor: string | null;
   internalNotes: string | null;
-  businessName:  string | null;
+  businessName: string | null;
   services: { name: string; duration: number; price: number }[];
-  clientName:  string | null;
+  clientName: string | null;
   clientPhone: string | null;
 };
 
-// Crea una cita desde el flujo público de reservas
-export async function createPublicAppointment(
-  input: CreatePublicAppointmentInput
-) {
+export async function createPublicAppointment(input: CreatePublicAppointmentInput) {
   const { businessId, serviceId, staffId, startTime, clientName, clientEmail, clientPhone, notes } = input;
-
-  // Obtener el servicio
-  const service = await prisma.service.findUnique({
-    where: { id: serviceId },
-    select: { id: true, name: true, duration: true, price: true },
-  });
-  if (!service) throw new Error("Servicio no encontrado");
-
   const start = new Date(startTime);
-  const end   = addMinutes(start, service.duration);
 
-  // Buscar o crear Client (usa campo "name" según schema)
-  let client = await prisma.client.findFirst({
-    where: { businessId, email: clientEmail || undefined },
-  });
-  if (!client) {
-    client = await prisma.client.create({
-      data: {
+  if (Number.isNaN(start.getTime())) {
+    throw new Error("Fecha u horario invalido");
+  }
+
+  if (start < new Date()) {
+    throw new Error("No puedes reservar un horario que ya paso");
+  }
+
+  const appointment = await prisma.$transaction(async (tx) => {
+    const service = await tx.service.findFirst({
+      where: { id: serviceId, businessId, isActive: true, isOnline: true },
+      select: { id: true, name: true, duration: true, price: true },
+    });
+    if (!service) throw new Error("Servicio no disponible");
+
+    const end = addMinutes(start, service.duration);
+    const staff = staffId
+      ? await tx.staffMember.findFirst({
+          where: {
+            id: staffId,
+            businessId,
+            isActive: true,
+            services: { some: { serviceId } },
+          },
+          select: { id: true, name: true },
+        })
+      : null;
+
+    if (staffId && !staff) {
+      throw new Error("Profesional no disponible para este servicio");
+    }
+
+    const conflictingAppointment = await tx.appointment.findFirst({
+      where: {
+        businessId,
+        ...(staffId ? { staffId } : {}),
+        status: { notIn: ["CANCELED", "NO_SHOW"] },
+        startTime: { lt: end },
+        endTime: { gt: start },
+      },
+      select: { id: true },
+    });
+
+    if (conflictingAppointment) {
+      throw new Error("Este horario ya no esta disponible");
+    }
+
+    const client = await tx.client.upsert({
+      where: { businessId_email: { businessId, email: clientEmail } },
+      update: {
+        name: clientName.trim(),
+        phone: clientPhone || null,
+      },
+      create: {
         businessId,
         name: clientName.trim(),
-        email: clientEmail || null,
+        email: clientEmail,
         phone: clientPhone || null,
       },
     });
-  }
 
-  // Crear la cita con los servicios y cliente anidados
-  const appointment = await prisma.appointment.create({
-    data: {
-      businessId,
-      staffId: staffId || null,
-      status: "PENDING",
-      startTime: start,
-      endTime: end,
-      totalPrice: service.price,
-      notes: notes || null,
-      source: "ONLINE",
-      services: {
-        create: {
-          serviceId: service.id,
-          serviceName: service.name,   // campo requerido por schema
-          price: service.price,
-          duration: service.duration,
+    return tx.appointment.create({
+      data: {
+        businessId,
+        staffId: staff?.id ?? null,
+        status: "PENDING",
+        startTime: start,
+        endTime: end,
+        totalPrice: service.price,
+        notes: notes || null,
+        source: "ONLINE",
+        services: {
+          create: {
+            serviceId: service.id,
+            serviceName: service.name,
+            price: service.price,
+            duration: service.duration,
+          },
+        },
+        clients: {
+          create: { clientId: client.id },
         },
       },
-      clients: {
-        create: { clientId: client.id },
+      include: {
+        staff: { select: { name: true } },
+        services: { select: { serviceName: true } },
       },
-    },
-    include: {
-      staff: { select: { name: true } },
-    },
+    });
+  }, {
+    isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
   });
 
   return {
@@ -95,11 +133,10 @@ export async function createPublicAppointment(
     startTime: appointment.startTime.toISOString(),
     endTime: appointment.endTime.toISOString(),
     staffName: appointment.staff?.name ?? "Cualquier profesional",
-    serviceName: service.name,
+    serviceName: appointment.services[0]?.serviceName ?? "Servicio",
   };
 }
 
-// Lista citas del negocio para el dashboard (rango de fechas)
 export async function getAppointmentsForDashboard(
   businessId: string,
   from: Date,
@@ -112,7 +149,7 @@ export async function getAppointmentsForDashboard(
     },
     include: {
       business: { select: { name: true } },
-      staff:    { select: { id: true, name: true, color: true } },
+      staff: { select: { id: true, name: true, color: true } },
       services: {
         select: {
           serviceName: true,
@@ -131,24 +168,24 @@ export async function getAppointmentsForDashboard(
   });
 
   return appts.map((a) => ({
-    id:            a.id,
-    bookingCode:   a.bookingCode,
-    status:        a.status,
-    startTime:     a.startTime,
-    endTime:       a.endTime,
-    totalPrice:    a.totalPrice,
-    source:        a.source,
-    staffId:       a.staff?.id    ?? null,
-    staffName:     a.staff?.name  ?? null,
-    staffColor:    a.staff?.color ?? null,
+    id: a.id,
+    bookingCode: a.bookingCode,
+    status: a.status,
+    startTime: a.startTime,
+    endTime: a.endTime,
+    totalPrice: a.totalPrice,
+    source: a.source,
+    staffId: a.staff?.id ?? null,
+    staffName: a.staff?.name ?? null,
+    staffColor: a.staff?.color ?? null,
     internalNotes: a.internalNotes,
-    businessName:  a.business?.name ?? null,
+    businessName: a.business?.name ?? null,
     services: a.services.map((s) => ({
-      name:     s.serviceName,
+      name: s.serviceName,
       duration: s.duration,
-      price:    s.price,
+      price: s.price,
     })),
-    clientName:  a.clients[0]?.client.name  ?? null,
+    clientName: a.clients[0]?.client.name ?? null,
     clientPhone: a.clients[0]?.client.phone ?? null,
   }));
 }

@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { ArrowRight, Copy, Check } from "lucide-react";
 import { useState } from "react";
+import { businessUrl } from "@/lib/urls";
 
 type Props = { slug: string };
 
 export function PublicPageCard({ slug }: Props) {
   const [copied, setCopied] = useState(false);
 
-  const publicUrl = `https://${slug}.frandora.cl`;
+  const publicUrl = businessUrl(slug);
 
   const copyLink = async () => {
     try {
@@ -43,7 +44,7 @@ export function PublicPageCard({ slug }: Props) {
           {copied ? "¡Copiado!" : "Copiar enlace"}
         </button>
         <Link
-          href={`/booking/${slug}`}
+          href={publicUrl}
           target="_blank"
           className="flex-1 flex items-center justify-center gap-1 text-xs font-sans font-semibold py-2 rounded-lg text-white transition-all"
           style={{ background: "linear-gradient(135deg, #6FA89E, #5a9990)" }}
