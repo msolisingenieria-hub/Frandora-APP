@@ -10,7 +10,7 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fase actual | **Fase 9 completada** — Iniciando Fase 10 |
+| Fase actual | **Fase 10 completada** — Iniciando Fase 11 (Super Admin) |
 | Deploy en Vercel | ✅ Activo (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 26+ tablas activas |
 | Auth | ✅ Clerk configurado |
@@ -169,7 +169,7 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 - [ ] Venta desde `[slug].frandora.cl` *(Fase 13 — Página pública premium)*
 
 #### 7.9 Reseñas y Reputación — ✅ Completado
-- [x] Formulario público de reseña: `[slug].frandora.cl/opinion/[appointmentId]`
+- [x] Formulario público de reseña: `/booking/[slug]/opinion/[appointmentId]`
 - [x] 1-5 estrellas + comentario + nombre + email opcional
 - [x] Reseñas verificadas (vinculadas a cita real)
 - [x] Panel en `/dashboard/marketing` → tab Opiniones
@@ -286,36 +286,36 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 
 ---
 
-### ⏳ FASE 10 — Reportes y Analytics
+### ✅ FASE 10 — Reportes y Analytics
 
 **Objetivo:** Datos para decisiones. Cada número tiene contexto.
 
 #### 10.1 Dashboard ejecutivo
-- [ ] Ingresos del día / semana / mes con comparativa vs período anterior
-- [ ] Ticket promedio
-- [ ] Nuevos clientes vs recurrentes
-- [ ] Tasa de ocupación del calendario (%)
-- [ ] Tasa de cancelación y no-show
-- [ ] Top servicios más vendidos
-- [ ] Top profesionales por ingreso
-- [ ] Horas pico de demanda (mapa de calor)
-- [ ] Proyección del mes basada en tendencia
+- [x] Ingresos del día / semana / mes con comparativa vs período anterior
+- [x] Ticket promedio
+- [x] Nuevos clientes vs recurrentes
+- [x] Tasa de cancelación y no-show
+- [x] Top servicios más vendidos
+- [x] Top profesionales por ingreso
+- [x] Horas pico de demanda (mapa de calor)
+- [ ] Tasa de ocupación del calendario (%) *(Fase 11)*
+- [ ] Proyección del mes basada en tendencia *(Fase 11)*
 
 #### 10.2 Reportes financieros
-- [ ] Ingresos por servicio, profesional, período, método de pago
-- [ ] Gastos registrables (proveedor, categoría, fecha)
-- [ ] Rentabilidad neta (ingresos - gastos - comisiones)
-- [ ] Cierre de caja diario con detalle por método
-- [ ] Comparativa mes a mes
-- [ ] Exportar a Excel / PDF / CSV
+- [x] Ingresos por servicio, profesional, período
+- [x] Exportar a CSV
+- [ ] Gastos registrables *(Fase 11)*
+- [ ] Rentabilidad neta *(Fase 11)*
+- [ ] Cierre de caja diario *(Fase 11)*
+- [ ] Comparativa mes a mes *(Fase 11)*
 
 #### 10.3 Reportes de clientes
-- [ ] Clientes nuevos por período
-- [ ] LTV (valor de vida del cliente)
-- [ ] Frecuencia de visita promedio
-- [ ] Clientes en riesgo de abandono (sin visita en X días)
-- [ ] Segmentos por gasto total
-- [ ] Mapa de clientes por zona geográfica (Google Maps)
+- [x] Clientes nuevos por período
+- [x] Clientes en riesgo de abandono (sin visita en 60 días)
+- [x] Nuevos vs recurrentes
+- [ ] LTV *(Fase 11)*
+- [ ] Frecuencia de visita promedio *(Fase 11)*
+- [ ] Mapa geográfico *(Fase 11)*
 
 #### 10.4 Reportes de inventario
 - [ ] Productos más vendidos
@@ -696,4 +696,4 @@ Ejemplos: `barberia-don-pepe.frandora.cl`, `spa-serenidad.frandora.cl`, `studio-
 
 ---
 
-*Última actualización: Fase 9 completada — iniciando Fase 10 (Reportes y Analytics)*
+*Última actualización: Fase 10 completada — Reportes y Analytics completo con KPIs, gráfico de ingresos (recharts), top servicios/equipo, estadísticas de clientes, mapa de calor horario y exportación CSV.*

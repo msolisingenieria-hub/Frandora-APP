@@ -9,7 +9,7 @@ import {
   LayoutDashboard, CalendarDays, Users, Sparkles,
   Receipt, BarChart3, Megaphone, Settings2,
   Zap, ChevronRight, Archive, PanelLeftClose, PanelLeftOpen,
-  UserCog, X, Menu,
+  UserCog, X, Menu, LineChart,
 } from "lucide-react";
 
 type NavItem = {
@@ -39,10 +39,16 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
     ],
   },
   {
-    title: "Marketing",
+    title: "Análisis",
     items: [
+      { href: "/dashboard/reportes",  label: "Reportes",  icon: LineChart },
       { href: "/dashboard/marketing", label: "Marketing", icon: Megaphone },
-      { href: "/dashboard/ajustes",   label: "Ajustes",   icon: Settings2 },
+    ],
+  },
+  {
+    title: "Config",
+    items: [
+      { href: "/dashboard/ajustes", label: "Ajustes", icon: Settings2 },
     ],
   },
 ];
