@@ -610,9 +610,16 @@
 
 | Tarea | Skill a invocar |
 |-------|----------------|
+| **DISEÑO PREMIUM — Cualquier página o componente nuevo** | `/ui-ux-pro-max` + `/ui-styling` — OBLIGATORIO |
+| Cualquier animación o transición nueva | `/emil-design-eng` — OBLIGATORIO antes de escribir |
+| Revisar animaciones existentes | `/review-animations` — genera tabla Before/After |
+| Nueva landing section / hero | `/ui-ux-pro-max` + `/design` + `/emil-design-eng` |
+| Identidad visual, brand assets | `/brand` + `/design-system` |
+| Banners de marketing, OG images | `/banner-design` + `/design` |
+| Sistema de tokens de diseño | `/design-system` + `/ui-styling` |
 | Diseño de feature compleja | `/brainstorming` → `/multi-agent-brainstorming` |
 | Nueva API route o servicio | `/nextjs-best-practices` + `/api-security-best-practices` |
-| Componente UI nuevo | `/shadcn` + `/tailwind-design-system` |
+| Componente UI nuevo | `/ui-ux-pro-max` + `/ui-styling` + `/shadcn` |
 | Query Prisma / DB schema | `/prisma-expert` + `/supabase-postgres-best-practices` |
 | Supabase (RLS, Realtime, Storage) | `/supabase` |
 | Performance / optimización | `/performance-engineer` + `/nextjs-best-practices` |
@@ -635,14 +642,25 @@
 | Análisis competitivo | `/competitive-landscape` |
 | Estrategia de lanzamiento | `/launch-strategy` + `/growth-engine` |
 
-### Skills Prioritarios para Frandora (Top 20)
+### Skills Prioritarios para Frandora (Top 29)
 
 ```
+# ═══════ DISEÑO PREMIUM — Los más importantes ═══════
+/ui-ux-pro-max                — Design intelligence: 50+ estilos, 161 paletas, 99 reglas UX
+/ui-styling                   — shadcn/ui + Tailwind + canvas visual — componentes premium
+/emil-design-eng              — Filosofía de animaciones (Emil Kowalski, creador de Sonner)
+/review-animations            — Revisor automático de animaciones: tabla Before/After
+/design                       — Logo, CIP, banners, iconos, social photos (Gemini AI)
+/design-system                — Tokens de diseño: primitive→semantic→component
+/brand                        — Voz de marca, identidad visual, guía de estilo
+/banner-design                — Banners para marketing, OG images, redes sociales
+
+# ═══════ INFRAESTRUCTURA ═══════
 /nextjs-best-practices        — Next.js App Router, RSC, caching
 /supabase                     — RLS, Realtime, Storage, Edge Functions
 /supabase-postgres-best-practices — Índices, performance, queries
 /prisma-expert                — ORM avanzado, relaciones complejas
-/shadcn                       — Componentes premium UI
+/shadcn                       — Componentes premium UI (base)
 /tailwind-design-system       — Design tokens consistentes
 /api-security-best-practices  — Protección de rutas públicas
 /saas-multi-tenant            — Isolación de datos por negocio
@@ -658,6 +676,36 @@
 /code-review                  — Revisión antes de cada merge
 /vercel-deployment            — Deploy y optimización en Vercel
 /launch-strategy              — Go-to-market Chile → mundo
+```
+
+### Reglas de Animación — Emil Kowalski Skills
+
+> Aplicar **siempre** al tocar animaciones, transiciones o efectos visuales en Frandora.
+
+| Contexto en Frandora | Regla |
+|---------------------|-------|
+| Landing page (hero, secciones) | `/emil-design-eng` — puede ser más expresivo, son animaciones de primera vez |
+| Dashboard (navegación, tabs) | Sub-300ms, ease-out, sin animación en atajos de teclado |
+| Booking flow (pasos 1→4) | Transiciones suaves, sin delay, feedback inmediato al tocar |
+| Modales y drawers | `ease-out` + `scale(0.95)` initial, `transform-origin: center` |
+| Popovers y dropdowns | `transform-origin` desde el trigger, no desde center |
+| Botones y CTAs | `scale(0.97)` en `:active` siempre (feedback táctil obligatorio) |
+| Toasts y notificaciones | CSS transitions (no keyframes) para interruptibilidad |
+| Cards con hover | Máx `scale(1.02)` + `translateY(-2px)`, solo en `hover: hover` |
+| Listas (staff, servicios) | Stagger 30-50ms entre items en la entrada inicial |
+| Cualquier animación nueva | Invocar `/review-animations` para audit antes del merge |
+
+**Durations de referencia:**
+- Botón press: 100-160ms
+- Tooltip, popover pequeño: 125-200ms
+- Dropdown: 150-250ms
+- Modal, drawer: 200-350ms
+
+**Easing estándar Frandora:**
+```css
+--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 ```
 
 ---
