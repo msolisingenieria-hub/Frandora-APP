@@ -29,7 +29,7 @@ export default function PricingCard({
 
   return (
     <div
-      className={`relative flex flex-col rounded-2xl p-6 transition-all duration-300 ${
+      className={`relative flex flex-col rounded-2xl p-6 transition-[transform,box-shadow] duration-300 ${
         isPopular
           ? "bg-brand-navy text-white shadow-teal-lg scale-[1.02] border border-brand-teal/40"
           : "bg-white border border-brand-mist shadow-brand hover:shadow-brand-lg hover:-translate-y-0.5"
@@ -77,7 +77,7 @@ export default function PricingCard({
       {/* CTA */}
       <Link
         href={SIGN_UP_URL}
-        className={`text-center text-sm font-sans font-semibold py-3 rounded-xl transition-all duration-200 mb-6 block ${
+        className={`text-center text-sm font-sans font-semibold py-3 rounded-xl transition-[background-color,color] duration-200 active:scale-[0.97] mb-6 block ${
           isPopular
             ? "bg-brand-teal text-white hover:bg-brand-teal/90 shadow-teal"
             : "bg-brand-gray text-brand-navy hover:bg-brand-mist border border-brand-mist"

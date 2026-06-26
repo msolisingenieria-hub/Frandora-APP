@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Gift, Plus, Copy, Check, Search } from "lucide-react";
+import { Gift, Plus, Copy, Check, Search, AlertCircle } from "lucide-react";
 
 type GiftCard = {
   id: string; code: string; initialValue: number; currentValue: number;
@@ -99,8 +99,10 @@ export function GiftCardsPanel() {
           </button>
         </div>
         {checkResult && (
-          <div className={`mt-2 px-3 py-2 rounded-xl text-sm font-body ${checkResult.valid ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
-            {checkResult.valid ? `✅ Saldo disponible: $${checkResult.balance?.toLocaleString("es-CL")}` : `❌ ${checkResult.error}`}
+          <div className={`mt-2 px-3 py-2.5 rounded-xl text-sm font-body flex items-center gap-2 ${checkResult.valid ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-red-50 text-red-600 border border-red-100"}`}>
+            {checkResult.valid
+              ? <><Check size={14} strokeWidth={2.5} className="flex-shrink-0" /> Saldo disponible: ${checkResult.balance?.toLocaleString("es-CL")}</>
+              : <><AlertCircle size={14} className="flex-shrink-0" /> {checkResult.error}</>}
           </div>
         )}
       </div>

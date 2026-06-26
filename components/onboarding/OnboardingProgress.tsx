@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Check } from "lucide-react";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
 
 type Step = { title: string; description: string };
@@ -47,7 +48,7 @@ export function OnboardingProgress({ currentStep, totalSteps, steps }: Props) {
                       : "w-6 h-6 bg-white/15 text-white/40",
                   ].join(" ")}
                 >
-                  {isDone ? "✓" : stepNum}
+                  {isDone ? <Check size={12} strokeWidth={3} /> : stepNum}
                 </div>
                 {i < steps.length - 1 && (
                   <div className={`h-px flex-1 min-w-[24px] transition-all duration-300 ${isDone ? "bg-brand-teal" : "bg-white/15"}`} />

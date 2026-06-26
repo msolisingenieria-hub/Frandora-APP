@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Send } from "lucide-react";
+import { X, Send, Check } from "lucide-react";
 
 type Props = { onClose: () => void; onSaved: () => void };
 
@@ -36,7 +36,7 @@ export function InviteModal({ onClose, onSaved }: Props) {
         {done ? (
           <div className="p-8 text-center">
             <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-3">
-              <span className="text-emerald-600 text-xl">✓</span>
+              <Check size={22} strokeWidth={2.5} className="text-emerald-600" />
             </div>
             <p className="font-sans font-semibold text-brand-navy text-sm">¡Invitación registrada!</p>
             <p className="text-xs font-body text-slate-400 mt-1">{email}</p>

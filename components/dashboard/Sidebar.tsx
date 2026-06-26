@@ -96,7 +96,7 @@ export function Sidebar() {
       {/* ── Sidebar ── */}
       <aside
         className={[
-          "h-screen flex flex-col transition-all duration-300 overflow-hidden shrink-0",
+          "h-screen flex flex-col transition-[width] duration-300 overflow-hidden shrink-0",
           "fixed top-0 left-0 z-50",
           "lg:sticky lg:top-0 lg:left-auto lg:z-30",
           w,
@@ -131,7 +131,7 @@ export function Sidebar() {
           <button
             onClick={toggleCollapse}
             title={collapsed ? "Expandir menú" : "Colapsar menú"}
-            className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-white/35 hover:text-white hover:bg-white/8 transition-all shrink-0"
+            className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-white/35 hover:text-white hover:bg-white/8 transition-[background-color,color] duration-150 shrink-0"
           >
             {collapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
           </button>
@@ -164,7 +164,7 @@ export function Sidebar() {
                       href={item.soon ? "#" : item.href}
                       title={collapsed ? item.label : undefined}
                       className={[
-                        "group flex items-center gap-3 rounded-xl text-sm font-body transition-all duration-150 relative",
+                        "group flex items-center gap-3 rounded-xl text-sm font-body transition-[background-color,color] duration-150 relative",
                         collapsed ? "px-0 py-2.5 justify-center" : "px-3 py-2.5",
                         isActive
                           ? "text-white"

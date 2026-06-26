@@ -1,12 +1,28 @@
 import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
+import { Gift, Zap, ShieldCheck } from "lucide-react";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
 import { ROOT_URL, SIGN_IN_URL } from "@/lib/urls";
 
 const BENEFITS = [
-  { emoji: "🎯", title: "14 días gratis", desc: "Sin tarjeta de crédito requerida" },
-  { emoji: "⚡", title: "Setup en 5 minutos", desc: "Asistente guiado paso a paso" },
-  { emoji: "🔒", title: "Cancela cuando quieras", desc: "Sin contratos ni permanencia" },
+  {
+    Icon: Gift,
+    title: "14 días gratis",
+    desc: "Sin tarjeta de crédito requerida",
+    color: "bg-brand-teal/20 text-brand-teal",
+  },
+  {
+    Icon: Zap,
+    title: "Setup en 5 minutos",
+    desc: "Asistente guiado paso a paso",
+    color: "bg-white/10 text-white",
+  },
+  {
+    Icon: ShieldCheck,
+    title: "Cancela cuando quieras",
+    desc: "Sin contratos ni permanencia",
+    color: "bg-white/10 text-white/70",
+  },
 ];
 
 export default function SignUpPage() {
@@ -35,12 +51,14 @@ export default function SignUpPage() {
             con Frandora.
           </h2>
           <div className="space-y-5">
-            {BENEFITS.map((b) => (
-              <div key={b.title} className="flex items-start gap-4">
-                <span className="text-2xl">{b.emoji}</span>
+            {BENEFITS.map(({ Icon, title, desc, color }) => (
+              <div key={title} className="flex items-start gap-4">
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
+                  <Icon size={17} strokeWidth={1.75} />
+                </div>
                 <div>
-                  <p className="text-white font-sans font-medium text-sm">{b.title}</p>
-                  <p className="text-white/55 text-xs mt-0.5">{b.desc}</p>
+                  <p className="text-white font-sans font-medium text-sm">{title}</p>
+                  <p className="text-white/55 text-xs mt-0.5">{desc}</p>
                 </div>
               </div>
             ))}
@@ -62,7 +80,7 @@ export default function SignUpPage() {
           <SignUp />
           <p className="mt-6 text-center text-sm text-slate-500">
             ¿Ya tienes cuenta?{" "}
-            <Link href={SIGN_IN_URL} className="text-brand-navy hover:text-brand-teal font-semibold transition-colors">
+            <Link href={SIGN_IN_URL} className="text-brand-navy hover:text-brand-teal font-semibold transition-colors duration-150">
               Inicia sesión
             </Link>
           </p>

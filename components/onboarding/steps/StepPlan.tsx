@@ -1,5 +1,6 @@
 "use client";
 
+import { Check } from "lucide-react";
 import { ONBOARDING_PLANS } from "@/types/onboarding";
 import type { OnboardingData } from "@/types/onboarding";
 
@@ -67,7 +68,7 @@ export function StepPlan({ data, onChange }: Props) {
               <ul className="space-y-1.5">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-xs">
-                    <span className={isSelected ? "text-brand-teal" : "text-brand-teal"}>✓</span>
+                    <Check size={11} strokeWidth={3} className="text-brand-teal flex-shrink-0 mt-0.5" />
                     <span className={isSelected ? "text-white/80" : "text-slate-600"}>{f}</span>
                   </li>
                 ))}

@@ -1,3 +1,5 @@
+import { Bell, CreditCard } from "lucide-react";
+
 const APPOINTMENTS = [
   { time: "09:00", name: "Juan Pérez", service: "Corte + Barba", color: "bg-brand-teal" },
   { time: "10:30", name: "Diego Muñoz", service: "Corte clásico", color: "bg-brand-teal/70" },
@@ -10,7 +12,9 @@ export default function BookingMockup() {
     <div className="relative w-full max-w-sm mx-auto">
       {/* Floating notification — new booking */}
       <div className="absolute -top-4 -right-2 md:-right-8 z-10 bg-white rounded-xl shadow-brand px-3 py-2 flex items-center gap-2 animate-float">
-        <span className="text-lg">🔔</span>
+        <div className="w-7 h-7 rounded-full bg-brand-teal/10 flex items-center justify-center flex-shrink-0">
+          <Bell size={13} className="text-brand-teal" />
+        </div>
         <div>
           <p className="text-[11px] font-sans font-semibold text-brand-navy leading-tight">Nueva reserva</p>
           <p className="text-[10px] font-body text-brand-navy/60 leading-tight">Sofía Ramírez · 16:00</p>
@@ -35,7 +39,7 @@ export default function BookingMockup() {
           {["Carlos", "Ana", "Luis"].map((s, i) => (
             <div
               key={s}
-              className={`flex-1 text-center text-[10px] font-body py-1 rounded-lg cursor-pointer transition-all ${
+              className={`flex-1 text-center text-[10px] font-body py-1 rounded-lg cursor-pointer transition-colors duration-150 ${
                 i === 0
                   ? "bg-brand-teal text-white font-semibold"
                   : "bg-white/5 text-white/50 hover:bg-white/10"
@@ -78,8 +82,8 @@ export default function BookingMockup() {
 
       {/* Floating stat — payment */}
       <div className="absolute -bottom-4 -left-2 md:-left-8 bg-white rounded-xl shadow-brand px-3 py-2 flex items-center gap-2">
-        <div className="w-7 h-7 rounded-full bg-brand-mist flex items-center justify-center">
-          <span className="text-sm">💳</span>
+        <div className="w-7 h-7 rounded-full bg-brand-mist flex items-center justify-center flex-shrink-0">
+          <CreditCard size={13} className="text-brand-navy/70" />
         </div>
         <div>
           <p className="text-[11px] font-sans font-semibold text-brand-navy leading-tight">Pago recibido</p>

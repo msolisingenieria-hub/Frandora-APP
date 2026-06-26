@@ -1,16 +1,20 @@
-const INDUSTRIES = [
-  { icon: "✂️", label: "Barberías" },
-  { icon: "💆", label: "Spas" },
-  { icon: "💇", label: "Salones de belleza" },
-  { icon: "🏋️", label: "Fitness & Gym" },
-  { icon: "🧘", label: "Yoga & Pilates" },
-  { icon: "💅", label: "Nail Studio" },
-  { icon: "🌿", label: "Masajes" },
-  { icon: "✨", label: "Clínica Estética" },
-  { icon: "🦷", label: "Odontología" },
-  { icon: "🩺", label: "Fisioterapia" },
-  { icon: "🐾", label: "Veterinaria" },
-  { icon: "🎓", label: "Coaching" },
+import { type LucideIcon, Scissors, Sparkles, Crown, Dumbbell, Heart, Palette, Leaf, Smile, Stethoscope, PawPrint, GraduationCap, Plus } from "lucide-react";
+
+type Industry = { Icon: LucideIcon; label: string };
+
+const INDUSTRIES: Industry[] = [
+  { Icon: Scissors,     label: "Barberías" },
+  { Icon: Sparkles,     label: "Spas" },
+  { Icon: Crown,        label: "Salones de belleza" },
+  { Icon: Dumbbell,     label: "Fitness & Gym" },
+  { Icon: Heart,        label: "Yoga & Pilates" },
+  { Icon: Palette,      label: "Nail Studio" },
+  { Icon: Leaf,         label: "Masajes" },
+  { Icon: Sparkles,     label: "Clínica Estética" },
+  { Icon: Smile,        label: "Odontología" },
+  { Icon: Stethoscope,  label: "Fisioterapia" },
+  { Icon: PawPrint,     label: "Veterinaria" },
+  { Icon: GraduationCap, label: "Coaching" },
 ];
 
 export default function Industries() {
@@ -24,23 +28,22 @@ export default function Industries() {
           </h2>
         </div>
 
-        {/* Grid responsive — scroll horizontal en mobile */}
         <div className="flex flex-wrap justify-center gap-3">
-          {INDUSTRIES.map((ind) => (
+          {INDUSTRIES.map(({ Icon, label }) => (
             <div
-              key={ind.label}
+              key={label}
               className="flex items-center gap-2 bg-white border border-brand-mist rounded-full px-4 py-2
-                         shadow-brand-sm hover:border-brand-teal hover:shadow-teal transition-all duration-200
+                         shadow-brand-sm hover:border-brand-teal hover:shadow-teal transition-[border-color,box-shadow] duration-200
                          cursor-default group"
             >
-              <span className="text-lg">{ind.icon}</span>
-              <span className="font-body text-sm font-medium text-brand-navy group-hover:text-brand-teal transition-colors whitespace-nowrap">
-                {ind.label}
+              <Icon size={14} className="text-brand-teal/70 group-hover:text-brand-teal transition-colors duration-150 flex-shrink-0" />
+              <span className="font-body text-sm font-medium text-brand-navy group-hover:text-brand-teal transition-colors duration-150 whitespace-nowrap">
+                {label}
               </span>
             </div>
           ))}
           <div className="flex items-center gap-2 bg-brand-teal/10 border border-brand-teal/30 rounded-full px-4 py-2">
-            <span className="text-lg">➕</span>
+            <Plus size={13} className="text-brand-teal flex-shrink-0" />
             <span className="font-body text-sm font-medium text-brand-teal whitespace-nowrap">
               Y mucho más
             </span>

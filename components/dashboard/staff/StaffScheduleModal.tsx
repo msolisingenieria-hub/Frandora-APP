@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Save } from "lucide-react";
+import { X, Save, Check } from "lucide-react";
 
 const DAYS = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
 
@@ -66,7 +66,7 @@ export function StaffScheduleModal({ staffId, staffName, initial, onClose, onSav
               className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${day.isAvailable ? "border-brand-teal/20 bg-slate-50" : "border-slate-100 opacity-50"}`}>
               <button type="button" onClick={() => toggle(idx)}
                 className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${day.isAvailable ? "bg-brand-navy border-brand-navy" : "border-slate-300"}`}>
-                {day.isAvailable && <span className="text-white text-[9px] font-bold">✓</span>}
+                {day.isAvailable && <Check size={10} strokeWidth={3} className="text-white" />}
               </button>
               <span className="text-sm font-body text-brand-navy w-20 shrink-0">{DAYS[idx]}</span>
               {day.isAvailable ? (

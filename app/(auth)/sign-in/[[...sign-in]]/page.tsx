@@ -1,5 +1,6 @@
 import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
+import { Check } from "lucide-react";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
 import { ROOT_URL, SIGN_UP_URL } from "@/lib/urls";
 
@@ -38,7 +39,9 @@ export default function SignInPage() {
           <ul className="space-y-4">
             {FEATURES.map((f) => (
               <li key={f} className="flex items-start gap-3">
-                <span className="w-5 h-5 rounded-full bg-brand-teal/20 border border-brand-teal/40 flex items-center justify-center flex-shrink-0 mt-0.5 text-brand-teal text-xs">✓</span>
+                <span className="w-5 h-5 rounded-full bg-brand-teal/20 border border-brand-teal/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Check size={10} strokeWidth={3} className="text-brand-teal" />
+                </span>
                 <span className="text-white/75 text-sm leading-relaxed">{f}</span>
               </li>
             ))}

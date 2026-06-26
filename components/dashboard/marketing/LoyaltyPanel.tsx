@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Award, ToggleLeft, ToggleRight, Info } from "lucide-react";
+import { Award, ToggleLeft, ToggleRight, Info, Check } from "lucide-react";
 
 type Config = {
   enabled: boolean;
@@ -107,7 +107,11 @@ export function LoyaltyPanel() {
           <button onClick={handleSave} disabled={saving}
             className="w-full py-3 rounded-xl text-sm font-sans font-semibold text-white transition-all"
             style={{ background: "linear-gradient(135deg,#0D1B2A,#1a3347)" }}>
-            {saved ? "✓ Guardado" : saving ? "Guardando…" : "Guardar configuración"}
+            {saved ? (
+              <span className="flex items-center justify-center gap-1.5">
+                <Check size={14} strokeWidth={2.5} /> Guardado
+              </span>
+            ) : saving ? "Guardando…" : "Guardar configuración"}
           </button>
         </div>
       )}

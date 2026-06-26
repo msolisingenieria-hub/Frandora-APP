@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, Users, TrendingUp, ArrowRight, Sparkles, Clock, CheckCircle2 } from "lucide-react";
+import { CalendarDays, Users, TrendingUp, ArrowRight, Sparkles, Clock, CheckCircle2, Check } from "lucide-react";
 import { PublicPageCard } from "@/components/dashboard/PublicPageCard";
 
 type Business = {
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                     "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all",
                     item.done ? "bg-brand-navy border-brand-navy" : "border-slate-300",
                   ].join(" ")}>
-                    {item.done && <span className="text-white text-[10px] font-bold">✓</span>}
+                    {item.done && <Check size={10} strokeWidth={3} className="text-white" />}
                   </div>
                   <span className={`text-sm font-body ${item.done ? "text-slate-400 line-through" : "text-brand-navy"}`}>
                     {item.label}
