@@ -34,3 +34,6 @@ Thumbs.db
 *.tsbuildinfo
 next-env.d.ts
 .env*
+
+# Claude Code — configuración local con tokens privados
+.claude/settings.local.json

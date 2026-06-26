@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { PublicBusiness } from "@/types/booking";
 import { MapPin, Phone } from "lucide-react";
 
@@ -30,7 +31,7 @@ export function BookingHeader({ business }: Props) {
             style={{ background: "linear-gradient(135deg, #0D1B2A, #1a3347)" }}
           >
             {business.logoUrl ? (
-              <img src={business.logoUrl} alt={business.name} className="w-full h-full object-cover" />
+              <Image src={business.logoUrl} alt={business.name} width={96} height={96} className="w-full h-full object-cover" />
             ) : (
               <span className="text-white font-sans font-bold text-3xl">
                 {business.name[0]}

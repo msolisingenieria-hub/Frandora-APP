@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { PublicStaff, BookingFormState } from "@/types/booking";
 import { Users, ChevronRight, CheckCircle } from "lucide-react";
 
@@ -80,7 +81,7 @@ export function StepStaff({ staff, serviceId, state, onChange, onNext }: Props) 
                 {/* Avatar */}
                 <div className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden flex items-center justify-center bg-slate-100">
                   {member.avatarUrl ? (
-                    <img src={member.avatarUrl} alt={member.name} className="w-full h-full object-cover" />
+                    <Image src={member.avatarUrl} alt={member.name} width={48} height={48} className="w-full h-full object-cover" />
                   ) : (
                     <span className="font-sans font-bold text-brand-navy text-lg">
                       {member.name[0]}
