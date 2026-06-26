@@ -39,25 +39,49 @@ export default function DashboardPage() {
   const [business, setBusiness] = useState<Business | null>(null);
   const [stats, setStats]       = useState<Stats>({ todayAppointments: 0, totalClients: 0, monthlyRevenue: 0 });
   const [loading, setLoading]   = useState(true);
+  const [noData, setNoData]     = useState(false);
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/dashboard/business").then((r) => r.json()),
-      fetch("/api/dashboard/stats").then((r) => r.json()),
+      fetch("/api/dashboard/business").then((r) => r.ok ? r.json() : null),
+      fetch("/api/dashboard/stats").then((r) => r.ok ? r.json() : null),
     ]).then(([biz, st]) => {
-      setBusiness(biz);
-      setStats(st);
+      if (biz && !biz.error) setBusiness(biz);
+      else setNoData(true);
+      if (st && !st.error) setStats(st);
       setLoading(false);
-    });
+    }).catch(() => { setLoading(false); setNoData(true); });
   }, []);
 
-  if (loading || !business) {
+  if (loading) {
     return (
       <div className="min-h-screen p-6 md:p-8 space-y-4"
         style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}>
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="h-20 rounded-2xl bg-slate-100 animate-pulse" />
         ))}
+      </div>
+    );
+  }
+
+  if (noData || !business) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-8"
+        style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}>
+        <div className="text-center space-y-4 max-w-sm">
+          <div className="w-16 h-16 rounded-2xl bg-brand-navy/5 flex items-center justify-center mx-auto">
+            <Sparkles size={28} className="text-brand-navy/30" />
+          </div>
+          <h2 className="text-brand-navy font-sans font-bold text-xl">Configurando tu negocio</h2>
+          <p className="text-slate-400 text-sm font-body">
+            Tu cuenta se está vinculando. Si este mensaje persiste, intenta cerrar sesión y volver a entrar.
+          </p>
+          <Link href="/onboarding"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-sans font-semibold text-white"
+            style={{ background: "linear-gradient(135deg, #0D1B2A 0%, #1a3d3a 100%)" }}>
+            Completar configuración <ArrowRight size={14} />
+          </Link>
+        </div>
       </div>
     );
   }
