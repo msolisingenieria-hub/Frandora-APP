@@ -1,3 +1,5 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
@@ -19,7 +21,17 @@ const nextConfig = {
     serverActions: {
       allowedOrigins: ["*.frandora.cl", "localhost:3000"],
     },
+    instrumentationHook: true,
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: "frandora",
+  project: "javascript-nextjs-tt",
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+  },
+});
