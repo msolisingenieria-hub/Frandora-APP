@@ -13,12 +13,20 @@ import { ChevronLeft, Sparkles } from "lucide-react";
 
 type Props = {
   business: PublicBusiness;
+  initialServiceId?: string;
+  initialStaffId?: string;
+  compact?: boolean; // cuando está dentro de un drawer, oculta el header y el fondo
 };
 
 const STEP_LABELS = ["Servicio", "Profesional", "Fecha y hora", "Tus datos"];
 
-export function BookingPage({ business }: Props) {
-  const [state, setState] = useState<BookingFormState>(INITIAL_BOOKING_STATE);
+export function BookingPage({ business, initialServiceId, initialStaffId, compact }: Props) {
+  const [state, setState] = useState<BookingFormState>(() => ({
+    ...INITIAL_BOOKING_STATE,
+    serviceId: initialServiceId ?? null,
+    staffId:   initialStaffId  ?? null,
+    step:      initialServiceId ? (initialStaffId ? 3 : 2) : 1,
+  }));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<BookingResult | null>(null);
@@ -72,11 +80,11 @@ export function BookingPage({ business }: Props) {
 
   return (
     <div
-      className="min-h-screen"
-      style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}
+      className={compact ? "min-h-full" : "min-h-screen"}
+      style={compact ? {} : { background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}
     >
-      {/* Header con info del negocio */}
-      <BookingHeader business={business} />
+      {/* Header con info del negocio — oculto en modo compact */}
+      {!compact && <BookingHeader business={business} />}
 
       {/* Área del wizard */}
       <div className="max-w-lg mx-auto px-0 md:px-4 pb-16">

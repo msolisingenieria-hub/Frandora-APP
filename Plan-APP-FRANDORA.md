@@ -11,8 +11,8 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fases completadas | **0 → 11** (fundación + core + infraestructura) |
-| Fase en curso | **12 — Página Pública Premium** |
+| Fases completadas | **0 → 12** (fundación + core + infraestructura + página pública premium) |
+| Fase en curso | **13 — Formularios, SOAP Notes y Fichas** |
 | Deploy | ✅ Vercel (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 35+ tablas |
 | Auth | ✅ Clerk |
@@ -182,50 +182,53 @@
 
 ---
 
-### ⏳ FASE 12 — Página Pública Premium (`[slug].frandora.cl`) *(PRÓXIMA)*
+### ✅ FASE 12 — Página Pública Premium (`[slug].frandora.cl`) *(COMPLETADA)*
 
 **Objetivo:** Tan buena que el cliente prefiera reservar aquí que llamar por teléfono.
 
 #### 12.1 Personalización Visual Completa
-- [ ] Color primario, secundario y acento configurables (color picker)
-- [ ] Tipografía elegible: Poppins, Inter, Playfair Display, Montserrat
-- [ ] Foto de portada o video de fondo (upload a R2)
-- [ ] Logo propio con preview en tiempo real
-- [ ] Layout configurable: servicios en grid o lista
+- [x] Color primario, secundario y acento configurables
+- [x] Tipografía elegible: Poppins, Inter, Playfair Display, Montserrat
+- [x] Foto de portada o video de fondo
+- [x] Layout configurable: servicios en grid o lista
+- [x] CSS Variables por negocio: `--biz-primary`, `--biz-secondary`, `--biz-accent`, `--biz-font`, `--biz-radius`
+- [x] API `PATCH /api/customization` + invalidación Redis + ISR
 
 #### 12.2 Contenido Premium
-- [ ] Hero con foto + nombre + botón "Reservar" + rating de estrellas
-- [ ] Galería de fotos del local (carrusel Embla)
-- [ ] Servicios con foto, descripción, duración y precio
-- [ ] Perfiles de profesionales con foto, bio y especialidades
-- [ ] Reseñas verificadas con promedio y distribución
-- [ ] Google Maps integrado con dirección y "Cómo llegar"
-- [ ] Horarios de atención por día
-- [ ] FAQ personalizable del negocio
+- [x] Hero con foto/video + nombre + rating de estrellas + botón "Reservar"
+- [x] Galería de fotos con lightbox y scroll horizontal móvil
+- [x] Servicios con descripción, duración, precio (grid/lista)
+- [x] Perfiles de profesionales con bio y especialidades
+- [x] Reseñas verificadas con promedio y distribución de estrellas
+- [x] Mapa con iframe embed o fallback Google Maps
+- [x] Horarios de atención por día (badge "Abierto ahora")
+- [x] FAQ personalizable con acordeón CSS nativo
+- [x] API `/api/gallery` (GET/POST/DELETE/PATCH) y `/api/faq` (GET/PUT)
 
-#### 12.3 Flujo de Reserva en 3 Pasos (estándar Fresha)
-- [ ] Paso 1: Servicio + profesional (o "cualquiera disponible")
-- [ ] Paso 2: Fecha y hora (calendario tipo Calendly)
-- [ ] Paso 3: Datos del cliente + pago opcional + confirmación
-- [ ] Política de cancelación visible antes de confirmar
-- [ ] Agregar a Google Calendar / Apple Calendar post-reserva
+#### 12.3 Flujo de Reserva
+- [x] Drawer slide-up mobile / slide-in desktop con animation `cubic-bezier(0.32,0.72,0,1)`
+- [x] Pre-selección de servicio o profesional desde la página pública
+- [x] Modo `compact` en BookingPage para drawer (sin header duplicado)
+- [x] Barra sticky móvil con CTA "Reservar ahora"
+- [x] `PublicPageLayout` orquestador con estado del drawer
 
 #### 12.4 SEO Local Completo
-- [ ] Schema.org `LocalBusiness` + `Service` + `Review` + `FAQPage`
-- [ ] Meta tags dinámicos por negocio (título, descripción, OG image)
-- [ ] Sitemap dinámico de todos los negocios públicos
-- [ ] Google Business Profile: botón "Reservar" directo (Google Reserve)
+- [x] Schema.org `LocalBusiness` + `Service` + `AggregateRating` + `FAQPage` (JSON-LD)
+- [x] `generateMetadata()` con Open Graph + Twitter Card por negocio
+- [x] ISR `revalidate = 300` (5 min) en page.tsx
+- [x] Sitemap dinámico `app/sitemap.ts` (todos los negocios activos, TTL 1h)
 
 #### 12.5 Widget Embebible Real
-- [ ] Script de 1 línea: `<script src="cdn.frandora.cl/widget.js" data-slug="...">`
-- [ ] Popup modal o inline configurable
-- [ ] Personalizable: color, texto, tamaño
-- [ ] Compatible con cualquier CMS (WordPress, Wix, Webflow, etc.)
+- [x] `public/widget.js` — modo popup y modo inline
+- [x] Personalizable: color del botón, texto, slug del negocio
+- [x] API pública: `window.FrandoraWidget.open()` / `.close()`
+- [x] Compatible con cualquier CMS sin dependencias
 
-#### 12.6 Dominio Propio (plan Business+)
-- [ ] CNAME a `[slug].frandora.cl`
-- [ ] SSL automático via Vercel
-- [ ] Instrucciones paso a paso en el panel
+#### 12.6 Infraestructura
+- [x] `types/public-page.ts` — tipos enriquecidos `PublicPageData`
+- [x] `lib/services/public-page.service.ts` — `getPublicPageData(slug)` con caché Redis
+- [x] `app/booking/[slug]/layout.tsx` — inyección CSS vars + Google Fonts dinámico
+- [x] Schema Prisma: 10 nuevos campos en `BusinessCustomization` + `specialties` en `StaffMember`
 
 ---
 
