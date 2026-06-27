@@ -50,7 +50,7 @@ export async function getPortalData(token: string): Promise<PortalData | null> {
     include: {
       services: { include: { service: { select: { name: true } } } },
       staff: { select: { name: true } },
-      payments: { select: { status: true, amount: true } },
+      payment: { select: { status: true, amount: true } },
     },
     orderBy: { startTime: "desc" },
     take: 30,
@@ -61,7 +61,7 @@ export async function getPortalData(token: string): Promise<PortalData | null> {
 
   for (const apt of appointments) {
     const serviceName = apt.services[0]?.service?.name ?? "Servicio";
-    const payment = apt.payments[0];
+    const payment = apt.payment;
     const item: PortalAppointment = {
       id: apt.id,
       serviceName,
@@ -71,7 +71,7 @@ export async function getPortalData(token: string): Promise<PortalData | null> {
       status: apt.status,
       price: payment?.amount ?? 0,
       paymentStatus: payment?.status ?? "PENDING",
-      canCancel: apt.startTime > now && apt.status !== "CANCELLED",
+      canCancel: apt.startTime > now && apt.status !== "CANCELED",
     };
     if (apt.startTime >= now) upcoming.push(item);
     else past.push(item);
@@ -139,11 +139,11 @@ export async function cancelPortalAppointment(
       businessId: portalToken.businessId,
       clients: { some: { clientId: portalToken.clientId } },
       startTime: { gt: new Date() },
-      status: { notIn: ["CANCELLED", "COMPLETED", "NO_SHOW"] },
+      status: { notIn: ["CANCELED", "COMPLETED", "NO_SHOW"] },
     },
   });
   if (!apt) return false;
 
-  await prisma.appointment.update({ where: { id: appointmentId }, data: { status: "CANCELLED" } });
+  await prisma.appointment.update({ where: { id: appointmentId }, data: { status: "CANCELED" } });
   return true;
 }
