@@ -330,6 +330,19 @@ model BusinessCustomization {
   metaTitle       String?
   metaDescription String?
 
+  // Página pública premium (Fase 12)
+  servicesLayout     String  @default("grid")   // "grid" | "list"
+  showGallery        Boolean @default(true)
+  showMap            Boolean @default(true)
+  showSchedule       Boolean @default(true)
+  showStaffBios      Boolean @default(true)
+  showReviews        Boolean @default(true)
+  showFaq            Boolean @default(true)
+  cancellationPolicy String?
+  faqs               Json    @default("[]")     // [{ question, answer }][]
+  mapEmbed           String?                    // Google Maps embed URL
+  customDomain       String?                    // dominio propio (Business+)
+
   updatedAt DateTime @updatedAt
 }
 
@@ -351,6 +364,7 @@ model StaffMember {
   phone       String?
   avatarUrl   String?
   bio         String?
+  specialties String[] @default([])
   role        UserRole @default(STAFF)
   color       String   @default("#6d28d9")
   isActive    Boolean  @default(true)
