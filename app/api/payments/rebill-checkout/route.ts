@@ -27,14 +27,26 @@ export async function POST(req: Request) {
   const business = user.ownedBusinesses[0];
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.frandora.cl";
 
-  const checkout = await createRebillCheckout({
-    planId: parsed.data.planId,
-    customerEmail: user.email,
-    customerName: user.name ?? business.name,
-    metadata: { businessId: business.id },
-    successUrl: `${baseUrl}/dashboard/facturacion?success=1`,
-    cancelUrl: `${baseUrl}/dashboard/facturacion?canceled=1`,
-  });
-
-  return NextResponse.json({ checkoutUrl: checkout.checkoutUrl });
+  try {
+    const checkout = await createRebillCheckout({
+      planId: parsed.data.planId,
+      customerEmail: user.email,
+      customerName: user.name ?? business.name,
+      metadata: { businessId: business.id },
+      successUrl: `${baseUrl}/dashboard/facturacion?success=1`,
+      cancelUrl: `${baseUrl}/dashboard/facturacion?canceled=1`,
+    });
+    return NextResponse.json({ checkoutUrl: checkout.checkoutUrl });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Error al conectar con el servicio de pago";
+    const is503 = msg.includes("503") || msg.includes("Service Temporarily Unavailable");
+    if (is503) {
+      return NextResponse.json(
+        { error: "El servicio de pago no está disponible en este momento. Intenta en unos minutos." },
+        { status: 503 }
+      );
+    }
+    console.error("[rebill-checkout]", msg);
+    return NextResponse.json({ error: "No se pudo iniciar el proceso de pago." }, { status: 500 });
+  }
 }
