@@ -27,7 +27,7 @@ export default function ClientesPage() {
   };
 
   const onSaved = () => {
-    setRefreshTrigger((n) => n + 1);
+    setRefreshTrigger((n: number) => n + 1);
   };
 
   return (

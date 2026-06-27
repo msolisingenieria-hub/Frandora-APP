@@ -10,6 +10,7 @@ import {
   Receipt, BarChart3, Megaphone, Settings2,
   Zap, ChevronRight, Archive, PanelLeftClose, PanelLeftOpen,
   UserCog, X, Menu, LineChart, FileText, ClipboardList, Images,
+  CreditCard, Package,
 } from "lucide-react";
 
 type NavItem = {
@@ -44,6 +45,13 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
       { href: "/dashboard/formularios",      label: "Formularios",     icon: FileText },
       { href: "/dashboard/fichas",           label: "Fichas Clínicas", icon: ClipboardList },
       { href: "/dashboard/galeria-clinica",  label: "Galería Clínica", icon: Images },
+    ],
+  },
+  {
+    title: "Fidelización",
+    items: [
+      { href: "/dashboard/membresias", label: "Membresías", icon: CreditCard },
+      { href: "/dashboard/paquetes",   label: "Paquetes",   icon: Package },
     ],
   },
   {

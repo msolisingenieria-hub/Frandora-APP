@@ -238,6 +238,11 @@ model Business {
   customization  BusinessCustomization?
   subscription   Subscription?
   notifications  Notification[]
+  memberships    Membership[]
+  clientMemberships ClientMembership[]
+  sessionPackages SessionPackage[]
+  clientPackages  ClientPackage[]
+  clientPortalTokens ClientPortalToken[]
 
   @@index([slug])
   @@index([ownerId])
@@ -537,6 +542,9 @@ model Client {
   classEnrollments ClassEnrollment[]
   soapNotes        SoapNote[]
   beforeAfterPhotos BeforeAfterPhoto[]
+  clientMemberships ClientMembership[]
+  clientPackages   ClientPackage[]
+  portalTokens     ClientPortalToken[]
 
   @@unique([businessId, email])
   @@index([businessId])
@@ -1190,4 +1198,139 @@ model AuditLog {
   @@index([userId])
   @@index([action])
   @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────
+// FASE 14 — MEMBRESÍAS, PAQUETES Y PORTAL
+// ─────────────────────────────────────────────
+
+enum MembershipBillingCycle {
+  MONTHLY
+  QUARTERLY
+  ANNUAL
+}
+
+enum ClientMembershipStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+  EXPIRED
+}
+
+enum ClientPackageStatus {
+  ACTIVE
+  DEPLETED
+  EXPIRED
+  CANCELLED
+}
+
+model Membership {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  name            String
+  description     String?
+  price           Float
+  billingCycle    MembershipBillingCycle @default(MONTHLY)
+  sessionsPerCycle Int?
+  discountPercent Float   @default(0)
+  color           String  @default("#6FA89E")
+  isActive        Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientMemberships ClientMembership[]
+
+  @@index([businessId])
+}
+
+model ClientMembership {
+  id           String   @id @default(cuid())
+  businessId   String
+  business     Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId     String
+  client       Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id])
+
+  status          ClientMembershipStatus @default(ACTIVE)
+  startDate       DateTime
+  endDate         DateTime
+  nextBillingDate DateTime?
+  sessionsUsed    Int       @default(0)
+  flowOrderId     String?
+  notes           String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+  @@index([clientId])
+  @@index([membershipId])
+  @@index([status])
+}
+
+model SessionPackage {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  sessions    Int
+  price       Float
+  validDays   Int     @default(0)
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientPackages ClientPackage[]
+
+  @@index([businessId])
+}
+
+model ClientPackage {
+  id        String   @id @default(cuid())
+  businessId String
+  business   Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId   String
+  client     Client         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  packageId  String
+  package    SessionPackage @relation(fields: [packageId], references: [id])
+
+  status         ClientPackageStatus @default(ACTIVE)
+  sessionsTotal  Int
+  sessionsUsed   Int      @default(0)
+  purchaseDate   DateTime @default(now())
+  expiresAt      DateTime?
+  flowOrderId    String?
+  notes          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+  @@index([clientId])
+  @@index([status])
+}
+
+model ClientPortalToken {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId   String
+  client     Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  token        String   @unique
+  expiresAt    DateTime
+  lastAccessAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([clientId])
+  @@index([businessId])
 }
