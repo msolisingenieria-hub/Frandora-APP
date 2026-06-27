@@ -20,7 +20,7 @@ export default function FichasPage() {
   }
 
   function onSaved() {
-    setRefreshTrigger((n) => n + 1);
+    setRefreshTrigger((n: number) => n + 1);
     setView("list");
     setEditingNote(null);
   }

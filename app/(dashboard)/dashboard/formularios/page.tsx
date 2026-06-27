@@ -19,7 +19,7 @@ export default function FormulariosPage() {
   }
 
   function onSaved() {
-    setRefreshTrigger((n) => n + 1);
+    setRefreshTrigger((n: number) => n + 1);
     setView("list");
     setEditingForm(null);
   }

@@ -12,7 +12,7 @@ export default function GaleriaClinicaPage() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   function onUploaded() {
-    setRefreshTrigger((n) => n + 1);
+    setRefreshTrigger((n: number) => n + 1);
     setView("grid");
   }
 
