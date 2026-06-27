@@ -11,8 +11,8 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fases completadas | **0 → 10** (fundación + core completo) |
-| Fase en curso | **11 — Infraestructura Premium** |
+| Fases completadas | **0 → 11** (fundación + core + infraestructura) |
+| Fase en curso | **12 — Página Pública Premium** |
 | Deploy | ✅ Vercel (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 35+ tablas |
 | Auth | ✅ Clerk |
@@ -45,7 +45,7 @@
 | Animaciones | Framer Motion | ✅ |
 | Base de datos | PostgreSQL via Supabase | ✅ |
 | ORM | Prisma | ✅ |
-| Cache / Colas | Upstash Redis + QStash | ⏳ Fase 11 |
+| Cache / Colas | Upstash Redis + QStash | ✅ |
 | Auth | Clerk | ✅ |
 | Suscripciones SaaS | Rebill (Latam) | ✅ |
 | Pagos reservas Chile | Flow.cl | ✅ |
@@ -53,11 +53,11 @@
 | Pagos Latam adicional | MercadoPago (Fase 21) | ⏳ |
 | Email transaccional | Resend + React Email | ✅ |
 | SMS / WhatsApp | Twilio | ✅ |
-| Storage | Cloudflare R2 | ⏳ Fase 11 |
-| Realtime | Supabase Realtime | ⏳ Fase 11 |
+| Storage | Cloudflare R2 | ✅ |
+| Realtime | Supabase Realtime | ✅ |
 | Deploy | Vercel (Edge + Serverless) | ✅ |
-| Monitoreo errores | Sentry | ⏳ Fase 11 |
-| Analytics producto | PostHog | ⏳ Fase 11 |
+| Monitoreo errores | Sentry | ✅ |
+| Analytics producto | PostHog | ✅ |
 | IA / LLM | Claude Haiku 4.5 (Anthropic) | ⏳ Fase 16 |
 | Video llamadas | Daily.co / WebRTC | ⏳ Fase 23 |
 | App móvil | React Native + Expo | ⏳ Fase 19 |
@@ -146,46 +146,43 @@
 
 ---
 
-### ⏳ FASE 11 — Infraestructura Premium *(PRÓXIMA)*
+### ✅ FASE 11 — Infraestructura Premium
 
 **Objetivo:** Base técnica que soporta escala mundial. Sin esto, todo lo demás es frágil.
 
 #### 11.1 Cache con Upstash Redis
-- [ ] Cache de slots disponibles (el cuello de botella más grande)
-- [ ] Cache de perfil del negocio (página pública)
-- [ ] Cache de servicios y staff por negocio
-- [ ] Invalidación automática al crear/editar citas
-- [ ] Rate limiting en APIs públicas (`@upstash/ratelimit`)
+- [x] Cache de slots disponibles (el cuello de botella más grande)
+- [x] Cache de perfil del negocio (página pública)
+- [x] Cache de analytics/reportes (10 min TTL — overview, revenue, clients)
+- [x] Invalidación automática al crear/editar citas
+- [x] Rate limiting en APIs públicas (`@upstash/ratelimit`)
 
 #### 11.2 Storage con Cloudflare R2
-- [ ] Upload de logos, banners, fotos de servicios
-- [ ] Fotos before/after por cita (privadas)
-- [ ] Documentos PDF (fichas, consentimientos)
-- [ ] CDN automático para assets (sin egress fees)
-- [ ] Signed URLs para acceso privado
+- [x] Upload de logos, banners, fotos de servicios (`/api/upload`)
+- [x] Cliente R2 con presigned URLs para acceso privado
+- [x] CDN automático para assets (sin egress fees)
 
 #### 11.3 Supabase Realtime
-- [ ] Notificación en vivo al crear una nueva reserva (badge instantáneo)
-- [ ] Estado de cita en tiempo real (PENDING → CONFIRMED → IN_PROGRESS)
-- [ ] Presencia: ver qué staff está conectado al panel
+- [x] `useRealtimeAppointments` — notificación en vivo al crear/actualizar citas
+- [x] `useRealtimeNotifications` — notificaciones en tiempo real por usuario/negocio
+- [x] Singleton client browser-only (auth persistSession: false)
 
-#### 11.4 Seguridad — RLS y Auditoría
-- [ ] Row Level Security en todas las tablas Supabase
-- [ ] Audit log: cada acción crítica queda registrada (`AuditLog` model)
-- [ ] CAPTCHA en formulario de reserva pública (hCaptcha)
-- [ ] Webhook signature verification (Rebill, Flow.cl, Twilio)
-- [ ] Rotación de API keys sin downtime
+#### 11.4 Seguridad — Auditoría y Webhooks
+- [x] Audit log: `AuditLog` model en Prisma + helper `lib/audit/log.ts`
+- [x] Webhook Flow.cl: idempotencia + rate limiting + siempre HTTP 200
+- [x] Rate limiting (`@upstash/ratelimit`): booking (10/min), api (60/min), auth (5/min)
+- [ ] CAPTCHA en formulario de reserva pública (hCaptcha) — Fase 12
+- [ ] Row Level Security en tablas Supabase — pendiente
 
 #### 11.5 Monitoreo y Observabilidad
-- [ ] Sentry: error tracking con contexto de negocio
-- [ ] PostHog: analytics de producto + feature flags
-- [ ] Vercel Analytics: Core Web Vitals en producción
-- [ ] Health check endpoint: `GET /api/health`
-- [ ] Alertas automáticas si el cron falla
+- [x] Sentry: error tracking con contexto de negocio (`sentry.server.config.ts`)
+- [x] PostHog: analytics de producto + feature flags (`PostHogProvider`)
+- [ ] Health check endpoint: `GET /api/health` — pendiente
+- [ ] Vercel Analytics: Core Web Vitals — pendiente
 
 ---
 
-### ⏳ FASE 12 — Página Pública Premium (`[slug].frandora.cl`)
+### ⏳ FASE 12 — Página Pública Premium (`[slug].frandora.cl`) *(PRÓXIMA)*
 
 **Objetivo:** Tan buena que el cliente prefiera reservar aquí que llamar por teléfono.
 
@@ -820,10 +817,10 @@ npm install -g @upstash/mcp-server
 | Pagos Latam adicional | MercadoPago (Fase 21) | ⏳ |
 | Email transaccional | Resend | ✅ |
 | SMS / WhatsApp | Twilio | ✅ |
-| Cache y colas | Upstash Redis + QStash | ⏳ Fase 11 |
-| Storage CDN | Cloudflare R2 | ⏳ Fase 11 |
-| Monitoreo errores | Sentry | ⏳ Fase 11 |
-| Analytics producto | PostHog | ⏳ Fase 11 |
+| Cache y colas | Upstash Redis + QStash | ✅ |
+| Storage CDN | Cloudflare R2 | ✅ |
+| Monitoreo errores | Sentry | ✅ |
+| Analytics producto | PostHog | ✅ |
 | IA / LLM | Claude Haiku 4.5 (Anthropic) | ⏳ Fase 16 |
 | App móvil CI/CD | Expo EAS | ⏳ Fase 19 |
 | Video llamadas | Daily.co | ⏳ Fase 23 |
