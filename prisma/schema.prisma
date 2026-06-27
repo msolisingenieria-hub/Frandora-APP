@@ -1027,3 +1027,27 @@ model Subscription {
   @@index([businessId])
   @@index([rebillSubId])
 }
+
+// ─────────────────────────────────────────────
+// AUDIT LOG — Fase 11
+// ─────────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  businessId String?
+  userId     String?
+
+  action     String   // CREATE_APPOINTMENT, CANCEL_APPOINTMENT, UPDATE_SETTINGS, etc.
+  resource   String   // appointment, client, payment, staff, settings
+  resourceId String?
+  metadata   Json?    // datos adicionales del evento
+  ipAddress  String?
+  userAgent  String?
+
+  createdAt DateTime @default(now())
+
+  @@index([businessId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
