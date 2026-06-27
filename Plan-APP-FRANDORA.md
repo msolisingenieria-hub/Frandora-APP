@@ -11,8 +11,8 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fases completadas | **0 → 14** (fundación + core + infraestructura + página pública premium + formularios clínicos + membresías y portal del cliente) |
-| Fase en curso | **15 — Super Admin Frandora** |
+| Fases completadas | **0 → 15** (fundación + core + infraestructura + página pública premium + formularios clínicos + membresías y portal del cliente + Super Admin) |
+| Fase en curso | **16 — IA y Asistente Conversacional** |
 | Deploy | ✅ Vercel (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 35+ tablas |
 | Auth | ✅ Clerk |
@@ -315,36 +315,38 @@
 
 ---
 
-### ⏳ FASE 15 — Super Admin Frandora (`admin.frandora.cl`)
+### ✅ FASE 15 — Super Admin Frandora (`admin.frandora.cl`)
 
 **Objetivo:** Control total de la plataforma. El centro nervioso de Frandora.
 
-#### 15.1 Dashboard Financiero de Frandora
-- [ ] MRR (Monthly Recurring Revenue) en tiempo real
-- [ ] ARR anualizado, Churn rate mensual
-- [ ] Nuevos negocios registrados (día / semana / mes)
-- [ ] LTV promedio por plan, proyección de ingresos
+#### 15.1 Dashboard Financiero de Frandora ✅
+- [x] MRR (Monthly Recurring Revenue) en tiempo real
+- [x] ARR anualizado, Churn rate mensual
+- [x] Nuevos negocios registrados (día / semana / mes)
+- [x] LTV promedio por plan, proyección de ingresos
 
-#### 15.2 Gestión de Negocios
-- [ ] Listado con búsqueda, filtro por plan y estado
-- [ ] Impersonar cualquier negocio para soporte (sin revelar contraseña)
-- [ ] Suspender / reactivar / cambiar plan manualmente
-- [ ] Historial de pagos y notas internas por negocio
+#### 15.2 Gestión de Negocios ✅
+- [x] Listado con búsqueda, filtro por plan y estado
+- [x] Impersonar cualquier negocio para soporte (sin revelar contraseña)
+- [x] Suspender / reactivar / cambiar plan manualmente
+- [x] Historial de pagos y notas internas por negocio
 
-#### 15.3 Feature Flags por Plan/Negocio
-- [ ] Activar/desactivar features sin redeploy
-- [ ] Rollout gradual a % de negocios (como LaunchDarkly)
-- [ ] Override por negocio individual (para betas)
+> **Extras implementados:** Login exclusivo admin@frandora.cl con formulario branded, formularios de auth personalizados (sin Clerk UI widget) para sign-in y sign-up, schema BusinessStatus + BusinessNote, audit log completo.
 
-#### 15.4 Comunicaciones Globales
-- [ ] Broadcast email a todos o segmento de negocios
-- [ ] Anuncios tipo banner en el dashboard de los negocios
-- [ ] Changelog de nuevas funcionalidades (visible en el panel)
+#### 15.3 Feature Flags por Plan/Negocio ✅
+- [x] Activar/desactivar features sin redeploy
+- [x] Rollout gradual a % de negocios (como LaunchDarkly)
+- [x] Override por negocio individual (para betas)
 
-#### 15.5 Sistema de Soporte Integrado
-- [ ] Tickets de soporte con estado (nuevo, en revisión, resuelto)
-- [ ] Historial de conversaciones por negocio
-- [ ] Base de conocimiento interna
+#### 15.4 Comunicaciones Globales ✅
+- [x] Broadcast email a todos o segmento de negocios
+- [x] Anuncios tipo banner en el dashboard de los negocios
+- [x] Changelog de nuevas funcionalidades (visible en el panel)
+
+#### 15.5 Sistema de Soporte Integrado ✅
+- [x] Tickets de soporte con estado (nuevo, en revisión, resuelto)
+- [x] Historial de conversaciones por negocio
+- [x] Base de conocimiento interna
 
 ---
 

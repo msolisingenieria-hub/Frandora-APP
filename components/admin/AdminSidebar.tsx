@@ -27,9 +27,9 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   {
     title: "Operación",
     items: [
-      { href: "/admin/flags",          label: "Feature Flags",   icon: ToggleRight, soon: true },
-      { href: "/admin/comunicaciones", label: "Comunicaciones",  icon: Megaphone,   soon: true },
-      { href: "/admin/soporte",        label: "Soporte",         icon: LifeBuoy,    soon: true },
+      { href: "/admin/feature-flags",  label: "Feature Flags",  icon: ToggleRight },
+      { href: "/admin/comunicaciones", label: "Comunicaciones", icon: Megaphone },
+      { href: "/admin/soporte",        label: "Soporte",        icon: LifeBuoy },
     ],
   },
 ];
