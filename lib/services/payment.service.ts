@@ -59,31 +59,31 @@ export async function initiateBookingPayment(
   };
 }
 
-// Confirma un pago Flow.cl desde el webhook
+// Confirma un pago Flow.cl desde el webhook (idempotente)
 export async function confirmFlowPayment(token: string): Promise<void> {
-  const status = await getFlowPaymentStatus(token);
+  // Idempotencia: si ya está completado, no procesar de nuevo
+  const existing = await prisma.payment.findFirst({
+    where: { flowToken: token },
+    select: { id: true, status: true, appointmentId: true },
+  });
+  if (existing?.status === "COMPLETED") return;
+
+  const flowStatus = await getFlowPaymentStatus(token);
 
   const paymentStatus =
-    status.status === 2 ? "COMPLETED" :
-    status.status === 3 ? "FAILED" :
-    status.status === 4 ? "FAILED" : "PENDING";
+    flowStatus.status === 2 ? "COMPLETED" :
+    flowStatus.status === 3 ? "FAILED" :
+    flowStatus.status === 4 ? "FAILED" : "PENDING";
 
   await prisma.payment.updateMany({
     where: { flowToken: token },
     data: { status: paymentStatus as "COMPLETED" | "FAILED" | "PENDING" },
   });
 
-  // Si el pago completó, confirmar la cita
-  if (paymentStatus === "COMPLETED") {
-    await prisma.payment.findFirst({
-      where: { flowToken: token },
-    }).then(async (p) => {
-      if (p?.appointmentId) {
-        await prisma.appointment.update({
-          where: { id: p.appointmentId },
-          data: { status: "CONFIRMED" },
-        });
-      }
+  if (paymentStatus === "COMPLETED" && existing?.appointmentId) {
+    await prisma.appointment.update({
+      where: { id: existing.appointmentId },
+      data: { status: "CONFIRMED" },
     });
   }
 }
