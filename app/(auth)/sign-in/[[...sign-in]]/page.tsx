@@ -1,8 +1,8 @@
-import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
-import { ROOT_URL, SIGN_UP_URL } from "@/lib/urls";
+import { SignInForm } from "@/components/auth/SignInForm";
+import { ROOT_URL } from "@/lib/urls";
 
 const FEATURES = [
   "Agenda inteligente con recordatorios automáticos",
@@ -61,13 +61,7 @@ export default function SignInPage() {
         </div>
 
         <div className="w-full max-w-sm">
-          <SignIn />
-          <p className="mt-6 text-center text-sm text-slate-500">
-            ¿No tienes cuenta?{" "}
-            <Link href={SIGN_UP_URL} className="text-brand-navy hover:text-brand-teal font-semibold transition-colors">
-              Empieza gratis 14 días
-            </Link>
-          </p>
+          <SignInForm />
         </div>
       </div>
     </div>

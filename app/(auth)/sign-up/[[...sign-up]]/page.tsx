@@ -1,8 +1,8 @@
-import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { Gift, Zap, ShieldCheck } from "lucide-react";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
-import { ROOT_URL, SIGN_IN_URL } from "@/lib/urls";
+import { SignUpForm } from "@/components/auth/SignUpForm";
+import { ROOT_URL } from "@/lib/urls";
 
 const BENEFITS = [
   {
@@ -77,13 +77,7 @@ export default function SignUpPage() {
         </div>
 
         <div className="w-full max-w-sm">
-          <SignUp />
-          <p className="mt-6 text-center text-sm text-slate-500">
-            ¿Ya tienes cuenta?{" "}
-            <Link href={SIGN_IN_URL} className="text-brand-navy hover:text-brand-teal font-semibold transition-colors duration-150">
-              Inicia sesión
-            </Link>
-          </p>
+          <SignUpForm />
         </div>
       </div>
     </div>
