@@ -9,7 +9,7 @@ import {
   LayoutDashboard, CalendarDays, Users, Sparkles,
   Receipt, BarChart3, Megaphone, Settings2,
   Zap, ChevronRight, Archive, PanelLeftClose, PanelLeftOpen,
-  UserCog, X, Menu, LineChart,
+  UserCog, X, Menu, LineChart, FileText, ClipboardList, Images,
 } from "lucide-react";
 
 type NavItem = {
@@ -36,6 +36,14 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
     items: [
       { href: "/dashboard/ventas",      label: "Ventas & POS", icon: Receipt },
       { href: "/dashboard/facturacion", label: "Facturación",  icon: BarChart3 },
+    ],
+  },
+  {
+    title: "Clínica",
+    items: [
+      { href: "/dashboard/formularios",      label: "Formularios",     icon: FileText },
+      { href: "/dashboard/fichas",           label: "Fichas Clínicas", icon: ClipboardList },
+      { href: "/dashboard/galeria-clinica",  label: "Galería Clínica", icon: Images },
     ],
   },
   {

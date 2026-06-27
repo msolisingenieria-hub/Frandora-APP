@@ -125,12 +125,22 @@ enum CampaignChannel {
 enum FormFieldType {
   TEXT
   TEXTAREA
+  NUMBER
   SELECT
   CHECKBOX
+  BOOLEAN
   DATE
   PHONE
   EMAIL
   SIGNATURE
+  SCALE
+}
+
+enum FormType {
+  PRE_APPOINTMENT
+  POST_APPOINTMENT
+  INTAKE
+  CONSENT
 }
 
 enum CouponType {
@@ -218,6 +228,9 @@ model Business {
   campaigns      Campaign[]
   forms          Form[]
   reviews        Review[]
+  soapNotes      SoapNote[]
+  soapTemplates  SoapTemplate[]
+  beforeAfterPhotos BeforeAfterPhoto[]
   groupClasses   GroupClass[]
   waitlist       Waitlist[]
   timeBlocks     TimeBlock[]
@@ -380,6 +393,8 @@ model StaffMember {
   appointments Appointment[]
   groupClasses GroupClass[]
   timeBlocks   TimeBlock[]
+  soapNotes    SoapNote[]
+  beforeAfterPhotos BeforeAfterPhoto[]
 
   @@index([businessId])
   @@index([userId])
@@ -468,6 +483,7 @@ model Service {
   appointmentItems AppointmentService[]
   addOns           ServiceAddOn[]
   groupClasses     GroupClass[]
+  serviceForms     ServiceForm[]
 
   @@index([businessId])
   @@index([categoryId])
@@ -514,11 +530,13 @@ model Client {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  appointments AppointmentClient[]
-  payments     Payment[]
-  giftCards    GiftCard[]   @relation("GiftCardRecipient")
-  formResponses FormResponse[]
+  appointments     AppointmentClient[]
+  payments         Payment[]
+  giftCards        GiftCard[]   @relation("GiftCardRecipient")
+  formResponses    FormResponse[]
   classEnrollments ClassEnrollment[]
+  soapNotes        SoapNote[]
+  beforeAfterPhotos BeforeAfterPhoto[]
 
   @@unique([businessId, email])
   @@index([businessId])
@@ -558,6 +576,8 @@ model Appointment {
   services AppointmentService[]
   payment  Payment?
   formResponses FormResponse[]
+  soapNotes     SoapNote[]
+  beforeAfterPhotos BeforeAfterPhoto[]
   review   Review?
 
   @@index([businessId])
@@ -810,12 +830,16 @@ model Form {
 
   name        String
   description String?
-  isRequired  Boolean @default(false)
-  isActive    Boolean @default(true)
-  sendBefore  Int     @default(24)
+  type        FormType @default(PRE_APPOINTMENT)
+  isRequired  Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  isConsent   Boolean  @default(false)
+  sendBefore  Int      @default(24)
+  sendVia     String[] @default(["EMAIL"])
 
-  fields    FormField[]
-  responses FormResponse[]
+  fields       FormField[]
+  responses    FormResponse[]
+  serviceForms ServiceForm[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -828,12 +852,16 @@ model FormField {
   formId String
   form   Form   @relation(fields: [formId], references: [id], onDelete: Cascade)
 
-  label       String
-  type        FormFieldType
-  placeholder String?
-  options     String[]
-  isRequired  Boolean @default(false)
-  order       Int     @default(0)
+  label        String
+  type         FormFieldType
+  placeholder  String?
+  options      String[]
+  isRequired   Boolean  @default(false)
+  order        Int      @default(0)
+  min          Int?
+  max          Int?
+  helpText     String?
+  defaultValue String?
 
   @@index([formId])
 }
@@ -847,14 +875,29 @@ model FormResponse {
   appointmentId String?
   appointment   Appointment? @relation(fields: [appointmentId], references: [id])
 
-  data      Json
-  signedAt  DateTime?
-  signature String?
+  data        Json
+  signedAt    DateTime?
+  signature   String?
+  token       String?   @unique
+  expiresAt   DateTime?
+  completedAt DateTime?
 
   createdAt DateTime @default(now())
 
   @@index([formId])
   @@index([clientId])
+  @@index([token])
+}
+
+model ServiceForm {
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  formId    String
+  form      Form    @relation(fields: [formId], references: [id], onDelete: Cascade)
+  order     Int     @default(0)
+
+  @@id([serviceId, formId])
+  @@index([formId])
 }
 
 // ─────────────────────────────────────────────
@@ -978,6 +1021,89 @@ model TimeBlock {
 
   @@index([businessId])
   @@index([startTime])
+}
+
+// ─────────────────────────────────────────────
+// SOAP NOTES Y FICHAS CLÍNICAS — Fase 13
+// ─────────────────────────────────────────────
+
+model SoapNote {
+  id            String       @id @default(cuid())
+  businessId    String
+  business      Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clientId      String?
+  client        Client?      @relation(fields: [clientId], references: [id])
+  appointmentId String?
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+  staffId       String?
+  staff         StaffMember? @relation(fields: [staffId], references: [id])
+  templateId    String?
+
+  subjective  String  @db.Text
+  objective   String  @db.Text
+  assessment  String  @db.Text
+  plan        String  @db.Text
+  extraFields Json?   @default("{}")
+  isPrivate   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+  @@index([clientId])
+  @@index([appointmentId])
+}
+
+model SoapTemplate {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  name        String
+  serviceId   String?
+  extraFields Json    @default("[]")
+  isDefault   Boolean @default(false)
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+}
+
+// ─────────────────────────────────────────────
+// GALERÍA BEFORE/AFTER — Fase 13
+// ─────────────────────────────────────────────
+
+model BeforeAfterPhoto {
+  id            String       @id @default(cuid())
+  businessId    String
+  business      Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  appointmentId String?
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+  clientId      String?
+  client        Client?      @relation(fields: [clientId], references: [id])
+  staffId       String?
+  staff         StaffMember? @relation(fields: [staffId], references: [id])
+
+  beforeKey      String
+  afterKey       String
+  beforeUrl      String
+  afterUrl       String
+  caption        String?
+  serviceTag     String?
+  isPublic       Boolean   @default(false)
+  hasConsent     Boolean   @default(false)
+  consentAt      DateTime?
+  shareToken     String?   @unique
+  shareExpiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+  @@index([clientId])
+  @@index([staffId])
 }
 
 enum EnrollmentStatus {
