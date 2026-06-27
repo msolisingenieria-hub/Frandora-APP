@@ -11,8 +11,8 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fases completadas | **0 → 12** (fundación + core + infraestructura + página pública premium) |
-| Fase en curso | **13 — Formularios, SOAP Notes y Fichas** |
+| Fases completadas | **0 → 13** (fundación + core + infraestructura + página pública premium + formularios clínicos) |
+| Fase en curso | **14 — Membresías, Paquetes y Portal del Cliente** |
 | Deploy | ✅ Vercel (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 35+ tablas |
 | Auth | ✅ Clerk |
@@ -232,56 +232,76 @@
 
 ---
 
-### ⏳ FASE 13 — Formularios, SOAP Notes y Fichas
+### ✅ FASE 13 — Formularios, SOAP Notes y Fichas *(COMPLETADA)*
 
 **Objetivo:** Esencial para clínicas, tattoo, psicólogos, nutricionistas — mercado premium.
 
-#### 13.1 Builder de Formularios (Drag & Drop)
-- [ ] Campos: texto, número, fecha, sí/no, selector, escala 1-10, firma
-- [ ] Consentimientos informados con firma digital (canvas)
-- [ ] Asignar formulario a servicio específico
-- [ ] Envío automático por email/WhatsApp 24h antes de la cita
-- [ ] Formularios pre-cita y post-cita
+#### 13.1 Builder de Formularios
+- [x] Campos: texto, número, fecha, sí/no, selector, escala 1-10, firma, email, teléfono, texto largo
+- [x] Flag `isConsent` para formularios de consentimiento informado
+- [x] Asignar formulario a servicio específico (`ServiceForm` model)
+- [x] Tipos pre-cita, post-cita, intake y consentimiento (`FormType`)
+- [x] Reordenamiento de campos con flechas arriba/abajo
+- [x] Duplicar y eliminar formularios desde el listado
+- [ ] Envío automático por email/WhatsApp 24h antes — pendiente Fase 17 (Workflows)
+- [ ] Canvas de firma digital (draw) — pendiente Fase 23 (Módulo Salud)
+- [ ] Export respuestas de formularios — pendiente Fase 18 (BI)
 
 #### 13.2 SOAP Notes y Fichas Clínicas
-- [ ] Template estándar: Subjetivo / Objetivo / Evaluación / Plan
-- [ ] Templates personalizables por tipo de servicio
-- [ ] Historial de notas por cliente (privadas, solo staff autorizado)
-- [ ] Export ficha clínica completa en PDF
+- [x] Template estándar: Subjetivo / Objetivo / Evaluación / Plan
+- [x] Autosave con debounce de 2s en fichas existentes
+- [x] Plantillas SOAP personalizables (crear, renombrar, marcar predeterminada, eliminar)
+- [x] Ficha privada/compartida con toggle, historial por negocio
+- [x] `clientId` opcional (ficha sin cliente asignado)
+- [ ] Export ficha clínica en PDF — pendiente Fase 18 (BI/Reportes)
 
 #### 13.3 Galería Before/After
-- [ ] Upload de fotos por cita (almacenadas en R2)
-- [ ] Privadas por defecto; link seguro para compartir con cliente
-- [ ] Galería pública en perfil del profesional (requiere consentimiento del cliente)
-- [ ] Watermark automático con logo del negocio
+- [x] Upload de pares antes/después a Cloudflare R2 via presigned URLs
+- [x] Privadas por defecto; share token único de 30 días
+- [x] Flag `isPublic` + flag `hasConsent` para galería pública del negocio
+- [x] Filtro por pública/privada + paginación
+- [x] Toggle público/privado desde la tarjeta sin recargar
+- [ ] Watermark automático con logo del negocio — pendiente Fase 13.4
+- [ ] Página pública `/share/ba/[token]` para ver resultado — pendiente Fase 23
+
+**Archivos creados (Fase 13):**
+- `app/(dashboard)/dashboard/formularios/` + `fichas/` + `galeria-clinica/` (3 páginas + 3 loading)
+- `components/dashboard/forms/` — `FormsList`, `FormBuilder`, `FieldEditor`
+- `components/dashboard/soap/` — `SoapNotesList`, `SoapNoteEditor`, `SoapTemplateManager`
+- `components/dashboard/before-after/` — `BeforeAfterGrid`, `BeforeAfterCard`, `BeforeAfterUploader`, `BeforeAfterShareModal`
+- `app/api/soap/` + `app/api/before-after/` (rutas completas con GET/POST/PATCH/DELETE)
+- `lib/services/soap.service.ts` + `lib/services/before-after.service.ts`
+- `types/soap.ts` + `types/before-after.ts`
+- Sidebar actualizado con sección "Clínica"
 
 ---
 
-### ⏳ FASE 14 — Membresías, Paquetes y Economía Recurrente
+### ⏳ FASE 14 — Membresías, Paquetes y Portal del Cliente
 
 **Objetivo:** Ingresos recurrentes para el negocio. El modelo más rentable del sector.
 
 #### 14.1 Membresías (Negocio → Sus Clientes)
-- [ ] Crear planes: mensual, trimestral, anual con precio y beneficios
-- [ ] Incluir: N sesiones, % descuento, servicios exclusivos
-- [ ] Cobro recurrente automático via Flow.cl
-- [ ] Tarjeta digital de membresía con QR
+- [ ] Crear planes de membresía: mensual, trimestral, anual con precio y beneficios
+- [ ] Beneficios configurables: N sesiones incluidas, % de descuento, servicios exclusivos
+- [ ] Cobro recurrente automático via Flow.cl (suscripción periódica)
+- [ ] Tarjeta digital de membresía con QR escaneable en el local
 - [ ] Pausa y cancelación desde el panel y desde el portal del cliente
-- [ ] Dashboard de suscriptores: activos, vencidos, ingresos recurrentes
+- [ ] Dashboard de suscriptores: activos, vencidos, MRR del negocio
 
 #### 14.2 Paquetes de Sesiones
-- [ ] Comprar 10 sesiones, usar durante 3 meses
-- [ ] Seguimiento de sesiones usadas vs disponibles (por cliente)
-- [ ] Vencimiento automático con alerta al cliente
-- [ ] Paquetes compartidos (pareja / familia)
+- [ ] Vender paquetes: "10 cortes por $80.000"
+- [ ] Seguimiento de sesiones usadas vs disponibles por cliente
+- [ ] Vencimiento configurable (sin vencimiento, 30/60/90/180 días)
+- [ ] Descuento automático al usar sesión del paquete en POS
 
 #### 14.3 Portal del Cliente (Self-service)
-- [ ] Ver y gestionar mis reservas
+- [ ] Página pública del cliente: `app.frandora.cl/cliente/[token]`
+- [ ] Ver y gestionar mis próximas reservas
 - [ ] Ver mi historial de citas y pagos
 - [ ] Ver mi saldo de puntos de lealtad y canjear
-- [ ] Ver mis paquetes y sesiones disponibles
+- [ ] Ver mis membresías activas y paquetes disponibles
 - [ ] Cancelar/reprogramar según la política del negocio
-- [ ] Descargar comprobantes de pago
+- [ ] Descargar comprobantes de pago (PDF)
 
 ---
 
