@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import { getPortalData } from "@/lib/services/client-portal.service";
 import { PortalLayout } from "@/components/client-portal/PortalLayout";
 

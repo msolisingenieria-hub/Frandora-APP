@@ -21,7 +21,6 @@ export default function MembresiasPage() {
   const [memberships, setMemberships] = useState<MembershipItem[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [showCreate, setShowCreate] = useState(false);
-  const [showSubscribers, setShowSubscribers] = useState<string | null>(null);
   const [showAssign, setShowAssign] = useState<string | null>(null);
   const [tab, setTab] = useState<"planes" | "suscriptores">("planes");
 

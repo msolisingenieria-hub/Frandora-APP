@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getBusinessId } from "@/lib/auth/business";
-import { useSession } from "@/lib/services/package.service";
+import { consumeSession } from "@/lib/services/package.service";
 
 const useSchema = z.object({
   count: z.number().int().min(1).optional(),
@@ -21,7 +21,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
 
   try {
-    const updated = await useSession(businessId, id, parsed.data.count ?? 1);
+    const updated = await consumeSession(businessId, id, parsed.data.count ?? 1);
     if (!updated) return NextResponse.json({ error: "Paquete no encontrado o inactivo" }, { status: 404 });
     return NextResponse.json({ ok: true, sessionsRemaining: updated.sessionsRemaining });
   } catch (err) {

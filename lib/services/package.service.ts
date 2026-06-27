@@ -129,7 +129,7 @@ export async function listClientPackages(
   return rows.map(mapClientPackage);
 }
 
-export async function useSession(
+export async function consumeSession(
   businessId: string, clientPackageId: string, count = 1
 ): Promise<ClientPackageItem | null> {
   const cp = await prisma.clientPackage.findFirst({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, Pencil, Trash2, Copy, ChevronRight, Plus } from "lucide-react";
+import { FileText, Trash2, Copy, ChevronRight, Plus } from "lucide-react";
 import type { FormItem } from "@/types/forms";
 import { FORM_TYPE_LABELS } from "@/types/forms";
 
