@@ -37,3 +37,8 @@ next-env.d.ts
 
 # Claude Code — configuración local con tokens privados
 .claude/settings.local.json
+
+# Python bytecode (from .agents/skills scripts)
+__pycache__/
+*.pyc
+*.pyo
