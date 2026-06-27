@@ -108,8 +108,14 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
 
   // ── 3. admin.frandora.cl → Super Admin ──
   if (subdomain === "admin") {
+    // La page de sign-in del admin no requiere sesión
+    if (url.pathname === "/sign-in") {
+      return NextResponse.rewrite(new URL("/admin/sign-in", req.url));
+    }
     const { userId } = await auth();
-    if (!userId) return NextResponse.redirect(new URL("/sign-in", APP_URL));
+    if (!userId) {
+      return NextResponse.redirect(new URL("/sign-in", `https://admin.${ROOT_DOMAIN}`));
+    }
     return NextResponse.rewrite(new URL(`/admin${url.pathname}`, req.url));
   }
 

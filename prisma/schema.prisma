@@ -24,6 +24,12 @@ enum UserRole {
   CLIENT
 }
 
+enum BusinessStatus {
+  ACTIVE
+  SUSPENDED
+  CANCELED
+}
+
 enum PlanTier {
   STARTER
   PROFESSIONAL
@@ -209,12 +215,15 @@ model Business {
   website     String?
   customDomain String?
 
+  status  BusinessStatus @default(ACTIVE)
+
   ownerId String
   owner   User   @relation("BusinessOwner", fields: [ownerId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  adminNotes     BusinessNote[]
   locations      BusinessLocation[]
   staff          StaffMember[]
   services       Service[]
@@ -1333,4 +1342,24 @@ model ClientPortalToken {
   @@index([token])
   @@index([clientId])
   @@index([businessId])
+}
+
+// ─────────────────────────────────────────────
+// FASE 15 — SUPER ADMIN
+// ─────────────────────────────────────────────
+
+model BusinessNote {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  authorId   String
+  content    String
+  isPinned   Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+  @@index([createdAt])
 }
