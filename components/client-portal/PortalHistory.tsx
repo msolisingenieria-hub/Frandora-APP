@@ -6,7 +6,7 @@ type Props = { appointments: PortalAppointment[] };
 
 const STATUS_LABELS: Record<string, string> = {
   COMPLETED: "Completada",
-  CANCELLED: "Cancelada",
+  CANCELED: "Cancelada",
   NO_SHOW: "No asistió",
 };
 
@@ -35,7 +35,7 @@ export function PortalHistory({ appointments }: Props) {
             <div className="text-right">
               <span className={`text-xs px-2 py-0.5 rounded-full ${
                 apt.status === "COMPLETED" ? "bg-green-50 text-green-600" :
-                apt.status === "CANCELLED" ? "bg-red-50 text-red-500" :
+                apt.status === "CANCELED" ? "bg-red-50 text-red-500" :
                 "bg-gray-100 text-gray-500"
               }`}>
                 {STATUS_LABELS[apt.status] ?? apt.status}

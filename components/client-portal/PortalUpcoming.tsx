@@ -12,7 +12,7 @@ type Props = {
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "Pendiente",
   CONFIRMED: "Confirmada",
-  CANCELLED: "Cancelada",
+  CANCELED: "Cancelada",
   COMPLETED: "Completada",
   NO_SHOW: "No asistió",
   IN_PROGRESS: "En curso",

@@ -54,7 +54,7 @@ const STATUS_COLORS: Record<string, string> = {
   CONFIRMED:   "#0D1B2A",
   IN_PROGRESS: "#162d43",
   COMPLETED:   "#4a7c75",
-  CANCELLED:   "#94a3b8",
+  CANCELED:    "#94a3b8",
   NO_SHOW:     "#e11d48",
 };
 
