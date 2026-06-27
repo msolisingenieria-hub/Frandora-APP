@@ -37,12 +37,14 @@ export function PortalLayout({ data, token }: Props) {
       <div className="bg-[#0D1B2A] text-white px-4 pt-10 pb-6">
         <div className="max-w-md mx-auto">
           {portalData.business.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={portalData.business.logoUrl} alt={portalData.business.name} className="h-8 mb-4 object-contain" />
           ) : (
             <p className="text-[#6FA89E] text-sm font-medium mb-1">{portalData.business.name}</p>
           )}
           <div className="flex items-center gap-3">
             {portalData.client.avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={portalData.client.avatarUrl} alt="" className="w-12 h-12 rounded-full object-cover" />
             ) : (
               <div className="w-12 h-12 rounded-full bg-[#6FA89E]/20 flex items-center justify-center text-[#6FA89E] font-bold text-lg">
