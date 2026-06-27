@@ -1,5 +1,17 @@
+import {
+  Scissors, Wind, Sparkles, Waves, Hand, HeartPulse, Stethoscope,
+  Smile, Activity, Brain, Apple, Dumbbell, Flame, PenTool, PawPrint,
+  TrendingUp, LayoutGrid,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { BUSINESS_CATEGORIES } from "@/types/onboarding";
 import type { OnboardingData } from "@/types/onboarding";
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Scissors, Wind, Sparkles, Waves, Hand, HeartPulse, Stethoscope,
+  Smile, Activity, Brain, Apple, Dumbbell, Flame, PenTool, PawPrint,
+  TrendingUp, LayoutGrid,
+};
 
 type Props = {
   data: OnboardingData;
@@ -16,20 +28,32 @@ export function StepCategory({ data, onChange }: Props) {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {BUSINESS_CATEGORIES.map((cat) => {
             const isSelected = data.category === cat.id;
+            const Icon = ICON_MAP[cat.iconName] ?? LayoutGrid;
             return (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => onChange({ category: cat.id, categoryLabel: cat.label })}
                 className={[
-                  "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 text-center",
+                  "group flex flex-col items-center gap-2.5 p-4 rounded-xl border-2 transition-all duration-200 text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6FA89E]",
                   isSelected
-                    ? "border-brand-navy bg-brand-navy text-white shadow-brand"
-                    : "border-slate-200 bg-white text-brand-navy hover:border-brand-navy/40 hover:bg-brand-navy/5",
+                    ? "border-[#0D1B2A] bg-[#0D1B2A] text-white shadow-lg scale-[1.02]"
+                    : "border-slate-200 bg-white text-[#0D1B2A] hover:border-[#6FA89E] hover:shadow-md hover:scale-[1.01]",
                 ].join(" ")}
               >
-                <span className="text-2xl">{cat.emoji}</span>
-                <span className={`text-xs font-sans font-medium leading-tight ${isSelected ? "text-white" : "text-brand-navy"}`}>
+                <div className={[
+                  "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
+                  isSelected
+                    ? "bg-white/15"
+                    : "bg-[#F2F4F6] group-hover:bg-[#CFE3DF]",
+                ].join(" ")}>
+                  <Icon
+                    size={20}
+                    strokeWidth={1.75}
+                    className={isSelected ? "text-[#6FA89E]" : "text-[#0D1B2A]"}
+                  />
+                </div>
+                <span className={`text-xs font-medium leading-tight ${isSelected ? "text-white" : "text-[#0D1B2A]"}`}>
                   {cat.label}
                 </span>
               </button>

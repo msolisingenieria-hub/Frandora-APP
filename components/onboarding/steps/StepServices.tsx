@@ -80,15 +80,15 @@ export function StepServices({ data, onChange }: Props) {
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-sans text-slate-500">Precio (CLP)</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
+                  <div className="flex items-center border border-slate-200 rounded-lg bg-white focus-within:border-[#6FA89E] focus-within:ring-1 focus-within:ring-[#6FA89E] transition-colors">
+                    <span className="pl-3 pr-1.5 text-slate-400 text-sm font-medium select-none shrink-0">$</span>
                     <input
                       type="number"
                       value={service.price || ""}
                       onChange={(e) => updateService(service.tempId, { price: Number(e.target.value) })}
                       placeholder="15000"
                       min="0"
-                      className="input-brand pl-7"
+                      className="flex-1 py-2.5 pr-3 text-sm text-[#0D1B2A] bg-transparent outline-none placeholder:text-slate-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
                 </div>

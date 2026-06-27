@@ -25,31 +25,35 @@ export type OnboardingData = {
   isAnnual: boolean;
 };
 
+import type { LucideIcon } from "lucide-react";
+
 export type BusinessCategoryOption = {
   id: string;
   label: string;
-  emoji: string;
+  iconName: string;
 };
 
 export const BUSINESS_CATEGORIES: BusinessCategoryOption[] = [
-  { id: "BARBERSHOP",       label: "Barbería",           emoji: "✂️" },
-  { id: "HAIR_SALON",       label: "Salón de Cabello",   emoji: "💇" },
-  { id: "BEAUTY_SALON",     label: "Salón de Belleza",   emoji: "💄" },
-  { id: "SPA",              label: "Spa",                emoji: "🧖" },
-  { id: "NAIL_SALON",       label: "Uñas & Manicura",    emoji: "💅" },
-  { id: "MASSAGE",          label: "Masajes",            emoji: "💆" },
-  { id: "AESTHETIC_CLINIC", label: "Clínica Estética",   emoji: "✨" },
-  { id: "DENTAL",           label: "Odontología",        emoji: "🦷" },
-  { id: "PHYSIOTHERAPY",    label: "Kinesiología",       emoji: "🏥" },
-  { id: "PSYCHOLOGY",       label: "Psicología",         emoji: "🧠" },
-  { id: "NUTRITION",        label: "Nutrición",          emoji: "🥗" },
-  { id: "FITNESS_GYM",      label: "Fitness & Gym",      emoji: "🏋️" },
-  { id: "YOGA_PILATES",     label: "Yoga & Pilates",     emoji: "🧘" },
-  { id: "TATTOO",           label: "Tatuajes",           emoji: "🎨" },
-  { id: "VETERINARY",       label: "Veterinaria",        emoji: "🐾" },
-  { id: "COACHING",         label: "Coaching",           emoji: "📈" },
-  { id: "OTHER",            label: "Otro",               emoji: "⚡" },
+  { id: "BARBERSHOP",       label: "Barbería",           iconName: "Scissors" },
+  { id: "HAIR_SALON",       label: "Salón de Cabello",   iconName: "Wind" },
+  { id: "BEAUTY_SALON",     label: "Salón de Belleza",   iconName: "Sparkles" },
+  { id: "SPA",              label: "Spa",                iconName: "Waves" },
+  { id: "NAIL_SALON",       label: "Uñas & Manicura",    iconName: "Hand" },
+  { id: "MASSAGE",          label: "Masajes",            iconName: "HeartPulse" },
+  { id: "AESTHETIC_CLINIC", label: "Clínica Estética",   iconName: "Stethoscope" },
+  { id: "DENTAL",           label: "Odontología",        iconName: "Smile" },
+  { id: "PHYSIOTHERAPY",    label: "Kinesiología",       iconName: "Activity" },
+  { id: "PSYCHOLOGY",       label: "Psicología",         iconName: "Brain" },
+  { id: "NUTRITION",        label: "Nutrición",          iconName: "Apple" },
+  { id: "FITNESS_GYM",      label: "Fitness & Gym",      iconName: "Dumbbell" },
+  { id: "YOGA_PILATES",     label: "Yoga & Pilates",     iconName: "Flame" },
+  { id: "TATTOO",           label: "Tatuajes",           iconName: "PenTool" },
+  { id: "VETERINARY",       label: "Veterinaria",        iconName: "PawPrint" },
+  { id: "COACHING",         label: "Coaching",           iconName: "TrendingUp" },
+  { id: "OTHER",            label: "Otro",               iconName: "LayoutGrid" },
 ];
+
+export type { LucideIcon };
 
 export const DURATION_OPTIONS = [
   { value: 15,  label: "15 min" },

@@ -2,7 +2,7 @@
 
 import type { PublicService, BookingFormState } from "@/types/booking";
 import { formatPrice, formatDuration } from "@/types/booking";
-import { Clock, ChevronRight, Sparkles } from "lucide-react";
+import { Clock, ChevronRight, Zap } from "lucide-react";
 
 type Props = {
   services: PublicService[];
@@ -22,73 +22,88 @@ export function StepService({ services, currency, state, onChange, onNext }: Pro
 
   return (
     <div className="p-4 md:p-6">
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          <Sparkles size={16} className="text-brand-teal" />
-          <p className="text-brand-teal text-xs font-sans font-semibold tracking-[0.15em] uppercase">
-            Paso 1 de 4
-          </p>
-        </div>
-        <h2 className="text-brand-navy font-sans font-bold text-xl">
-          ¿Qué servicio necesitas?
-        </h2>
+      {/* Header */}
+      <div className="mb-5">
+        <p className="text-[#6FA89E] text-xs font-semibold tracking-[0.15em] uppercase mb-1">
+          Paso 1 de 4
+        </p>
+        <h2 className="text-[#0D1B2A] font-bold text-xl">¿Qué servicio necesitas?</h2>
+        <p className="text-slate-400 text-sm mt-0.5">Elige y reserva al instante</p>
       </div>
 
-      <div className="space-y-6">
-        {categories.map((cat) => (
-          <div key={cat}>
-            <p className="text-slate-400 text-xs font-sans font-semibold tracking-[0.15em] uppercase mb-3 px-1">
-              {cat}
-            </p>
-            <div className="space-y-2">
-              {services
-                .filter((s) => (s.categoryName ?? "Servicios") === cat)
-                .map((service) => (
-                  <button
-                    key={service.id}
-                    onClick={() => handleSelect(service.id)}
-                    className={[
-                      "w-full flex items-center gap-4 p-4 rounded-2xl border-2 text-left transition-all duration-200",
-                      state.serviceId === service.id
-                        ? "border-brand-navy bg-brand-navy/5"
-                        : "border-slate-100 bg-white hover:border-brand-navy/30 hover:bg-slate-50",
-                    ].join(" ")}
-                  >
-                    {/* Color indicator */}
-                    <div
-                      className="w-1 h-12 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: service.color }}
-                    />
+      <div className="space-y-5">
+        {categories.map((cat) => {
+          const catServices = services.filter((s) => (s.categoryName ?? "Servicios") === cat);
+          return (
+            <div key={cat}>
+              {categories.length > 1 && (
+                <p className="text-slate-400 text-xs font-semibold tracking-[0.12em] uppercase mb-2 px-1">
+                  {cat}
+                </p>
+              )}
+              <div className="space-y-2">
+                {catServices.map((service) => {
+                  const isSelected = state.serviceId === service.id;
+                  return (
+                    <button
+                      key={service.id}
+                      onClick={() => handleSelect(service.id)}
+                      className={[
+                        "group w-full flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all duration-200 active:scale-[0.98]",
+                        isSelected
+                          ? "border-[#0D1B2A] bg-[#0D1B2A] shadow-lg"
+                          : "border-slate-100 bg-white hover:border-[#6FA89E]/50 hover:shadow-md",
+                      ].join(" ")}
+                    >
+                      {/* Color dot */}
+                      <div
+                        className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center opacity-90"
+                        style={{ backgroundColor: service.color + "22", border: `1.5px solid ${service.color}44` }}
+                      >
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: service.color }} />
+                      </div>
 
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-sans font-semibold text-brand-navy text-sm leading-tight">
-                        {service.name}
-                      </p>
-                      {service.description && (
-                        <p className="text-slate-400 text-xs mt-0.5 line-clamp-1">
-                          {service.description}
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <p className={`font-semibold text-sm leading-tight ${isSelected ? "text-white" : "text-[#0D1B2A]"}`}>
+                          {service.name}
                         </p>
-                      )}
-                      <div className="flex items-center gap-2 mt-1.5">
-                        <span className="flex items-center gap-1 text-slate-400 text-xs">
+                        {service.description && (
+                          <p className={`text-xs mt-0.5 line-clamp-1 ${isSelected ? "text-white/60" : "text-slate-400"}`}>
+                            {service.description}
+                          </p>
+                        )}
+                        <span className={`flex items-center gap-1 text-xs mt-1 ${isSelected ? "text-[#6FA89E]" : "text-slate-400"}`}>
                           <Clock size={11} /> {formatDuration(service.duration)}
                         </span>
                       </div>
-                    </div>
 
-                    {/* Price */}
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="font-sans font-bold text-brand-navy text-sm">
-                        {formatPrice(service.price, currency)}
-                      </span>
-                      <ChevronRight size={16} className="text-slate-300" />
-                    </div>
-                  </button>
-                ))}
+                      {/* Price + arrow */}
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="text-right">
+                          <span className={`font-bold text-sm block ${isSelected ? "text-white" : "text-[#0D1B2A]"}`}>
+                            {formatPrice(service.price, currency)}
+                          </span>
+                        </div>
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
+                          isSelected ? "bg-[#6FA89E]" : "bg-slate-100 group-hover:bg-[#CFE3DF]"
+                        }`}>
+                          <ChevronRight size={14} className={isSelected ? "text-white" : "text-[#0D1B2A]"} />
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
+      </div>
+
+      {/* Footer trust line */}
+      <div className="mt-6 flex items-center justify-center gap-1.5">
+        <Zap size={11} className="text-[#6FA89E]" />
+        <p className="text-xs text-slate-400">Confirmación instantánea</p>
       </div>
     </div>
   );

@@ -81,7 +81,7 @@ export function BookingPage({ business, initialServiceId, initialStaffId, compac
   return (
     <div
       className={compact ? "min-h-full" : "min-h-screen"}
-      style={compact ? {} : { background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}
+      style={compact ? {} : { background: "linear-gradient(180deg, #f0f4f8 0%, #f8fafc 50%, #ffffff 100%)" }}
     >
       {/* Header con info del negocio — oculto en modo compact */}
       {!compact && <BookingHeader business={business} />}
@@ -91,31 +91,29 @@ export function BookingPage({ business, initialServiceId, initialStaffId, compac
 
         {/* Barra de progreso (pasos 1-4) */}
         {state.step < 5 && (
-          <div className="px-4 md:px-0 pt-6 pb-2">
-            {/* Steps indicator */}
-            <div className="flex items-center gap-1.5 mb-3">
+          <div className="px-4 md:px-0 pt-4 pb-2">
+            <div className="flex items-center gap-1 mb-3">
               {STEP_LABELS.map((label, i) => {
                 const stepNum = i + 1;
                 const isActive    = stepNum === state.step;
                 const isCompleted = stepNum < state.step;
                 return (
-                  <div key={label} className="flex items-center gap-1.5 flex-1">
+                  <div key={label} className="flex items-center gap-1 flex-1">
                     <div className={[
-                      "h-1.5 rounded-full flex-1 transition-all duration-500",
-                      isCompleted ? "bg-brand-teal" : isActive ? "bg-brand-navy" : "bg-slate-200",
+                      "h-1 rounded-full flex-1 transition-all duration-500",
+                      isCompleted ? "bg-[#6FA89E]" : isActive ? "bg-[#0D1B2A]" : "bg-slate-200",
                     ].join(" ")} />
                   </div>
                 );
               })}
             </div>
 
-            {/* Selected service summary */}
             {selectedService && state.step > 1 && (
-              <div className="flex items-center gap-2 px-1">
-                <Sparkles size={12} className="text-brand-teal" />
-                <p className="text-xs text-slate-500 font-body truncate">
-                  <span className="font-semibold text-brand-navy">{selectedService.name}</span>
-                  {" · "}{selectedService.duration} min
+              <div className="flex items-center gap-2 bg-[#F2F4F6] rounded-xl px-3 py-2">
+                <Sparkles size={12} className="text-[#6FA89E] shrink-0" />
+                <p className="text-xs text-slate-600 truncate">
+                  <span className="font-semibold text-[#0D1B2A]">{selectedService.name}</span>
+                  <span className="text-slate-400"> · {selectedService.duration} min</span>
                 </p>
               </div>
             )}
@@ -123,21 +121,20 @@ export function BookingPage({ business, initialServiceId, initialStaffId, compac
         )}
 
         {/* Card principal */}
-        <div className="bg-white rounded-t-3xl md:rounded-3xl shadow-brand border border-slate-100 overflow-hidden">
+        <div className="bg-white rounded-t-3xl md:rounded-3xl shadow-[0_4px_32px_rgba(13,27,42,0.10)] border border-slate-100/80 overflow-hidden">
 
           {/* Back button */}
           {state.step > 1 && state.step < 5 && (
             <div className="px-4 pt-4">
               <button
                 onClick={goBack}
-                className="flex items-center gap-1 text-slate-400 hover:text-brand-navy text-sm font-body transition-colors"
+                className="flex items-center gap-1 text-slate-400 hover:text-[#0D1B2A] text-sm transition-colors"
               >
                 <ChevronLeft size={16} /> Volver
               </button>
             </div>
           )}
 
-          {/* Steps */}
           {state.step === 1 && (
             <StepService
               services={business.services}
@@ -184,8 +181,8 @@ export function BookingPage({ business, initialServiceId, initialStaffId, compac
 
         {/* Powered by Frandora */}
         <div className="flex items-center justify-center gap-1.5 mt-6">
-          <p className="text-slate-300 text-xs font-body">Reservas gestionadas por</p>
-          <span className="text-brand-teal text-xs font-sans font-bold">Frandora</span>
+          <p className="text-slate-400 text-xs">Reservas seguras con</p>
+          <span className="text-[#6FA89E] text-xs font-bold">Frandora</span>
         </div>
       </div>
     </div>
