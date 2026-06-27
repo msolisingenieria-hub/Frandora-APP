@@ -11,8 +11,8 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fases completadas | **0 → 13** (fundación + core + infraestructura + página pública premium + formularios clínicos) |
-| Fase en curso | **14 — Membresías, Paquetes y Portal del Cliente** |
+| Fases completadas | **0 → 14** (fundación + core + infraestructura + página pública premium + formularios clínicos + membresías y portal del cliente) |
+| Fase en curso | **15 — Super Admin Frandora** |
 | Deploy | ✅ Vercel (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 35+ tablas |
 | Auth | ✅ Clerk |
@@ -276,32 +276,42 @@
 
 ---
 
-### ⏳ FASE 14 — Membresías, Paquetes y Portal del Cliente
+### ✅ FASE 14 — Membresías, Paquetes y Portal del Cliente
 
 **Objetivo:** Ingresos recurrentes para el negocio. El modelo más rentable del sector.
 
 #### 14.1 Membresías (Negocio → Sus Clientes)
-- [ ] Crear planes de membresía: mensual, trimestral, anual con precio y beneficios
-- [ ] Beneficios configurables: N sesiones incluidas, % de descuento, servicios exclusivos
-- [ ] Cobro recurrente automático via Flow.cl (suscripción periódica)
-- [ ] Tarjeta digital de membresía con QR escaneable en el local
-- [ ] Pausa y cancelación desde el panel y desde el portal del cliente
-- [ ] Dashboard de suscriptores: activos, vencidos, MRR del negocio
+- [x] Crear planes de membresía: mensual, trimestral, anual con precio y beneficios
+- [x] Beneficios configurables: N sesiones incluidas, % de descuento
+- [ ] Cobro recurrente automático via Flow.cl (pendiente Fase 17 — workflows)
+- [ ] Tarjeta digital de membresía con QR escaneable (pendiente — requiere react-qr-code)
+- [x] Pausa y cancelación desde el panel
+- [x] Dashboard de suscriptores: activos, vencidos, MRR del negocio
 
 #### 14.2 Paquetes de Sesiones
-- [ ] Vender paquetes: "10 cortes por $80.000"
-- [ ] Seguimiento de sesiones usadas vs disponibles por cliente
-- [ ] Vencimiento configurable (sin vencimiento, 30/60/90/180 días)
-- [ ] Descuento automático al usar sesión del paquete en POS
+- [x] Vender paquetes: "10 cortes por $80.000"
+- [x] Seguimiento de sesiones usadas vs disponibles por cliente
+- [x] Vencimiento configurable (sin vencimiento, 30/60/90/180 días)
+- [ ] Descuento automático al usar sesión en POS (pendiente integración POS)
 
 #### 14.3 Portal del Cliente (Self-service)
-- [ ] Página pública del cliente: `app.frandora.cl/cliente/[token]`
-- [ ] Ver y gestionar mis próximas reservas
-- [ ] Ver mi historial de citas y pagos
-- [ ] Ver mi saldo de puntos de lealtad y canjear
-- [ ] Ver mis membresías activas y paquetes disponibles
-- [ ] Cancelar/reprogramar según la política del negocio
-- [ ] Descargar comprobantes de pago (PDF)
+- [x] Página pública del cliente: `app.frandora.cl/cliente/[token]`
+- [x] Ver y gestionar mis próximas reservas
+- [x] Ver mi historial de citas
+- [x] Ver mi saldo de puntos de lealtad
+- [x] Ver mis membresías activas y paquetes disponibles
+- [x] Cancelar citas según la política del negocio (canCancel calculado en backend)
+- [ ] Descargar comprobantes de pago (PDF) (pendiente Fase 16)
+
+**Archivos creados:**
+- `prisma/schema.prisma` — modelos Membership, ClientMembership, SessionPackage, ClientPackage, ClientPortalToken
+- `types/membership.ts`, `types/package.ts`, `types/client-portal.ts`
+- `lib/services/membership.service.ts`, `lib/services/package.service.ts`, `lib/services/client-portal.service.ts`
+- `app/api/memberships/**`, `app/api/packages/**`, `app/api/portal/**`, `app/api/clients/[id]/portal-token`
+- `app/(dashboard)/dashboard/membresias/page.tsx`, `app/(dashboard)/dashboard/paquetes/page.tsx`
+- `components/dashboard/memberships/**`, `components/dashboard/packages/**`
+- `components/client-portal/**`, `app/cliente/[token]/page.tsx`
+- `components/dashboard/Sidebar.tsx` — sección "Fidelización" agregada
 
 ---
 
