@@ -35,7 +35,10 @@ export function AdminSignInForm() {
       const result = await signIn.create({ identifier: ADMIN_EMAIL, password });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        router.push("/admin");
+        // En producción (admin.frandora.cl) "/" es el admin vía middleware rewrite.
+        // En local ("/admin") también funciona porque el middleware pasa directo.
+        const isAdminSubdomain = window.location.hostname.startsWith("admin.");
+        router.push(isAdminSubdomain ? "/" : "/admin");
       }
     } catch (err: unknown) {
       const code = (err as { errors?: { code: string }[] })?.errors?.[0]?.code ?? "";
