@@ -14,6 +14,7 @@ export type DaySchedule = {
 export type OnboardingData = {
   category: string;
   categoryLabel: string;
+  categoryCustomLabel?: string; // para categoría "Otro"
   businessName: string;
   phone: string;
   address: string;

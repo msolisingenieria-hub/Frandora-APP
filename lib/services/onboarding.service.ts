@@ -47,12 +47,16 @@ async function uniqueSlug(base: string): Promise<string> {
 export async function completeOnboarding({ clerkId, email, name, data }: CompleteOnboardingInput) {
   await ensurePlansExist();
 
-  // 1. Upsert User
-  const user = await prisma.user.upsert({
-    where: { clerkId },
-    update: { name, email, role: "BUSINESS_OWNER" },
-    create: { clerkId, email, name, role: "BUSINESS_OWNER" },
-  });
+  // 1. Upsert User — primero por clerkId, si falla por email duplicado actualiza el clerkId
+  let user = await prisma.user.findFirst({ where: { OR: [{ clerkId }, { email }] } });
+  if (user) {
+    user = await prisma.user.update({
+      where: { id: user.id },
+      data: { clerkId, name, email, role: "BUSINESS_OWNER" },
+    });
+  } else {
+    user = await prisma.user.create({ data: { clerkId, email, name, role: "BUSINESS_OWNER" } });
+  }
 
   // 2. Create Business
   const slug = await uniqueSlug(slugify(data.businessName));

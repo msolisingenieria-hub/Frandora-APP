@@ -35,7 +35,7 @@ const INITIAL_DATA: OnboardingData = {
 };
 
 function isStepValid(step: number, data: OnboardingData): boolean {
-  if (step === 1) return !!data.category;
+  if (step === 1) return !!data.category && (data.category !== "OTHER" || !!data.categoryCustomLabel?.trim());
   if (step === 2) return !!(data.businessName.trim() && data.phone.trim() && data.city.trim());
   if (step === 3) return data.services.some((s) => s.name.trim() && s.price > 0);
   return true;
