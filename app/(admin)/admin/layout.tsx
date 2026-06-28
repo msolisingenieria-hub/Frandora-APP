@@ -30,9 +30,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <p className="max-w-sm text-sm font-body text-slate-500">
             Tu cuenta no tiene permisos de administrador. Si crees que es un error, cierra sesión e ingresa con la cuenta correcta.
           </p>
-          <code className="mt-2 rounded-lg bg-slate-100 px-3 py-2 text-xs text-slate-600 select-all">
-            {userId}
-          </code>
         </div>
       </ClerkProvider>
     );
