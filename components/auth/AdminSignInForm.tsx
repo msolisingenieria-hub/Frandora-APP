@@ -6,19 +6,20 @@ import { Eye, EyeOff, Loader2, AlertCircle, ShieldCheck, Mail, RotateCcw } from 
 
 const ADMIN_EMAIL = "admin@frandora.cl";
 
-function clerkMsg(code: string): string {
+function clerkMsg(err: unknown): string {
+  const e = (err as { errors?: { code?: string; message?: string; longMessage?: string }[] })?.errors?.[0];
+  const code = e?.code ?? "";
   const map: Record<string, string> = {
     form_identifier_not_found: "Credenciales incorrectas.",
     form_password_incorrect:   "Credenciales incorrectas.",
     form_code_incorrect:       "Código incorrecto. Revísalo e inténtalo de nuevo.",
     verification_expired:      "El código venció. Pide uno nuevo.",
     too_many_requests:         "Demasiados intentos. Espera unos minutos.",
+    session_exists:            "Ya tienes una sesión abierta. Recargando...",
+    client_state_invalid:      "Sesión anterior corrupta. Recarga la página (Ctrl+F5).",
   };
-  return map[code] ?? "Algo salió mal. Inténtalo de nuevo.";
-}
-
-function errCode(err: unknown): string {
-  return (err as { errors?: { code: string }[] })?.errors?.[0]?.code ?? "";
+  // Para errores no mapeados, mostramos el mensaje real de Clerk para no ocultar la causa.
+  return map[code] ?? e?.longMessage ?? e?.message ?? "Algo salió mal. Inténtalo de nuevo.";
 }
 
 export function AdminSignInForm() {
@@ -76,7 +77,13 @@ export function AdminSignInForm() {
       }
       setError("No se pudo completar el acceso.");
     } catch (err: unknown) {
-      setError(clerkMsg(errCode(err)));
+      const code = (err as { errors?: { code?: string }[] })?.errors?.[0]?.code ?? "";
+      // Si ya hay una sesión activa (cookies previas), entramos directo al panel.
+      if (code === "session_exists") {
+        window.location.href = window.location.hostname.startsWith("admin.") ? "/" : "/admin";
+        return;
+      }
+      setError(clerkMsg(err));
     } finally {
       setLoading(false);
     }
@@ -95,7 +102,7 @@ export function AdminSignInForm() {
       }
       setError("Código incorrecto o vencido.");
     } catch (err: unknown) {
-      setError(clerkMsg(errCode(err)));
+      setError(clerkMsg(err));
     } finally {
       setLoading(false);
     }
@@ -108,7 +115,7 @@ export function AdminSignInForm() {
     try {
       await sendEmailCode();
     } catch (err: unknown) {
-      setError(clerkMsg(errCode(err)));
+      setError(clerkMsg(err));
     } finally {
       setResending(false);
     }
