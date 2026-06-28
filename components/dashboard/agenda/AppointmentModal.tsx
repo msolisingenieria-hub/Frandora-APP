@@ -13,6 +13,7 @@ type Props = {
   slotEnd?:    Date | null;
   onClose:     () => void;
   onUpdated?:  () => void;
+  onCharge?:   (appt: AppointmentListItem) => void;
 };
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
@@ -24,7 +25,7 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   NO_SHOW:     { label: "No asistió",  color: "bg-red-100 text-red-600" },
 };
 
-export function AppointmentModal({ appointment, onClose, onUpdated }: Props) {
+export function AppointmentModal({ appointment, onClose, onUpdated, onCharge }: Props) {
   const [status, setStatus]   = useState(appointment?.status ?? "PENDING");
   const [notes,  setNotes]    = useState(appointment?.internalNotes ?? "");
   const [saving, setSaving]   = useState(false);
@@ -160,11 +161,17 @@ export function AppointmentModal({ appointment, onClose, onUpdated }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-100 flex gap-3">
+        <div className="px-6 py-4 border-t border-slate-100 flex gap-2 flex-wrap">
           <button onClick={onClose}
-            className="flex-1 py-2.5 rounded-xl text-sm font-body text-slate-500 hover:text-brand-navy border border-slate-200 transition-colors">
+            className="py-2.5 px-4 rounded-xl text-sm font-body text-slate-500 hover:text-brand-navy border border-slate-200 transition-colors">
             Cerrar
           </button>
+          {onCharge && appointment && (
+            <button onClick={() => onCharge(appointment)}
+              className="py-2.5 px-4 rounded-xl text-sm font-sans font-semibold text-brand-navy border border-brand-teal/40 bg-brand-teal/5 hover:bg-brand-teal/10 transition-colors flex items-center gap-1.5">
+              💳 Cobrar
+            </button>
+          )}
           <button onClick={saveChanges} disabled={saving}
             className="flex-1 py-2.5 rounded-xl text-sm font-sans font-semibold text-white transition-all disabled:opacity-60"
             style={{ background: "linear-gradient(135deg,#0D1B2A,#1a3347)" }}>

@@ -26,9 +26,17 @@ export default async function AgendaPage() {
   const from = startOfMonth(now);
   const to   = endOfMonth(addMonths(now, 1));
 
-  const [appointments, timeBlocks] = await Promise.all([
+  const [appointments, timeBlocks, staffMembers] = await Promise.all([
     getAppointmentsForDashboard(business.id, from, to),
     getTimeBlocks(business.id, from, to),
+    prisma.staffMember.findMany({
+      where: { businessId: business.id, isActive: true },
+      select: {
+        id: true, name: true, role: true, color: true, avatarUrl: true,
+        schedules: { select: { dayOfWeek: true, isAvailable: true, startTime: true, endTime: true } },
+      },
+      orderBy: { name: "asc" },
+    }),
   ]);
 
   return (
@@ -86,6 +94,7 @@ export default async function AgendaPage() {
         appointments={appointments}
         timeBlocks={timeBlocks}
         businessSlug={business.slug}
+        staff={staffMembers}
       />
     </div>
   );
