@@ -49,6 +49,19 @@
 
     --radius: 0.75rem;
 
+    /* ── Variables de tema del negocio (sobreescritas por BusinessThemeInjector) ── */
+    --biz-primary:        211 53% 11%;
+    --biz-primary-fg:     0 0% 100%;
+    --biz-accent:         170 25% 55%;
+    --biz-accent-fg:      0 0% 100%;
+    --biz-secondary:      169 26% 85%;
+    --biz-radius:         0.75rem;
+    --density-space-xs:   0.25rem;
+    --density-space-sm:   0.5rem;
+    --density-space-md:   1rem;
+    --density-space-lg:   1.5rem;
+    --density-space-xl:   2rem;
+
     --chart-1: 211 53% 11%;
     --chart-2: 170 25% 55%;
     --chart-3: 211 40% 30%;

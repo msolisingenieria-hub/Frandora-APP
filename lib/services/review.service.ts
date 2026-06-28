@@ -92,8 +92,8 @@ export async function toggleReviewVisibility(id: string, businessId: string, isP
   });
 }
 
-export async function getAppointmentForReview(appointmentId: string) {
-  return prisma.appointment.findUnique({
+export async function getAppointmentForReview(appointmentId: string, businessSlug?: string) {
+  const appt = await prisma.appointment.findUnique({
     where: { id: appointmentId },
     include: {
       business: { select: { name: true, slug: true } },
@@ -101,4 +101,8 @@ export async function getAppointmentForReview(appointmentId: string) {
       staff:    { select: { name: true } },
     },
   });
+  // Si se pasa un slug, verificar que la cita pertenece al negocio correcto.
+  // Evita que un atacante lea datos de citas de otro negocio con un appointmentId arbitrario.
+  if (appt && businessSlug && appt.business.slug !== businessSlug) return null;
+  return appt;
 }

@@ -11,8 +11,8 @@
 
 | Ítem | Estado |
 |------|--------|
-| Fases completadas | **0 → 15** (fundación + core + infraestructura + página pública premium + formularios clínicos + membresías y portal del cliente + Super Admin) |
-| Fase en curso | **16 — IA y Asistente Conversacional** |
+| Fases completadas | **0 → 15** (fundación + core + infraestructura + página pública premium + formularios clínicos + membresías y portal del cliente + Super Admin) + **Auditoría de Seguridad completa + Sistema de Temas (28/06/2026)** |
+| Fase en curso | **16 — IA y Asistente Conversacional** (+ 16.5 Personalización Total en curso) |
 | Deploy | ✅ Vercel (`frandora-system`) |
 | Base de datos | ✅ Supabase PostgreSQL — 35+ tablas |
 | Auth | ✅ Clerk |
@@ -350,7 +350,59 @@
 
 ---
 
+### ✅ AUDITORÍA COMPLETA — Fases 0-15 (28/06/2026)
+
+#### Seguridad
+- [x] Fix vulnerabilidad crítica en review.service.ts (getAppointmentForReview sin businessId)
+- [x] Fix vulnerabilidad crítica en notification.service.ts (loadAppointmentData sin businessId)
+- [x] Auditoría de 93 API routes — 91/93 correctamente filtran por businessId
+
+#### Sistema de Temas (base para Fase 16+)
+- [x] lib/theme/hexToHsl.ts — conversión hex→HSL
+- [x] lib/theme/generateThemeCSS.ts — generador de CSS variables + 5 paletas predefinidas
+- [x] components/providers/BusinessThemeInjector.tsx — Server Component
+- [x] components/providers/BusinessThemeInjectorClient.tsx — Client Component con preview en vivo
+- [x] Extensión BusinessCustomization: themeMode, densityPreset, borderRadiusPreset, dashboardBgType, *ColorHsl
+- [x] CSS variables --biz-primary, --biz-accent, --biz-secondary, --density-space-*, --biz-radius en globals.css
+- [x] Tokens Tailwind: biz-primary, biz-accent, biz-secondary
+
+#### Tests E2E (Playwright)
+- [x] 105/105 tests pasando (full-audit.spec.ts — 107 tests definidos)
+- [x] Cobertura: landing, auth, onboarding, dashboard (16 páginas), admin, booking, portal cliente
+- [x] Responsive: desktop (1280x800), tablet (768x1024), mobile (375x812)
+
+#### Rediseños UI
+- [x] admin/feature-flags: 5.5/10 → 9/10 (grupos por scope, barra de progreso, pill mono)
+- [x] admin/comunicaciones: 6/10 → 9/10 (bordes semánticos, KPIs, toast feedback)
+- [x] dashboard/servicios: 6.5/10 → 9/10 (drawer, tabs categoría, badge visibilidad)
+- [x] dashboard/ajustes/personalizacion: NUEVA página (preview en vivo, 5 paletas, density, radius)
+
+---
+
 ## PILAR 2: INTELIGENCIA — IA y Automatización (Fases 16–18)
+
+---
+
+### ⏳ FASE 16.5 — Personalización Total (Dashboard + Página Pública)
+
+**Objetivo:** Cada negocio tiene su identidad visual propia en toda la plataforma.
+
+#### 16.5.1 Dashboard del Negocio
+- [x] Sistema de temas con CSS variables dinámicas
+- [x] 5 paletas predefinidas + picker personalizado
+- [x] Densidad: Compact / Normal / Spacious
+- [x] Radio de bordes: Sharp / Rounded / Pill
+- [x] Preview en vivo sin reload
+- [ ] Modo oscuro por negocio
+- [ ] Fondo del panel: sólido / gradiente / imagen URL
+- [ ] Animaciones: activar/desactivar reducción de movimiento
+
+#### 16.5.2 Página Pública de Reservas
+- [x] Color primario, secundario, acento (Fase 12)
+- [x] Tipografía elegible (Fase 12)
+- [ ] Temas completos intercambiables (usar sistema de themePresets)
+- [ ] Editor visual drag-and-drop de secciones
+- [ ] Plantillas de página: Minimalista / Premium / Clínica / Fitness
 
 ---
 
@@ -379,6 +431,8 @@
 - [ ] Respuestas sugeridas a reseñas negativas
 - [ ] Asunto y cuerpo de campañas de email basados en objetivo
 - [ ] FAQ del negocio generado desde historial de preguntas frecuentes
+- [ ] Sugerencia de paleta de colores por IA basada en el nombre/categoría del negocio
+- [ ] Generador de logo con IA para negocios sin branding
 
 ---
 
@@ -389,6 +443,7 @@
 #### 17.1 Builder Visual de Flujos
 - [ ] Interfaz tipo Zapier/Make: trigger → condición → acción
 - [ ] 20+ triggers: nueva reserva, cancelación, X días sin visita, cumpleaños, pago recibido, review recibida, saldo bajo de producto, etc.
+- [ ] Trigger: cuando un negocio cambia su tema visual (para AB testing de conversión)
 - [ ] 20+ acciones: enviar email, SMS, WhatsApp, crear tarea, aplicar cupón, agregar tag, añadir lista de espera, notificar al staff
 - [ ] Condiciones: si es cliente nuevo, si el servicio es X, si el monto > Y
 
@@ -864,5 +919,6 @@ npm install -g @upstash/mcp-server
 
 ---
 
-*Última actualización: Plan maestro world-class — 26 fases, 4 pilares, registro completo de skills/agentes/MCPs.*
+*Última actualización: 28/06/2026 — Auditoría completa Fases 0-15 + Sistema de Temas + FASE 16.5 incorporada al roadmap.*
 *Skills activos: 20 prioritarios documentados. Agentes: workflow definido por fase. MCPs: 4 activos + 7 por instalar.*
+*Plan maestro world-class — 26 fases + 16.5, 4 pilares, registro completo de skills/agentes/MCPs.*

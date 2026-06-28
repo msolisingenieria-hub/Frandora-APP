@@ -13,11 +13,11 @@ import { prisma } from "@/lib/db/client";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
-async function loadAppointmentData(appointmentId: string) {
+async function loadAppointmentData(appointmentId: string, expectedBusinessId?: string) {
   const appt = await prisma.appointment.findUnique({
     where: { id: appointmentId },
     include: {
-      business: { select: { name: true, slug: true } },
+      business: { select: { id: true, name: true, slug: true } },
       clients:  {
         include: { client: { select: { name: true, email: true, phone: true } } },
         take: 1,
@@ -27,6 +27,8 @@ async function loadAppointmentData(appointmentId: string) {
     },
   });
   if (!appt) return null;
+  // Defensa en profundidad: si se pasa businessId, verificar que coincide.
+  if (expectedBusinessId && appt.business.id !== expectedBusinessId) return null;
 
   const client  = appt.clients[0]?.client;
   const service = appt.services[0]?.service;

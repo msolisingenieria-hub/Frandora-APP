@@ -10,7 +10,7 @@ import {
   Receipt, BarChart3, Megaphone, Settings2,
   Zap, ChevronRight, Archive, PanelLeftClose, PanelLeftOpen,
   UserCog, X, Menu, LineChart, FileText, ClipboardList, Images,
-  CreditCard, Package,
+  CreditCard, Package, Palette,
 } from "lucide-react";
 
 type NavItem = {
@@ -64,7 +64,8 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   {
     title: "Config",
     items: [
-      { href: "/dashboard/ajustes", label: "Ajustes", icon: Settings2 },
+      { href: "/dashboard/ajustes",                  label: "Ajustes",         icon: Settings2 },
+      { href: "/dashboard/ajustes/personalizacion",  label: "Personalización", icon: Palette   },
     ],
   },
 ];

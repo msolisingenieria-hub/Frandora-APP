@@ -82,6 +82,10 @@ const config: Config = {
           gray: "#F2F4F6",
           white: "#FFFFFF",
         },
+        // ── Tokens de tema del negocio (dinámicos via BusinessThemeInjector) ──
+        "biz-primary":   "hsl(var(--biz-primary))",
+        "biz-accent":    "hsl(var(--biz-accent))",
+        "biz-secondary": "hsl(var(--biz-secondary))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -156,6 +160,10 @@ const config: Config = {
       },
     },
   },
+  safelist: [
+    "density-compact", "density-normal", "density-spacious",
+    "radius-sharp", "radius-rounded", "radius-pill",
+  ],
   plugins: [require("tailwindcss-animate")],
 };
 

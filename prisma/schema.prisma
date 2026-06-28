@@ -344,12 +344,23 @@ model BusinessCustomization {
   businessId String   @unique
   business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
-  primaryColor   String @default("#6d28d9")
-  secondaryColor String @default("#a78bfa")
-  accentColor    String @default("#f59e0b")
+  primaryColor   String @default("#0D1B2A")
+  secondaryColor String @default("#CFE3DF")
+  accentColor    String @default("#6FA89E")
   fontFamily     String @default("Inter")
   borderRadius   String @default("0.75rem")
   darkMode       Boolean @default(false)
+
+  // ── Sistema de temas (Fase 10 / Auditoría) ──
+  themeMode          String  @default("light")    // "light" | "dark" | "auto"
+  densityPreset      String  @default("normal")   // "compact" | "normal" | "spacious"
+  borderRadiusPreset String  @default("rounded")  // "sharp" | "rounded" | "pill"
+  dashboardBgType    String  @default("gradient") // "solid" | "gradient" | "image"
+  dashboardBgValue   String?
+  // Colores en HSL para inyección directa en CSS variables (calculados desde los hex)
+  primaryColorHsl    String  @default("211 53% 11%")
+  accentColorHsl     String  @default("170 25% 55%")
+  secondaryColorHsl  String  @default("169 26% 85%")
 
   heroTitle       String?
   heroSubtitle    String?
