@@ -1,12 +1,10 @@
-import { ClerkProvider } from "@clerk/nextjs";
 import { AdminSignInForm } from "@/components/auth/AdminSignInForm";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
 import { ShieldCheck } from "lucide-react";
 
 export default function AdminSignInPage() {
   return (
-    <ClerkProvider>
-      <div className="min-h-screen flex flex-col items-center justify-center p-6"
+    <div className="min-h-screen flex flex-col items-center justify-center p-6"
         style={{ background: "linear-gradient(160deg, #132539 0%, #0D1B2A 50%, #091520 100%)" }}
       >
         {/* Glow decorativo */}
@@ -42,6 +40,5 @@ export default function AdminSignInPage() {
           </p>
         </div>
       </div>
-    </ClerkProvider>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useSignIn } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, AlertCircle, ShieldCheck } from "lucide-react";
 
 const ADMIN_EMAIL = "admin@frandora.cl";
@@ -18,7 +17,6 @@ function clerkMsg(code: string): string {
 
 export function AdminSignInForm() {
   const { signIn, setActive, isLoaded } = useSignIn();
-  const router = useRouter();
 
   const [password, setPassword] = useState("");
   const [showPwd, setShowPwd]   = useState(false);
@@ -35,10 +33,10 @@ export function AdminSignInForm() {
       const result = await signIn.create({ identifier: ADMIN_EMAIL, password });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        // En producción (admin.frandora.cl) "/" es el admin vía middleware rewrite.
-        // En local ("/admin") también funciona porque el middleware pasa directo.
-        const isAdminSubdomain = window.location.hostname.startsWith("admin.");
-        router.push(isAdminSubdomain ? "/" : "/admin");
+        // Forzamos recarga completa para que el middleware vea la sesión en la cookie.
+        // En admin.frandora.cl "/" es el panel admin. En local va a /admin.
+        const dest = window.location.hostname.startsWith("admin.") ? "/" : "/admin";
+        window.location.href = dest;
       }
     } catch (err: unknown) {
       const code = (err as { errors?: { code: string }[] })?.errors?.[0]?.code ?? "";
