@@ -115,7 +115,12 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     // En Clerk v6, auth.protect() maneja el handshake correctamente.
     // Si no hay sesión, redirige a NEXT_PUBLIC_CLERK_SIGN_IN_URL (/sign-in en este dominio).
     await auth.protect();
-    return NextResponse.rewrite(new URL(`/admin${url.pathname}`, req.url));
+    // Aceptamos tanto "/negocios" como "/admin/negocios" para no romper enlaces
+    // internos del panel (el menú enlaza con prefijo /admin, válido también en local).
+    const adminPath = url.pathname.startsWith("/admin")
+      ? url.pathname
+      : `/admin${url.pathname}`;
+    return NextResponse.rewrite(new URL(adminPath, req.url));
   }
 
   // ── 4. [slug].frandora.cl → Página pública del negocio ──
