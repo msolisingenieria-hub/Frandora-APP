@@ -19,29 +19,9 @@ function GoogleIcon() {
   );
 }
 
-function AppleIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.39.07 2.35.74 3.17.77 1.2-.24 2.35-.95 3.64-.84 1.54.12 2.69.7 3.44 1.76-3.15 1.9-2.4 6.07.77 7.23-.57 1.55-1.35 3.08-3.02 3.96zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-    </svg>
-  );
-}
-
-function MicrosoftIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="#f25022" d="M1 1h10v10H1z"/>
-      <path fill="#00a4ef" d="M13 1h10v10H13z"/>
-      <path fill="#7fba00" d="M1 13h10v10H1z"/>
-      <path fill="#ffb900" d="M13 13h10v10H13z"/>
-    </svg>
-  );
-}
 
 const SOCIAL_PROVIDERS = [
-  { id: "oauth_google",    label: "Google",    icon: GoogleIcon    },
-  { id: "oauth_apple",     label: "Apple",     icon: AppleIcon     },
-  { id: "oauth_microsoft", label: "Microsoft", icon: MicrosoftIcon },
+  { id: "oauth_google", label: "Google", icon: GoogleIcon },
 ] as const;
 
 type OAuthStrategy = typeof SOCIAL_PROVIDERS[number]["id"];
@@ -223,19 +203,19 @@ export function SignInForm() {
       {errorBox}
 
       {/* ── Botones sociales ── */}
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="flex flex-col gap-2.5">
         {SOCIAL_PROVIDERS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             type="button"
             onClick={() => handleSocial(id)}
             disabled={!!socialLoading}
-            className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-2.5 px-3 text-xs font-sans font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+            className="w-full flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white py-2.5 px-4 text-sm font-sans font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
             aria-label={`Continuar con ${label}`}
           >
             {socialLoading === id
               ? <Loader2 size={15} className="animate-spin text-slate-400" />
-              : <><Icon /><span className="hidden sm:inline">{label}</span></>
+              : <><Icon /><span>Continuar con {label}</span></>
             }
           </button>
         ))}
