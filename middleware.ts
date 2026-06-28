@@ -112,7 +112,9 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     if (url.pathname === "/sign-in") {
       return NextResponse.rewrite(new URL("/admin/sign-in", req.url));
     }
-    const { userId } = await auth();
+    const authResult = await auth();
+    const { userId } = authResult;
+    console.log("[admin-middleware] path:", url.pathname, "userId:", userId, "sessionId:", (authResult as Record<string, unknown>).sessionId ?? "none");
     if (!userId) {
       return NextResponse.redirect(new URL("/sign-in", `https://admin.${ROOT_DOMAIN}`));
     }
