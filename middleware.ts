@@ -112,12 +112,9 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     if (url.pathname === "/sign-in") {
       return NextResponse.rewrite(new URL("/admin/sign-in", req.url));
     }
-    const authResult = await auth();
-    const { userId } = authResult;
-    console.log("[admin-middleware] path:", url.pathname, "userId:", userId, "sessionId:", (authResult as Record<string, unknown>).sessionId ?? "none");
-    if (!userId) {
-      return NextResponse.redirect(new URL("/sign-in", `https://admin.${ROOT_DOMAIN}`));
-    }
+    // En Clerk v6, auth.protect() maneja el handshake correctamente.
+    // Si no hay sesión, redirige a NEXT_PUBLIC_CLERK_SIGN_IN_URL (/sign-in en este dominio).
+    await auth.protect();
     return NextResponse.rewrite(new URL(`/admin${url.pathname}`, req.url));
   }
 

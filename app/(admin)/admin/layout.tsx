@@ -18,7 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     select: { name: true, role: true },
   });
 
-  if (!user || user.role !== "SUPER_ADMIN") redirect("/dashboard");
+  if (!user || user.role !== "SUPER_ADMIN") redirect("/sign-in");
 
   return (
     <ClerkProvider>
