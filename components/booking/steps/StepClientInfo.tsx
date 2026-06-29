@@ -92,6 +92,20 @@ export function StepClientInfo({ state, onChange, onSubmit, loading, error }: Pr
           />
         </div>
 
+        {/* Honeypot anti-bot — invisible para humanos, los bots lo rellenan */}
+        <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden" tabIndex={-1}>
+          <label htmlFor="website-url">No completar este campo</label>
+          <input
+            id="website-url"
+            type="text"
+            name="website"
+            autoComplete="off"
+            tabIndex={-1}
+            value={state.hp}
+            onChange={(e) => onChange({ hp: e.target.value })}
+          />
+        </div>
+
         {/* Error */}
         {error && (
           <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-body">

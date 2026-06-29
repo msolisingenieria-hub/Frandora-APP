@@ -62,6 +62,7 @@ export type BookingFormState = {
   clientEmail: string;
   clientPhone: string;
   notes: string;
+  hp: string; // honeypot anti-bot — debe quedar vacío
 };
 
 export type BookingResult = {
@@ -84,6 +85,7 @@ export const INITIAL_BOOKING_STATE: BookingFormState = {
   clientEmail: "",
   clientPhone: "",
   notes: "",
+  hp: "",
 };
 
 // Formatea precio según moneda

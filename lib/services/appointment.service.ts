@@ -31,6 +31,22 @@ export type AppointmentListItem = {
   clientPhone: string | null;
 };
 
+/**
+ * Resuelve el businessId a partir del slug público del negocio.
+ * Se usa para que la reserva pública NO confíe en un businessId enviado
+ * por el cliente: el negocio se determina server-side desde el slug.
+ * Retorna null si el slug no existe o el negocio no está activo.
+ */
+export async function resolveBusinessIdBySlug(slug: string): Promise<string | null> {
+  const business = await prisma.business.findUnique({
+    where: { slug },
+    select: { id: true, status: true },
+  });
+  if (!business) return null;
+  if (business.status !== "ACTIVE") return null;
+  return business.id;
+}
+
 export async function createPublicAppointment(input: CreatePublicAppointmentInput) {
   const { businessId, serviceId, staffId, startTime, clientName, clientEmail, clientPhone, notes } = input;
   const start = new Date(startTime);

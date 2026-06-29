@@ -50,7 +50,7 @@ export function BookingPage({ business, initialServiceId, initialStaffId, compac
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          businessId:  business.id,
+          slug:        business.slug,
           serviceId:   state.serviceId,
           staffId:     state.staffId,
           startTime:   state.startTime,
@@ -58,6 +58,7 @@ export function BookingPage({ business, initialServiceId, initialStaffId, compac
           clientEmail: state.clientEmail,
           clientPhone: state.clientPhone,
           notes:       state.notes,
+          hp:          state.hp,
         }),
       });
       const data = await res.json();
