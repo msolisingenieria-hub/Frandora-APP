@@ -10,6 +10,13 @@ test.describe("API de notificaciones", () => {
     expect(res.status()).toBe(401);
   });
 
+  test("GET /api/notifications/reminders con clave incorrecta retorna 401", async ({ request }) => {
+    const res = await request.get("/api/notifications/reminders", {
+      headers: { authorization: "Bearer clave-incorrecta-12345" },
+    });
+    expect(res.status()).toBe(401);
+  });
+
   test("GET /api/notifications/reminders con clave correcta retorna 200", async ({ request }) => {
     const res = await request.get("/api/notifications/reminders", {
       headers: { authorization: `Bearer ${CRON_SECRET}` },
