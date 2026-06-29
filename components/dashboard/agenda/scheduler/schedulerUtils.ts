@@ -2,7 +2,8 @@ import { getHours, getMinutes, getDay } from "date-fns";
 import type { AppointmentListItem } from "@/lib/services/appointment.service";
 import type { AgendaStaff, AppointmentWithLayout } from "@/types/agenda";
 
-export function resolveOverlaps(appointments: AppointmentListItem[]): AppointmentWithLayout[] {
+export function resolveOverlaps(appointments: AppointmentListItem[] | undefined | null): AppointmentWithLayout[] {
+  if (!appointments?.length) return [];
   const sorted = [...appointments].sort(
     (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
   );

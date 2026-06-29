@@ -57,16 +57,22 @@ export function ProSchedulerGrid({
     return () => { ts.removeEventListener("scroll", onTs); gs.removeEventListener("scroll", onGs); };
   }, [syncScroll, hourHeight]);
 
-  // Filtrar staff
-  const filteredStaff = staff.filter((s) =>
-    filters.staffIds.length === 0 || filters.staffIds.includes(s.id)
+  // Guards defensivos
+  const safeStaff   = staff        ?? [];
+  const safeAppts   = appointments ?? [];
+  const safeBlocks  = timeBlocks   ?? [];
+  const staffIds    = filters?.staffIds  ?? [];
+  const statuses    = filters?.statuses  ?? [];
+  const searchQuery = filters?.searchQuery ?? "";
+
+  const filteredStaff = safeStaff.filter((s) =>
+    staffIds.length === 0 || staffIds.includes(s.id)
   );
 
-  // Filtrar citas
-  const filteredAppts = appointments.filter((a) => {
-    if (filters.statuses.length > 0 && !filters.statuses.includes(a.status)) return false;
-    if (filters.searchQuery) {
-      const q = filters.searchQuery.toLowerCase();
+  const filteredAppts = safeAppts.filter((a) => {
+    if (statuses.length > 0 && !statuses.includes(a.status)) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
       if (!a.clientName?.toLowerCase().includes(q) &&
           !a.services?.[0]?.name?.toLowerCase().includes(q)) return false;
     }
@@ -81,7 +87,7 @@ export function ProSchedulerGrid({
   }
 
   function getStaffBlocks(staffId: string) {
-    return timeBlocks.filter((b) => !b.staffId || b.staffId === staffId);
+    return safeBlocks.filter((b) => !b.staffId || b.staffId === staffId);
   }
 
   function handleDragStart(e: React.DragEvent, appt: AppointmentListItem) {

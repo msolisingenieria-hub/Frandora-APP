@@ -52,11 +52,11 @@ export function AgendaView({ appointments, timeBlocks, businessSlug, staff = [] 
   const [posAppt,        setPosAppt]        = useState<AppointmentListItem | null>(null);
   const [showBlockModal, setShowBlockModal] = useState(false);
   const [blockSlot,      setBlockSlot]      = useState<{ start: Date; end: Date } | null>(null);
-  const [localAppts,     setLocalAppts]     = useState(appointments);
-  const [localBlocks,    setLocalBlocks]    = useState(timeBlocks);
+  const [localAppts,     setLocalAppts]     = useState(appointments ?? []);
+  const [localBlocks,    setLocalBlocks]    = useState(timeBlocks   ?? []);
   const [isFullscreen,   setIsFullscreen]   = useState(false);
 
-  const normalizedBlocks: TimeBlockItem[] = localBlocks.map((b) => ({
+  const normalizedBlocks: TimeBlockItem[] = (localBlocks ?? []).map((b) => ({
     ...b,
     startTime: new Date(b.startTime),
     endTime:   new Date(b.endTime),
@@ -65,12 +65,20 @@ export function AgendaView({ appointments, timeBlocks, businessSlug, staff = [] 
   }));
 
   async function refreshCalendar() {
-    const [aRes, bRes] = await Promise.all([
-      fetch("/api/appointments?dashboard=1"),
-      fetch("/api/time-blocks"),
-    ]);
-    if (aRes.ok) setLocalAppts(await aRes.json());
-    if (bRes.ok) setLocalBlocks(await bRes.json());
+    try {
+      const [aRes, bRes] = await Promise.all([
+        fetch("/api/appointments"),
+        fetch("/api/time-blocks"),
+      ]);
+      if (aRes.ok) {
+        const data = await aRes.json().catch(() => null);
+        if (Array.isArray(data)) setLocalAppts(data);
+      }
+      if (bRes.ok) {
+        const data = await bRes.json().catch(() => null);
+        if (Array.isArray(data)) setLocalBlocks(data);
+      }
+    } catch { /* red error — mantiene estado anterior */ }
   }
 
   const handleApptMove = useCallback(async (id: string, newStart: Date, newEnd: Date, newStaffId: string) => {
@@ -89,7 +97,7 @@ export function AgendaView({ appointments, timeBlocks, businessSlug, staff = [] 
   const zoomIn  = () => setZoom((z) => ZOOM_LEVELS[Math.min(ZOOM_LEVELS.indexOf(z) + 1, ZOOM_LEVELS.length - 1)]);
   const zoomOut = () => setZoom((z) => ZOOM_LEVELS[Math.max(ZOOM_LEVELS.indexOf(z) - 1, 0)]);
 
-  const dayAppts = localAppts.filter((a) => {
+  const dayAppts = (localAppts ?? []).filter((a) => {
     const d = new Date(a.startTime);
     return d.getFullYear() === selectedDate.getFullYear() &&
            d.getMonth()    === selectedDate.getMonth()    &&
@@ -165,7 +173,7 @@ export function AgendaView({ appointments, timeBlocks, businessSlug, staff = [] 
         <MiniCalendar
           selectedDate={selectedDate}
           onChange={setSelectedDate}
-          appointmentDates={localAppts.map((a) => new Date(a.startTime))}
+          appointmentDates={(localAppts ?? []).map((a) => new Date(a.startTime))}
         />
 
         {/* Otras secciones */}
