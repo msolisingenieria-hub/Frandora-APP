@@ -1,235 +1,139 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Settings2, Check, Loader2, Globe,
-  Phone, Clock, Instagram, Facebook,
-} from "lucide-react";
+import { Settings2, Check, Loader2, Building2, ShieldCheck, Bell, ExternalLink } from "lucide-react";
+import { GeneralSettings }      from "@/components/dashboard/settings/GeneralSettings";
+import { PolicySettings }       from "@/components/dashboard/settings/PolicySettings";
+import { NotificationSettings } from "@/components/dashboard/settings/NotificationSettings";
+import { EMPTY_SETTINGS } from "@/types/settings";
+import type { SettingsForm, SettingsField } from "@/types/settings";
 
-type FormData = {
-  name: string; slug: string; description: string;
-  phone: string; website: string; timezone: string;
-  instagram: string; facebook: string; tiktok: string; whatsapp: string;
-};
-
-const EMPTY: FormData = {
-  name: "", slug: "", description: "", phone: "", website: "",
-  timezone: "America/Santiago", instagram: "", facebook: "", tiktok: "", whatsapp: "",
-};
-
-const TIMEZONES = [
-  "America/Santiago", "America/Buenos_Aires", "America/Bogota",
-  "America/Lima", "America/Mexico_City", "America/Caracas", "America/Montevideo",
-];
-
-// ─── Field fuera del componente principal para que no pierda el foco ───
-type FieldProps = {
-  label: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  icon?: React.ElementType;
-  type?: string;
-  placeholder?: string;
-};
-
-function Field({ label, value, onChange, icon: Icon, type = "text", placeholder }: FieldProps) {
-  return (
-    <div>
-      <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-        {label}
-      </label>
-      <div className="relative">
-        {Icon && <Icon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />}
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className={`w-full ${Icon ? "pl-9" : "pl-3"} pr-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal font-body text-brand-navy transition-colors`}
-        />
-      </div>
-    </div>
-  );
-}
+const TABS = [
+  { key: "general",       label: "Negocio",        icon: Building2   },
+  { key: "policies",      label: "Reservas",       icon: ShieldCheck },
+  { key: "notifications", label: "Notificaciones", icon: Bell        },
+] as const;
+type TabKey = typeof TABS[number]["key"];
 
 export default function AjustesPage() {
-  const [form,    setForm]    = useState<FormData>(EMPTY);
+  const [tab,     setTab]     = useState<TabKey>("general");
+  const [form,    setForm]    = useState<SettingsForm>(EMPTY_SETTINGS);
+  const [loading, setLoading] = useState(true);
   const [saving,  setSaving]  = useState(false);
   const [saved,   setSaved]   = useState(false);
-  const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/settings").then((r) => r.json()).then((data) => {
-      if (data && !data.error) {
+    fetch("/api/settings").then((r) => r.json()).then((d) => {
+      if (d && !d.error) {
         setForm({
-          name:        data.name        ?? "",
-          slug:        data.slug        ?? "",
-          description: data.description ?? "",
-          phone:       data.phone       ?? "",
-          website:     data.website     ?? "",
-          timezone:    data.timezone    ?? "America/Santiago",
-          instagram:   data.instagram   ?? "",
-          facebook:    data.facebook    ?? "",
-          tiktok:      data.tiktok      ?? "",
-          whatsapp:    data.whatsapp    ?? "",
+          name: d.name ?? "", slug: d.slug ?? "", description: d.description ?? "",
+          logoUrl: d.logoUrl ?? null, phone: d.phone ?? "",
+          website: d.website ?? "", timezone: d.timezone ?? "America/Santiago", currency: d.currency ?? "CLP",
+          instagram: d.instagram ?? "", facebook: d.facebook ?? "", tiktok: d.tiktok ?? "", whatsapp: d.whatsapp ?? "",
+          bookingAdvanceDays: d.bookingAdvanceDays ?? 60, minCancelHours: d.minCancelHours ?? 24,
+          bufferMinutes: d.bufferMinutes ?? 0, depositPercent: d.depositPercent ?? 0,
+          requirePayment: d.requirePayment ?? false, autoConfirm: d.autoConfirm ?? true,
+          allowClientCancel: d.allowClientCancel ?? true, allowClientReschedule: d.allowClientReschedule ?? true,
+          emailEnabled: d.emailEnabled ?? true, smsEnabled: d.smsEnabled ?? false, whatsappEnabled: d.whatsappEnabled ?? false,
+          reminder24h: d.reminder24h ?? true, reminder1h: d.reminder1h ?? false, reviewRequestEnabled: d.reviewRequestEnabled ?? true,
         });
       }
       setLoading(false);
-    });
+    }).catch(() => setLoading(false));
   }, []);
 
-  const set = (key: keyof FormData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-      setForm((p) => ({ ...p, [key]: e.target.value }));
-
-  const setSlug = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const slug = e.target.value
-      .toLowerCase()
-      .replace(/[^a-z0-9-]/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "");
-    setForm((p) => ({ ...p, slug }));
+  const set = (k: SettingsField, v: string | boolean | number | null) => {
+    setForm((p) => ({ ...p, [k]: v }));
+    setSaved(false);
   };
 
-  const handleSave = async () => {
+  async function handleSave() {
     setSaving(true);
     setError(null);
-    const payload = {
-      name:        form.name        || undefined,
-      slug:        form.slug        || undefined,
-      description: form.description || null,
-      phone:       form.phone       || null,
-      website:     form.website     || null,
-      timezone:    form.timezone,
-      instagram:   form.instagram   || null,
-      facebook:    form.facebook    || null,
-      tiktok:      form.tiktok      || null,
-      whatsapp:    form.whatsapp    || null,
-    };
     const res = await fetch("/api/settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        ...form,
+        description: form.description || null, phone: form.phone || null, website: form.website || null,
+        logoUrl: form.logoUrl,
+        instagram: form.instagram || null, facebook: form.facebook || null, tiktok: form.tiktok || null, whatsapp: form.whatsapp || null,
+        slug: form.slug || undefined, name: form.name || undefined,
+      }),
     });
     setSaving(false);
     if (!res.ok) {
-      const data = await res.json().catch(() => null);
-      setError(data?.error || "No se pudieron guardar los cambios");
+      const d = await res.json().catch(() => null);
+      setError(typeof d?.error === "string" ? d.error : "No se pudieron guardar los cambios");
       return;
     }
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
-  };
+  }
 
   if (loading) return (
-    <div className="min-h-screen p-6 md:p-8 space-y-4"
-      style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}>
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="h-14 rounded-2xl bg-slate-100 animate-pulse" />
-      ))}
+    <div className="min-h-screen p-6 space-y-4" style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}>
+      {Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-16 rounded-2xl bg-slate-100 animate-pulse" />)}
     </div>
   );
 
   return (
-    <div
-      className="min-h-screen p-6 md:p-8"
-      style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}
-    >
+    <div className="min-h-screen p-4 md:p-8" style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}>
       <div className="max-w-2xl mx-auto">
-        <div className="mb-8">
+
+        {/* Header */}
+        <div className="mb-5">
           <div className="flex items-center gap-2 mb-0.5">
-            <Settings2 size={18} className="text-brand-teal" />
-            <p className="text-brand-teal text-xs font-sans font-semibold tracking-[0.18em] uppercase">Configuración</p>
+            <Settings2 size={16} className="text-brand-teal" />
+            <p className="text-brand-teal text-[11px] font-sans font-semibold tracking-[0.18em] uppercase">Configuración</p>
           </div>
-          <h1 className="text-brand-navy font-sans font-bold text-2xl md:text-3xl tracking-tight">Ajustes del negocio</h1>
+          <h1 className="text-brand-navy font-sans font-bold text-2xl tracking-tight">Ajustes del negocio</h1>
         </div>
 
-        <div className="space-y-6">
-
-          {/* Datos básicos */}
-          <section className="bg-white rounded-2xl border border-slate-100 shadow-brand p-6">
-            <h2 className="text-brand-navy font-sans font-semibold text-sm uppercase tracking-wider mb-5">Datos del negocio</h2>
-            <div className="space-y-4">
-              <Field label="Nombre del negocio *" value={form.name} onChange={set("name")} />
-              <div>
-                <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-                  URL pública (slug)
-                </label>
-                <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
-                  <span className="px-3 py-2.5 text-xs text-slate-400 font-body border-r border-slate-200 whitespace-nowrap bg-slate-100">
-                    slug.frandora.cl/
-                  </span>
-                  <input type="text" value={form.slug} onChange={setSlug}
-                    className="flex-1 px-3 py-2.5 text-sm bg-slate-50 font-body text-brand-navy focus:outline-none" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Descripción</label>
-                <textarea value={form.description} onChange={set("description")} rows={3}
-                  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 font-body text-brand-navy resize-none transition-colors" />
-              </div>
-            </div>
-          </section>
-
-          {/* Contacto */}
-          <section className="bg-white rounded-2xl border border-slate-100 shadow-brand p-6">
-            <h2 className="text-brand-navy font-sans font-semibold text-sm uppercase tracking-wider mb-5">Contacto</h2>
-            <div className="space-y-4">
-              <Field label="Teléfono / WhatsApp de contacto" value={form.phone} onChange={set("phone")} icon={Phone} placeholder="+56 9 xxxx xxxx" />
-              <Field label="Sitio web" value={form.website} onChange={set("website")} icon={Globe} placeholder="https://minegocio.cl" />
-              <div>
-                <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-                  <Clock size={12} className="inline mr-1" />Zona horaria
-                </label>
-                <select value={form.timezone} onChange={set("timezone")}
-                  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 font-body text-brand-navy transition-colors">
-                  {TIMEZONES.map((tz) => <option key={tz} value={tz}>{tz}</option>)}
-                </select>
-              </div>
-            </div>
-          </section>
-
-          {/* Redes sociales */}
-          <section className="bg-white rounded-2xl border border-slate-100 shadow-brand p-6">
-            <h2 className="text-brand-navy font-sans font-semibold text-sm uppercase tracking-wider mb-5">Redes sociales</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Instagram" value={form.instagram} onChange={set("instagram")} icon={Instagram} placeholder="@minegocio" />
-              <Field label="Facebook" value={form.facebook} onChange={set("facebook")} icon={Facebook} placeholder="facebook.com/minegocio" />
-              <Field label="TikTok" value={form.tiktok} onChange={set("tiktok")} placeholder="@minegocio" />
-              <Field label="WhatsApp Business" value={form.whatsapp} onChange={set("whatsapp")} icon={Phone} placeholder="+56 9 xxxx xxxx" />
-            </div>
-          </section>
-
-          {/* URL pública */}
-          <section className="rounded-2xl p-5 border border-brand-navy/15 relative overflow-hidden"
+        {/* URL pública */}
+        {form.slug && (
+          <a href={`https://${form.slug}.frandora.cl`} target="_blank" rel="noopener noreferrer"
+            className="flex items-center justify-between gap-3 rounded-xl p-3 mb-5 border border-brand-navy/15 relative overflow-hidden group"
             style={{ background: "linear-gradient(135deg, #0D1B2A 0%, #1a3347 100%)" }}>
-            <div className="absolute top-0 right-0 w-28 h-28 rounded-full pointer-events-none"
-              style={{ background: "radial-gradient(circle, rgba(111,168,158,0.2) 0%, transparent 70%)" }} />
-            <p className="text-brand-teal text-xs tracking-[0.15em] uppercase font-sans font-semibold mb-1 relative z-10">Tu página pública de reservas</p>
-            <p className="text-white font-sans font-semibold text-sm relative z-10">{form.slug || "tunegocio"}.frandora.cl</p>
-            <p className="text-white/40 text-xs font-body mt-1 relative z-10">
-              Los clientes reservan 24/7 desde esta URL. Compártela en redes sociales.
-            </p>
-          </section>
+            <div className="relative z-10 min-w-0">
+              <p className="text-brand-teal text-[10px] tracking-[0.15em] uppercase font-sans font-semibold">Tu página pública</p>
+              <p className="text-white font-sans font-semibold text-sm truncate">{form.slug}.frandora.cl</p>
+            </div>
+            <ExternalLink size={15} className="text-white/50 group-hover:text-brand-teal transition-colors flex-shrink-0 relative z-10" />
+          </a>
+        )}
 
-          {/* Guardar */}
-          {error && (
-            <p className="text-sm text-red-500 font-body text-center">{error}</p>
-          )}
-          <button onClick={handleSave} disabled={saving}
-            className="w-full py-3.5 rounded-2xl font-sans font-bold text-sm text-white flex items-center justify-center gap-2 transition-all hover:-translate-y-px disabled:opacity-60"
-            style={{ background: "linear-gradient(135deg, #0D1B2A, #1a3347)" }}>
-            {saving ? (
-              <><Loader2 size={16} className="animate-spin" />Guardando...</>
-            ) : saved ? (
-              <><Check size={16} className="text-brand-teal" />¡Cambios guardados!</>
-            ) : (
-              "Guardar cambios"
-            )}
-          </button>
-
+        {/* Tabs */}
+        <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1 mb-5">
+          {TABS.map(({ key, label, icon: Icon }) => (
+            <button key={key} onClick={() => setTab(key)}
+              className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-sans font-semibold transition-all ${tab === key ? "bg-white text-brand-navy shadow-sm" : "text-slate-500 hover:text-brand-navy"}`}>
+              <Icon size={13} />
+              <span className="hidden sm:inline">{label}</span>
+            </button>
+          ))}
         </div>
+
+        {/* Contenido del tab */}
+        <div className="animate-fade-in">
+          {tab === "general"       && <GeneralSettings form={form} set={set} />}
+          {tab === "policies"      && <PolicySettings form={form} set={set} />}
+          {tab === "notifications" && <NotificationSettings form={form} set={set} />}
+        </div>
+
+        {/* Guardar (sticky) */}
+        <div className="sticky bottom-4 mt-5">
+          {error && <p className="text-sm text-rose-600 font-body text-center mb-2 bg-white/90 rounded-lg py-2">{error}</p>}
+          <button onClick={handleSave} disabled={saving}
+            className="w-full py-3.5 rounded-2xl font-sans font-bold text-sm text-white flex items-center justify-center gap-2 transition-all hover:-translate-y-px disabled:opacity-60 shadow-brand-lg"
+            style={{ background: saved ? "linear-gradient(135deg, #16a34a, #15803d)" : "linear-gradient(135deg, #0D1B2A, #1a3347)" }}>
+            {saving ? <><Loader2 size={16} className="animate-spin" />Guardando...</>
+              : saved ? <><Check size={16} />¡Cambios guardados!</>
+              : "Guardar cambios"}
+          </button>
+        </div>
+
       </div>
     </div>
   );

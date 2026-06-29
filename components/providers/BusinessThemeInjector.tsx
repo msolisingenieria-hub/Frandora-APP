@@ -1,7 +1,8 @@
 import { generateThemeCSS, type ThemeConfig } from "@/lib/theme/generateThemeCSS";
 
+// Acepta los campos crudos de Prisma (string) y los normaliza internamente.
 interface Props {
-  config: Partial<ThemeConfig>;
+  config: Partial<Record<keyof ThemeConfig, string | null>>;
 }
 
 /**
