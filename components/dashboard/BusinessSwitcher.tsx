@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown, Check, Building2 } from "lucide-react";
 import { switchBusinessAction } from "@/lib/actions/switch-business";
 import type { UserBusiness } from "@/lib/auth/business";
@@ -18,23 +19,25 @@ export function BusinessSwitcher({ businesses, currentId, businessName, logoUrl 
   const [pos, setPos] = useState({ top: 0, left: 0, width: 224 });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   function openDropdown() {
     if (buttonRef.current) {
       const r = buttonRef.current.getBoundingClientRect();
-      setPos({ top: r.bottom + 6, left: r.left, width: Math.max(r.width, 224) });
+      setPos({ top: r.bottom + 6, left: r.left, width: Math.max(r.width, 220) });
     }
     setOpen((v) => !v);
   }
 
   useEffect(() => {
+    if (!open) return;
     function handleClick(e: MouseEvent) {
       if (
         dropdownRef.current && !dropdownRef.current.contains(e.target as Node) &&
         buttonRef.current && !buttonRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
+      ) setOpen(false);
     }
     function handleScroll() { setOpen(false); }
     document.addEventListener("mousedown", handleClick);
@@ -43,14 +46,14 @@ export function BusinessSwitcher({ businesses, currentId, businessName, logoUrl 
       document.removeEventListener("mousedown", handleClick);
       window.removeEventListener("scroll", handleScroll, true);
     };
-  }, []);
+  }, [open]);
 
   if (businesses.length <= 1) {
     return (
       <div className="flex items-center gap-2.5 min-w-0">
         {logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={logoUrl} alt={businessName ?? "Logo"} className="w-9 h-9 rounded-xl object-contain bg-white/10 p-0.5 shrink-0" />
+          <img src={logoUrl} alt={businessName ?? "Logo"} className="w-8 h-8 rounded-xl object-contain bg-white/10 p-0.5 shrink-0" />
         ) : (
           <div className="w-8 h-8 rounded-xl bg-brand-teal/20 flex items-center justify-center shrink-0">
             <Building2 size={16} className="text-brand-teal" />
@@ -68,6 +71,66 @@ export function BusinessSwitcher({ businesses, currentId, businessName, logoUrl 
     setPending(null);
     setOpen(false);
   }
+
+  const dropdown = (
+    <div
+      ref={dropdownRef}
+      style={{
+        position: "fixed",
+        top: pos.top,
+        left: pos.left,
+        width: pos.width,
+        zIndex: 99999,
+        backgroundColor: "#0c1e30",
+        border: "1px solid rgba(111,168,158,0.25)",
+        borderRadius: "14px",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05)",
+      }}
+    >
+      <p style={{ padding: "12px 12px 6px", fontSize: "10px", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)" }}>
+        Mis negocios
+      </p>
+      {businesses.map((biz) => {
+        const isCurrent = biz.id === currentId;
+        const isLoading = pending === biz.id;
+        return (
+          <button
+            key={biz.id}
+            onClick={() => handleSwitch(biz.id)}
+            disabled={isLoading}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              width: "100%",
+              padding: "10px 12px",
+              textAlign: "left",
+              background: isCurrent ? "rgba(111,168,158,0.15)" : "transparent",
+              opacity: isLoading ? 0.6 : 1,
+              cursor: isLoading ? "default" : "pointer",
+              transition: "background 0.1s",
+            }}
+            onMouseEnter={(e) => { if (!isCurrent) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)"; }}
+            onMouseLeave={(e) => { if (!isCurrent) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+          >
+            {biz.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={biz.logoUrl} alt={biz.name} style={{ width: 28, height: 28, borderRadius: 8, objectFit: "contain", background: "rgba(255,255,255,0.1)", padding: 2, flexShrink: 0 }} />
+            ) : (
+              <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(111,168,158,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <Building2 size={12} color="#6FA89E" />
+              </div>
+            )}
+            <span style={{ flex: 1, fontSize: 13, fontWeight: isCurrent ? 600 : 400, color: isCurrent ? "#ffffff" : "rgba(255,255,255,0.65)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {isLoading ? "Cambiando..." : biz.name}
+            </span>
+            {isCurrent && <Check size={13} color="#6FA89E" style={{ flexShrink: 0 }} />}
+          </button>
+        );
+      })}
+      <div style={{ height: 6 }} />
+    </div>
+  );
 
   return (
     <>
@@ -93,54 +156,7 @@ export function BusinessSwitcher({ businesses, currentId, businessName, logoUrl 
         />
       </button>
 
-      {open && (
-        <div
-          ref={dropdownRef}
-          style={{
-            position: "fixed",
-            top: pos.top,
-            left: pos.left,
-            width: pos.width,
-            zIndex: 9999,
-            background: "#0f2035",
-            border: "1px solid rgba(111,168,158,0.2)",
-            borderRadius: "14px",
-            boxShadow: "0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)",
-          }}
-        >
-          <p className="px-3 pt-3 pb-1.5 text-[10px] font-sans font-semibold tracking-[0.15em] uppercase text-white/40">
-            Mis negocios
-          </p>
-          {businesses.map((biz) => {
-            const isCurrent = biz.id === currentId;
-            const isLoading = pending === biz.id;
-            return (
-              <button
-                key={biz.id}
-                onClick={() => handleSwitch(biz.id)}
-                disabled={isLoading}
-                className={`flex items-center gap-3 w-full px-3 py-2.5 text-left transition-colors duration-100 last:rounded-b-[14px]
-                  ${isCurrent ? "bg-brand-teal/15" : "hover:bg-white/8"}
-                  ${isLoading ? "opacity-60" : ""}`}
-              >
-                {biz.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={biz.logoUrl} alt={biz.name} className="w-7 h-7 rounded-lg object-contain bg-white/10 p-0.5 shrink-0" />
-                ) : (
-                  <div className="w-7 h-7 rounded-lg bg-brand-teal/15 flex items-center justify-center shrink-0">
-                    <Building2 size={12} className="text-brand-teal/70" />
-                  </div>
-                )}
-                <span className={`flex-1 text-sm font-body truncate ${isCurrent ? "text-white font-semibold" : "text-white/65 hover:text-white"}`}>
-                  {isLoading ? "Cambiando..." : biz.name}
-                </span>
-                {isCurrent && <Check size={13} className="text-brand-teal shrink-0" />}
-              </button>
-            );
-          })}
-          <div className="h-1.5 rounded-b-[14px]" />
-        </div>
-      )}
+      {mounted && open && createPortal(dropdown, document.body)}
     </>
   );
 }
