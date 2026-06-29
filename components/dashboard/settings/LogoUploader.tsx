@@ -8,36 +8,64 @@ interface Props {
   onChange: (url: string | null) => void;
   label?:   string;
   hint?:    string;
-  folder?:  "logos" | "banners";
 }
 
-export function LogoUploader({ value, onChange, label = "Logo del negocio", hint, folder = "logos" }: Props) {
-  const [uploading, setUploading] = useState(false);
-  const [error,     setError]     = useState<string | null>(null);
+const MAX_DIM = 192;        // px — el logo se muestra a ~80px; 192 cubre retina y mantiene el data URL liviano
+const MAX_BYTES = 160_000;  // ~160KB máx: se envía en cada carga del panel, debe ser liviano
+
+// Redimensiona y comprime la imagen en el navegador, devuelve un data URL.
+function compressImage(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    // SVG no se rasteriza: se usa tal cual (es liviano y escalable)
+    if (file.type === "image/svg+xml") {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result as string);
+      r.onerror = () => reject(new Error("No se pudo leer el archivo"));
+      r.readAsDataURL(file);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, MAX_DIM / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("No se pudo procesar la imagen"));
+        ctx.drawImage(img, 0, 0, w, h);
+        // PNG conserva transparencia (importante para logos)
+        const dataUrl = canvas.toDataURL("image/png");
+        resolve(dataUrl);
+      };
+      img.onerror = () => reject(new Error("Imagen inválida"));
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => reject(new Error("No se pudo leer el archivo"));
+    reader.readAsDataURL(file);
+  });
+}
+
+export function LogoUploader({ value, onChange, label = "Logo del negocio", hint }: Props) {
+  const [processing, setProcessing] = useState(false);
+  const [error,      setError]      = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File) {
     setError(null);
-    setUploading(true);
+    setProcessing(true);
     try {
-      // 1. Pedir URL de subida
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ folder, contentType: file.type, fileSize: file.size }),
-      });
-      if (!res.ok) throw new Error((await res.json())?.error ?? "No se pudo preparar la subida");
-      const { uploadUrl, publicUrl } = await res.json();
-
-      // 2. Subir el archivo directo al almacenamiento
-      const put = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
-      if (!put.ok) throw new Error("No se pudo subir la imagen");
-
-      onChange(publicUrl);
+      const dataUrl = await compressImage(file);
+      if (dataUrl.length > MAX_BYTES) {
+        throw new Error("La imagen es muy pesada. Usa un logo más simple o liviano.");
+      }
+      onChange(dataUrl);
     } catch (e: unknown) {
       setError((e as Error).message);
     } finally {
-      setUploading(false);
+      setProcessing(false);
     }
   }
 
@@ -45,7 +73,6 @@ export function LogoUploader({ value, onChange, label = "Logo del negocio", hint
     <div>
       <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{label}</label>
       <div className="flex items-center gap-4">
-        {/* Preview */}
         <div className="w-20 h-20 rounded-2xl border border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0 relative">
           {value ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -53,7 +80,7 @@ export function LogoUploader({ value, onChange, label = "Logo del negocio", hint
           ) : (
             <ImageIcon size={24} className="text-slate-300" />
           )}
-          {uploading && (
+          {processing && (
             <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
               <Loader2 size={20} className="animate-spin text-brand-teal" />
             </div>
@@ -62,7 +89,7 @@ export function LogoUploader({ value, onChange, label = "Logo del negocio", hint
 
         <div className="flex-1 min-w-0">
           <div className="flex gap-2">
-            <button type="button" onClick={() => inputRef.current?.click()} disabled={uploading}
+            <button type="button" onClick={() => inputRef.current?.click()} disabled={processing}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 text-xs font-sans font-semibold text-brand-navy hover:bg-slate-50 transition-colors disabled:opacity-50">
               <Upload size={13} />
               {value ? "Cambiar" : "Subir imagen"}
@@ -74,7 +101,7 @@ export function LogoUploader({ value, onChange, label = "Logo del negocio", hint
               </button>
             )}
           </div>
-          <p className="text-[11px] font-body text-slate-400 mt-1.5">{hint ?? "PNG, JPG o SVG. Máx 2MB."}</p>
+          <p className="text-[11px] font-body text-slate-400 mt-1.5">{hint ?? "PNG, JPG o SVG. Se ajusta automáticamente."}</p>
           {error && <p className="text-[11px] font-body text-rose-600 mt-1">{error}</p>}
         </div>
       </div>

@@ -67,7 +67,8 @@ export function PublicHero({ data, onBook }: Props) {
           {/* Logo */}
           {logoUrl && (
             <div className="mb-4 w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 border-white/30 shadow-brand">
-              <Image src={logoUrl} alt={`Logo ${name}`} width={80} height={80} className="object-cover w-full h-full" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={logoUrl} alt={`Logo ${name}`} className="object-cover w-full h-full" />
             </div>
           )}
 

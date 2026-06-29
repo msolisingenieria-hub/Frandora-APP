@@ -21,7 +21,7 @@ type StaffItem = {
   id: string; name: string; email: string|null; phone: string|null;
   bio: string|null; role: string; color: string;
   commissionRate: number|null; commissionType: string;
-  isActive: boolean; avatarUrl: string|null;
+  isActive: boolean; avatarUrl: string|null; acceptsBookings: boolean;
   schedules: Schedule[];
   _count: { appointments: number };
 };
@@ -283,6 +283,7 @@ export function StaffView() {
             role: editTarget.role, color: editTarget.color,
             commissionRate: editTarget.commissionRate ?? 0,
             commissionType: editTarget.commissionType,
+            acceptsBookings: editTarget.acceptsBookings ?? true,
           }}
           onSave={data => handleEdit(data as Record<string, unknown>)}
           onCancel={() => setEditTarget(null)}

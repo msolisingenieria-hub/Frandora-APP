@@ -67,6 +67,8 @@ export async function PATCH(req: NextRequest) {
   if (parsed.data.primaryColor)   data.primaryColorHsl   = hexToHsl(parsed.data.primaryColor);
   if (parsed.data.accentColor)    data.accentColorHsl    = hexToHsl(parsed.data.accentColor);
   if (parsed.data.secondaryColor) data.secondaryColorHsl = hexToHsl(parsed.data.secondaryColor);
+  // fontFamily es NOT NULL en la DB: "Por defecto" (null) → usar Inter
+  if (data.fontFamily === null) data.fontFamily = "Inter";
 
   const updated = await prisma.businessCustomization.upsert({
     where:  { businessId },

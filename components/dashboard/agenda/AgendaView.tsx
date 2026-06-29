@@ -13,6 +13,7 @@ import { MiniCalendar }     from "@/components/dashboard/agenda/sidebar/MiniCale
 import { AppointmentModal } from "@/components/dashboard/agenda/AppointmentModal";
 import { TimeBlockModal }   from "@/components/dashboard/agenda/TimeBlockModal";
 import { InlinePOSModal }   from "@/components/dashboard/agenda/modals/InlinePOSModal";
+import { CreateAppointmentModal } from "@/components/dashboard/agenda/modals/CreateAppointmentModal";
 import { ClassesPanel }     from "@/components/dashboard/agenda/ClassesPanel";
 import { WaitlistPanel }    from "@/components/dashboard/agenda/WaitlistPanel";
 import { WidgetPanel }      from "@/components/dashboard/agenda/WidgetPanel";
@@ -52,6 +53,7 @@ export function AgendaView({ appointments, timeBlocks, businessSlug, staff = [] 
   const [selectedAppt,   setSelectedAppt] = useState<AppointmentListItem | null>(null);
   const [posAppt,        setPosAppt]      = useState<AppointmentListItem | null>(null);
   const [showBlockModal, setShowBlockModal] = useState(false);
+  const [showCreate,     setShowCreate]   = useState(false);
   const [blockSlot,      setBlockSlot]    = useState<{ start: Date; end: Date } | null>(null);
   const [localAppts,     setLocalAppts]   = useState(appointments ?? []);
   const [localBlocks,    setLocalBlocks]  = useState(timeBlocks   ?? []);
@@ -270,7 +272,7 @@ export function AgendaView({ appointments, timeBlocks, businessSlug, staff = [] 
               <Clock3 size={12} />
               <span className="hidden md:inline">Bloquear</span>
             </button>
-            <button onClick={() => { /* TODO: CreateAppointmentModal */ }}
+            <button onClick={() => setShowCreate(true)}
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-sans font-semibold text-white transition-all active:scale-[0.98]"
               style={{ background: "linear-gradient(135deg, #6FA89E, #5a9990)" }}>
               <CalendarPlus size={12} />
@@ -291,7 +293,7 @@ export function AgendaView({ appointments, timeBlocks, businessSlug, staff = [] 
               hourHeight={zoom}
               filters={safeFilters}
               onApptClick={(appt) => setSelectedAppt(appt)}
-              onSlotClick={() => { /* TODO */ }}
+              onSlotClick={() => setShowCreate(true)}
               onApptMove={handleApptMove}
             />
           )}
@@ -393,6 +395,15 @@ export function AgendaView({ appointments, timeBlocks, businessSlug, staff = [] 
           end={blockSlot.end}
           onClose={() => { setShowBlockModal(false); setBlockSlot(null); }}
           onSaved={refreshCalendar}
+        />
+      )}
+
+      {showCreate && (
+        <CreateAppointmentModal
+          staff={staff}
+          selectedDate={selectedDate}
+          onClose={() => setShowCreate(false)}
+          onCreated={refreshCalendar}
         />
       )}
     </div>

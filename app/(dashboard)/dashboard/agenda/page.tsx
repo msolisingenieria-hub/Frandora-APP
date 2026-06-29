@@ -43,7 +43,7 @@ export default async function AgendaPage() {
   const pendingCount  = appointments.filter((a) => a.status === "PENDING").length;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden p-3 md:p-4"
+    <div className="flex flex-col h-full overflow-hidden p-3 md:p-4"
       style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 50%, #ffffff 100%)" }}>
 
       {/* Header compacto */}
