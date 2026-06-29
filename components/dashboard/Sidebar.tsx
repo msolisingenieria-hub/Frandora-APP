@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import { FrandoraLogo } from "@/components/ui/FrandoraLogo";
+import { BusinessSwitcher } from "@/components/dashboard/BusinessSwitcher";
+import type { UserBusiness } from "@/lib/auth/business";
 import { useState, useEffect } from "react";
 import {
   LayoutDashboard, CalendarDays, Users, Sparkles,
@@ -70,7 +72,14 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   },
 ];
 
-export function Sidebar({ businessName, logoUrl }: { businessName?: string; logoUrl?: string | null } = {}) {
+type SidebarProps = {
+  businessName?: string;
+  logoUrl?: string | null;
+  businesses?: UserBusiness[];
+  currentBusinessId?: string;
+};
+
+export function Sidebar({ businessName, logoUrl, businesses = [], currentBusinessId = "" }: SidebarProps = {}) {
   const path = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -134,17 +143,28 @@ export function Sidebar({ businessName, logoUrl }: { businessName?: string; logo
         {/* ── Logo + botón cerrar/colapsar ── */}
         <div className="relative z-10 flex items-center justify-between px-4 pt-5 pb-4 border-b border-white/8 shrink-0">
           {!collapsed && (
-            <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0">
-              {logoUrl ? (
-                <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={logoUrl} alt={businessName ?? "Logo"} className="w-9 h-9 rounded-xl object-contain bg-white/10 p-0.5 flex-shrink-0" />
-                  <span className="text-white font-sans font-semibold text-sm truncate">{businessName ?? "Mi negocio"}</span>
-                </>
+            <div className="flex-1 min-w-0">
+              {businesses.length > 0 ? (
+                <BusinessSwitcher
+                  businesses={businesses}
+                  currentId={currentBusinessId}
+                  businessName={businessName}
+                  logoUrl={logoUrl}
+                />
               ) : (
-                <FrandoraLogo size="sm" variant="light" showTagline />
+                <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0">
+                  {logoUrl ? (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={logoUrl} alt={businessName ?? "Logo"} className="w-9 h-9 rounded-xl object-contain bg-white/10 p-0.5 flex-shrink-0" />
+                      <span className="text-white font-sans font-semibold text-sm truncate">{businessName ?? "Mi negocio"}</span>
+                    </>
+                  ) : (
+                    <FrandoraLogo size="sm" variant="light" showTagline />
+                  )}
+                </Link>
               )}
-            </Link>
+            </div>
           )}
           {collapsed && (
             <Link href="/dashboard" className="mx-auto block">
