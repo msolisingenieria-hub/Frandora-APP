@@ -38,6 +38,9 @@ next-env.d.ts
 # Claude Code — configuración local con tokens privados
 .claude/settings.local.json
 
+# Skills hidratadas (cache restaurable desde skills-lock.json con `npx skills experimental_install`)
+.agents/
+
 # Python bytecode (from .agents/skills scripts)
 __pycache__/
 *.pyc

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { PublicBusiness, BookingFormState, BookingResult } from "@/types/booking";
 import { INITIAL_BOOKING_STATE } from "@/types/booking";
 import { BookingHeader } from "./BookingHeader";
@@ -109,8 +110,16 @@ export function BookingPage({ business, initialServiceId, initialStaffId, compac
             </div>
 
             {selectedService && state.step > 1 && (
-              <div className="flex items-center gap-2 bg-[#F2F4F6] rounded-xl px-3 py-2">
-                <Sparkles size={12} className="text-[#6FA89E] shrink-0" />
+              <div className="flex items-center gap-2.5 bg-[#F2F4F6] rounded-xl p-1.5 pr-3">
+                {selectedService.imageUrl ? (
+                  <div className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0">
+                    <Image src={selectedService.imageUrl} alt={selectedService.name} fill className="object-cover" sizes="32px" />
+                  </div>
+                ) : (
+                  <div className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center bg-[#6FA89E]/20">
+                    <Sparkles size={13} className="text-[#6FA89E]" />
+                  </div>
+                )}
                 <p className="text-xs text-slate-600 truncate">
                   <span className="font-semibold text-[#0D1B2A]">{selectedService.name}</span>
                   <span className="text-slate-400"> · {selectedService.duration} min</span>
@@ -174,6 +183,8 @@ export function BookingPage({ business, initialServiceId, initialStaffId, compac
             <BookingConfirmation
               result={result}
               businessName={business.name}
+              service={selectedService}
+              currency={business.currency}
               onNewBooking={handleNewBooking}
             />
           )}

@@ -109,11 +109,16 @@ export function PublicServices({ services, currency, layout, onBook }: Props) {
 
   return (
     <section id="servicios" className="px-4 md:px-10 py-8 md:py-10">
-      <h2 className="font-sans font-bold text-brand-navy text-xl md:text-2xl mb-5">Servicios</h2>
-      <div className={layout === "list"
+      <div className="mb-5 md:mb-6">
+        <p className="text-brand-teal text-xs font-sans font-semibold tracking-[0.15em] uppercase mb-1">
+          Reserva online
+        </p>
+        <h2 className="font-sans font-bold text-brand-navy text-2xl md:text-3xl">Servicios</h2>
+      </div>
+      <div className={`biz-stagger ${layout === "list"
         ? "flex flex-col gap-3"
         : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-      }>
+      }`}>
         {services.map((s) => (
           <ServiceCard key={s.id} service={s} currency={currency} layout={layout} onBook={onBook} />
         ))}

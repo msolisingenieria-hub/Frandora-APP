@@ -170,6 +170,7 @@ export async function getPublicBusinessData(slug: string) {
       duration: s.duration,
       price: s.price,
       color: s.color,
+      imageUrl: s.imageUrl ?? null,
       categoryName: s.category?.name ?? null,
     })),
     staff: business.staff.map((m) => ({
@@ -177,6 +178,7 @@ export async function getPublicBusinessData(slug: string) {
       name: m.name,
       avatarUrl: m.avatarUrl,
       bio: m.bio,
+      specialties: m.specialties,
       serviceIds: m.services.map((ss) => ss.serviceId),
     })),
     schedule: location?.schedules.map((sc) => ({

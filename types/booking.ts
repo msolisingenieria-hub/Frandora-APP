@@ -10,6 +10,7 @@ export type PublicService = {
   duration: number;    // minutos
   price: number;
   color: string;
+  imageUrl: string | null;
   categoryName: string | null;
 };
 
@@ -18,6 +19,7 @@ export type PublicStaff = {
   name: string;
   avatarUrl: string | null;
   bio: string | null;
+  specialties: string[];
   serviceIds: string[];
 };
 

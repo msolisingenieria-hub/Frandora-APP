@@ -11,6 +11,7 @@ import { PublicSchedule }      from "./PublicSchedule";
 import { PublicMap }           from "./PublicMap";
 import { PublicFaq }           from "./PublicFaq";
 import { PublicStickyBar }     from "./PublicStickyBar";
+import { PublicFooter }        from "./PublicFooter";
 import { PublicBookingDrawer } from "./PublicBookingDrawer";
 
 type Props = {
@@ -79,20 +80,8 @@ export function PublicPageLayout({ data }: Props) {
           <PublicFaq faqs={customization.faqs} />
         )}
 
-        {/* Footer mínimo */}
-        <footer className="px-4 md:px-10 py-6 border-t border-slate-100 text-center">
-          <p className="font-body text-slate-400 text-xs">
-            Powered by{" "}
-            <a
-              href="https://frandora.cl"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-brand-teal font-semibold hover:underline"
-            >
-              Frandora
-            </a>
-          </p>
-        </footer>
+        {/* Footer completo */}
+        <PublicFooter data={data} onBook={() => openBooking()} />
       </main>
 
       {/* Barra sticky mobile */}

@@ -426,16 +426,41 @@ chore: tareas de mantenimiento
 
 ## Fases de Desarrollo
 
-0. Setup y fundación
-1. Landing page premium
-2. Auth y onboarding
-3. Agenda y reservas (core)
-4. CRM de clientes
-5. Pagos y facturación
-6. POS e inventario
-7. Marketing y notificaciones
-8. Reportes y analytics
-9. Super admin
-10. Pulido y lanzamiento
+El roadmap completo y vigente vive en `Plan-APP-FRANDORA.md` (26 fases + 16.5, 4 pilares). Resumen:
 
-**Fase actual:** Fase 9 completada — iniciando Fase 10 (Reportes y Analytics)
+**Pilar 1 — Core (Fases 0–15):** ✅ COMPLETADAS
+0. Setup · 1. Landing · 2. Auth/Onboarding · 3. Agenda y reservas · 4. CRM · 5. Pagos · 6. POS · 7. Marketing/Notificaciones · 8. Agenda avanzada · 9. Staff/Recursos · 10. Reportes · 11. Infraestructura premium · 12. Página pública premium · 13. Formularios/SOAP · 14. Membresías/Portal · 15. Super Admin · + Auditoría de seguridad + Sistema de Temas.
+
+**Pilar 2 — Inteligencia (Fases 16–18):** ⏳ EN CURSO
+- 16 — IA y asistente WhatsApp (Claude Haiku 4.5)
+- 16.5 — Personalización total (en curso)
+- 17 — Workflows · 18 — BI/Analytics avanzado
+
+**Pilar 3 — Escala (19–22):** App móvil, Marketplace, i18n, API pública.
+**Pilar 4 — Verticales (23–26):** Salud, Fitness, Tienda, RR.HH.
+
+**Fase actual:** 16 / 16.5 en curso. **Tarea inmediata:** rediseño premium de la página pública de reservas (booking) — fotos en servicios y profesionales, redes sociales, footer Frandora, selección de profesional + horarios por profesional.
+
+---
+
+## Registro de Skills, Agentes y MCPs
+
+> Detalle completo y tabla "cuándo usar cada uno" en `Plan-APP-FRANDORA.md`. Aquí va el **estado real** (verificado en disco).
+
+### Skills — estado real
+- **Disponibles ahora:** plugin Vercel (`vercel:*` — nextjs, ai-sdk, shadcn, vercel-functions, deployments-cicd, etc.) + built-in de Claude Code (`code-review`, `simplify`, `verify`, `run`, `claude-api`, `security-review`).
+- **Declaradas en `skills-lock.json` pero SIN hidratar** (carpeta vacía en `.claude/skills/`, requieren re-sync antes de usarse): `ui-ux-pro-max`, `ui-styling`, `design`, `design-system`, `brand`, `banner-design`, `slides`, `emil-design-eng`, `review-animations`, `supabase`, `supabase-postgres-best-practices`.
+- **Regla:** antes de cualquier trabajo de diseño premium, re-hidratar `ui-ux-pro-max`, `ui-styling` y `emil-design-eng`. Para Next.js/RSC/deploy usar el plugin Vercel (no skills duplicadas).
+
+### Agentes (subagentes)
+- `Plan` — diseñar arquitectura al iniciar fase o feature grande.
+- `Explore` — búsquedas amplias en el código (read-only).
+- `general-purpose` — investigación de 3+ pasos.
+- `vercel:*` (ai-architect, deployment-expert, performance-optimizer) — tareas Vercel especializadas.
+- `code-review` (built-in skill) — antes de cada merge importante.
+- **Nota:** los agentes solo se invocan cuando el usuario lo pide explícitamente.
+
+### MCPs
+- **Activo:** `supabase` (proyecto `lnybarrqefqywjfcuzmc` — DB de producción real).
+- **Disponibles:** Vercel, Gmail, Google Calendar.
+- **Por instalar (no urgente):** GitHub (PRs/CI), opcional Cloudflare R2 / Upstash.

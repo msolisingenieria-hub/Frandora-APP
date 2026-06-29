@@ -3,9 +3,10 @@
 import Image from "next/image";
 import { Star, MapPin, Phone } from "lucide-react";
 import type { PublicPageData } from "@/types/public-page";
+import { SocialLinks } from "./SocialLinks";
 
 type Props = {
-  data: Pick<PublicPageData, "name" | "description" | "logoUrl" | "coverUrl" | "city" | "phone" | "ratingStats" | "customization">;
+  data: Pick<PublicPageData, "name" | "description" | "logoUrl" | "coverUrl" | "city" | "phone" | "ratingStats" | "socials" | "customization">;
   onBook: () => void;
 };
 
@@ -31,7 +32,7 @@ function StarRating({ average, total }: { average: number; total: number }) {
 }
 
 export function PublicHero({ data, onBook }: Props) {
-  const { name, description, logoUrl, coverUrl, city, phone, ratingStats, customization } = data;
+  const { name, description, logoUrl, coverUrl, city, phone, ratingStats, socials, customization } = data;
   const hasVideo = !!customization.heroVideoUrl;
   const hasCover = !!coverUrl || !!customization.heroImageUrl;
   const coverSrc = customization.heroImageUrl ?? coverUrl;
@@ -105,16 +106,19 @@ export function PublicHero({ data, onBook }: Props) {
             )}
           </div>
 
-          {/* CTA */}
-          <button
-            onClick={onBook}
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl font-sans font-semibold text-base
-              text-white shadow-lg transition-all duration-150 ease-out
-              active:scale-[0.97] cursor-pointer hover:brightness-110"
-            style={{ background: "var(--biz-primary, #0D1B2A)" }}
-          >
-            Reservar ahora
-          </button>
+          {/* CTA + redes sociales */}
+          <div className="flex flex-wrap items-center gap-4">
+            <button
+              onClick={onBook}
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl font-sans font-semibold text-base
+                text-white shadow-lg transition-[transform,filter] duration-150 ease-out
+                active:scale-[0.97] cursor-pointer hover:brightness-110"
+              style={{ background: "var(--biz-primary, #0D1B2A)" }}
+            >
+              Reservar ahora
+            </button>
+            <SocialLinks socials={socials} variant="light" />
+          </div>
         </div>
       </div>
     </section>

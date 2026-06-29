@@ -1,6 +1,8 @@
 "use client";
 
-import type { BookingResult } from "@/types/booking";
+import Image from "next/image";
+import type { BookingResult, PublicService } from "@/types/booking";
+import { formatPrice, formatDuration } from "@/types/booking";
 import { CheckCircle, Calendar, Clock, User, Copy } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -8,10 +10,12 @@ import { es } from "date-fns/locale";
 type Props = {
   result: BookingResult;
   businessName: string;
+  service?: PublicService | null;
+  currency?: string;
   onNewBooking: () => void;
 };
 
-export function BookingConfirmation({ result, businessName, onNewBooking }: Props) {
+export function BookingConfirmation({ result, businessName, service, currency = "CLP", onNewBooking }: Props) {
   const start = new Date(result.startTime);
   const end   = new Date(result.endTime);
 
@@ -36,6 +40,29 @@ export function BookingConfirmation({ result, businessName, onNewBooking }: Prop
       <p className="text-slate-500 text-sm max-w-xs">
         Tu cita en <span className="font-semibold text-brand-navy">{businessName}</span> ha sido reservada exitosamente.
       </p>
+
+      {/* Resumen del servicio */}
+      {service && (
+        <div className="mt-6 w-full max-w-xs flex items-center gap-3 p-3 bg-brand-mist/30 border border-brand-mist rounded-2xl text-left">
+          <div className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0">
+            {service.imageUrl ? (
+              <Image src={service.imageUrl} alt={service.name} fill className="object-cover" sizes="48px" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center"
+                style={{ background: `linear-gradient(135deg, ${service.color}, ${service.color}99)` }}>
+                <span className="font-bold text-white/90">{service.name[0]}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-sans font-semibold text-brand-navy text-sm truncate">{service.name}</p>
+            <p className="text-slate-500 text-xs">{formatDuration(service.duration)}</p>
+          </div>
+          <span className="font-sans font-bold text-brand-navy text-sm tabular-nums">
+            {formatPrice(service.price, currency)}
+          </span>
+        </div>
+      )}
 
       {/* Código de reserva */}
       <div className="my-6 w-full max-w-xs">

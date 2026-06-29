@@ -72,6 +72,13 @@ export type PublicDaySchedule = {
   isClosed: boolean;
 };
 
+export type PublicSocials = {
+  instagram: string | null;
+  facebook: string | null;
+  tiktok: string | null;
+  whatsapp: string | null;
+};
+
 export type PublicPageData = {
   id: string;
   name: string;
@@ -91,5 +98,6 @@ export type PublicPageData = {
   schedule: PublicDaySchedule[];
   reviews: PublicReview[];
   ratingStats: PublicRatingStats;
+  socials: PublicSocials;
   customization: PublicCustomization;
 };

@@ -33,6 +33,7 @@ function toPublicBusiness(data: PublicPageData): PublicBusiness {
       duration: s.duration,
       price: s.price,
       color: s.color,
+      imageUrl: s.imageUrl,
       categoryName: s.categoryName,
     })),
     staff: data.staff.map((m) => ({
@@ -40,6 +41,7 @@ function toPublicBusiness(data: PublicPageData): PublicBusiness {
       name: m.name,
       avatarUrl: m.avatarUrl,
       bio: m.bio,
+      specialties: m.specialties,
       serviceIds: m.serviceIds,
     })),
     schedule: data.schedule,

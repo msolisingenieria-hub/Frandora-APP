@@ -177,6 +177,12 @@ export async function getPublicPageData(slug: string): Promise<PublicPageData | 
       createdAt: r.createdAt.toISOString(),
     })),
     ratingStats,
+    socials: {
+      instagram: business.settings?.socialInstagram ?? null,
+      facebook:  business.settings?.socialFacebook  ?? null,
+      tiktok:    business.settings?.socialTiktok    ?? null,
+      whatsapp:  business.settings?.socialWhatsapp  ?? null,
+    },
     customization,
   };
 }

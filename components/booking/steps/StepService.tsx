@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { PublicService, BookingFormState } from "@/types/booking";
 import { formatPrice, formatDuration } from "@/types/booking";
 import { Clock, ChevronRight, Zap } from "lucide-react";
@@ -41,7 +42,7 @@ export function StepService({ services, currency, state, onChange, onNext }: Pro
                   {cat}
                 </p>
               )}
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {catServices.map((service) => {
                   const isSelected = state.serviceId === service.id;
                   return (
@@ -49,18 +50,35 @@ export function StepService({ services, currency, state, onChange, onNext }: Pro
                       key={service.id}
                       onClick={() => handleSelect(service.id)}
                       className={[
-                        "group w-full flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all duration-200 active:scale-[0.98]",
+                        "group w-full flex items-center gap-3.5 p-2.5 pr-4 rounded-2xl border-2 text-left",
+                        "transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out active:scale-[0.98]",
                         isSelected
                           ? "border-[#0D1B2A] bg-[#0D1B2A] shadow-lg"
                           : "border-slate-100 bg-white hover:border-[#6FA89E]/50 hover:shadow-md",
                       ].join(" ")}
                     >
-                      {/* Color dot */}
-                      <div
-                        className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center opacity-90"
-                        style={{ backgroundColor: service.color + "22", border: `1.5px solid ${service.color}44` }}
-                      >
-                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: service.color }} />
+                      {/* Foto del servicio (o fallback de marca) */}
+                      <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0">
+                        {service.imageUrl ? (
+                          <Image
+                            src={service.imageUrl}
+                            alt={service.name}
+                            fill
+                            className="object-cover"
+                            sizes="64px"
+                          />
+                        ) : (
+                          <div
+                            className="w-full h-full flex items-center justify-center"
+                            style={{
+                              background: `linear-gradient(135deg, ${service.color}, ${service.color}99)`,
+                            }}
+                          >
+                            <span className="font-bold text-white/90 text-xl">
+                              {service.name[0]}
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Info */}
@@ -78,13 +96,11 @@ export function StepService({ services, currency, state, onChange, onNext }: Pro
                         </span>
                       </div>
 
-                      {/* Price + arrow */}
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <div className="text-right">
-                          <span className={`font-bold text-sm block ${isSelected ? "text-white" : "text-[#0D1B2A]"}`}>
-                            {formatPrice(service.price, currency)}
-                          </span>
-                        </div>
+                      {/* Precio + flecha */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className={`font-bold text-sm tabular-nums ${isSelected ? "text-white" : "text-[#0D1B2A]"}`}>
+                          {formatPrice(service.price, currency)}
+                        </span>
                         <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
                           isSelected ? "bg-[#6FA89E]" : "bg-slate-100 group-hover:bg-[#CFE3DF]"
                         }`}>
