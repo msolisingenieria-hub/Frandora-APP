@@ -39,63 +39,39 @@ export default async function AgendaPage() {
     }),
   ]);
 
+  const todayCount    = appointments.filter((a) => new Date(a.startTime).toDateString() === new Date().toDateString()).length;
+  const pendingCount  = appointments.filter((a) => a.status === "PENDING").length;
+
   return (
-    <div
-      className="min-h-screen p-4 md:p-6 lg:p-8"
-      style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 30%, #ffffff 100%)" }}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <div className="flex items-center gap-2 mb-0.5">
-            <CalendarDays size={18} className="text-brand-teal" />
-            <p className="text-brand-teal text-xs font-sans font-semibold tracking-[0.18em] uppercase">
-              Agenda
-            </p>
-          </div>
-          <h1 className="text-brand-navy font-sans font-bold text-2xl md:text-3xl tracking-tight">
-            Calendario y citas
-          </h1>
+    <div className="flex flex-col h-screen overflow-hidden p-3 md:p-4"
+      style={{ background: "linear-gradient(160deg, rgba(13,27,42,0.04) 0%, #f8fafc 50%, #ffffff 100%)" }}>
+
+      {/* Header compacto */}
+      <div className="flex items-center gap-4 mb-3 flex-shrink-0">
+        <div className="flex items-center gap-2">
+          <CalendarDays size={16} className="text-brand-teal flex-shrink-0" />
+          <h1 className="text-brand-navy font-sans font-bold text-lg tracking-tight">Agenda</h1>
+        </div>
+        {/* Mini stats inline */}
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-body text-slate-500">
+            <span className="font-sans font-bold text-brand-navy">{todayCount}</span> hoy
+          </span>
+          <span className="text-xs font-body text-slate-500">
+            <span className="font-sans font-bold text-amber-500">{pendingCount}</span> pendientes
+          </span>
         </div>
       </div>
 
-      {/* Stats rápidas */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        {[
-          {
-            label: "Hoy",
-            value: appointments.filter((a) => {
-              const d = new Date(a.startTime);
-              return d.toDateString() === new Date().toDateString();
-            }).length,
-          },
-          {
-            label: "Esta semana",
-            value: appointments.filter((a) => {
-              const d = new Date(a.startTime);
-              const n = new Date();
-              const ws = new Date(n); ws.setDate(n.getDate() - n.getDay() + 1);
-              const we = new Date(ws); we.setDate(ws.getDate() + 7);
-              return d >= ws && d < we;
-            }).length,
-          },
-          { label: "Pendientes",  value: appointments.filter(a => a.status === "PENDING").length },
-          { label: "Completadas", value: appointments.filter(a => a.status === "COMPLETED").length },
-        ].map((stat) => (
-          <div key={stat.label} className="bg-white rounded-2xl border border-slate-100 shadow-brand-sm p-4">
-            <p className="text-brand-navy font-sans font-bold text-2xl">{stat.value}</p>
-            <p className="text-slate-400 text-xs mt-0.5 font-body">{stat.label}</p>
-          </div>
-        ))}
+      {/* Agenda ocupa el resto de la pantalla */}
+      <div className="flex-1 min-h-0">
+        <AgendaView
+          appointments={appointments}
+          timeBlocks={timeBlocks}
+          businessSlug={business.slug}
+          staff={staffMembers}
+        />
       </div>
-
-      {/* Vista interactiva con tabs — componente cliente */}
-      <AgendaView
-        appointments={appointments}
-        timeBlocks={timeBlocks}
-        businessSlug={business.slug}
-        staff={staffMembers}
-      />
     </div>
   );
 }

@@ -40,8 +40,11 @@ export function resolveOverlaps(appointments: AppointmentListItem[] | undefined 
 }
 
 export function isStaffWorking(staff: AgendaStaff, date: Date): boolean {
-  const dow = getDay(date); // 0=Sun, 1=Mon, ...
-  const schedule = staff.schedules?.find((s) => s.dayOfWeek === dow);
+  // Si no hay horarios configurados, asumimos que el staff atiende todos los dias.
+  if (!staff.schedules?.length) return true;
+  const dow = getDay(date); // 0=Dom, 1=Lun, ...
+  const schedule = staff.schedules.find((s) => s.dayOfWeek === dow);
+  // Si ese dia no tiene entry, tampoco atiende
   return schedule?.isAvailable ?? false;
 }
 

@@ -11,7 +11,7 @@ const UpdateSchema = z.object({
   primaryColor:      z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
   secondaryColor:    z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
   accentColor:       z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
-  fontFamily:        z.enum(["Poppins", "Inter", "Playfair Display", "Montserrat", "Lato", "Nunito"]).optional(),
+  fontFamily:        z.enum(["Poppins", "Inter", "Playfair Display", "Montserrat", "Lato", "Nunito"]).nullable().optional(),
   borderRadius:      z.string().optional(),
   heroTitle:         z.string().max(120).nullable().optional(),
   heroSubtitle:      z.string().max(200).nullable().optional(),
