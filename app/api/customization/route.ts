@@ -70,7 +70,8 @@ export async function PATCH(req: NextRequest) {
 
   const updated = await prisma.businessCustomization.upsert({
     where:  { businessId },
-    create: { businessId, ...data },
+    // En el create Prisma exige la relación `business` (connect), no el escalar businessId.
+    create: { business: { connect: { id: businessId } }, ...data },
     update: data,
   });
 

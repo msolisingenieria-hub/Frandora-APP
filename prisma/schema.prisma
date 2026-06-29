@@ -408,6 +408,7 @@ model StaffMember {
   role        UserRole @default(STAFF)
   color       String   @default("#6d28d9")
   isActive    Boolean  @default(true)
+  acceptsBookings Boolean @default(true)  // si aparece en la agenda y recibe reservas
   commissionRate Float? @default(0)
   commissionType String @default("PERCENT")
 

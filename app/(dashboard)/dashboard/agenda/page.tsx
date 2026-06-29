@@ -30,7 +30,7 @@ export default async function AgendaPage() {
     getAppointmentsForDashboard(business.id, from, to),
     getTimeBlocks(business.id, from, to),
     prisma.staffMember.findMany({
-      where: { businessId: business.id, isActive: true },
+      where: { businessId: business.id, isActive: true, acceptsBookings: true },
       select: {
         id: true, name: true, role: true, color: true, avatarUrl: true,
         schedules: { select: { dayOfWeek: true, isAvailable: true, startTime: true, endTime: true } },

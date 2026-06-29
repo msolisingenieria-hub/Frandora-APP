@@ -130,21 +130,21 @@ export function ProSchedulerGrid({
   const lineTop    = minutesToTop(nowMinutes, START_HOUR, hourHeight);
 
   return (
-    <div className="flex flex-1 overflow-hidden border border-slate-200 rounded-2xl bg-white shadow-brand">
+    <div className="flex h-full overflow-hidden border border-slate-200 rounded-2xl bg-white shadow-brand">
 
       {/* Columna de horas */}
-      <div className="w-14 flex-shrink-0 border-r border-slate-100 flex flex-col">
+      <div className="w-14 flex-shrink-0 border-r border-slate-100 flex flex-col min-h-0">
         <div className="h-14 border-b border-slate-100 flex-shrink-0" />
-        <div ref={timeScrollRef} className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-none">
+        <div ref={timeScrollRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-none">
           <TimeColumn hourHeight={hourHeight} startHour={START_HOUR} endHour={END_HOUR} />
         </div>
       </div>
 
       {/* Grid de profesionales */}
-      <div className="flex-1 overflow-x-auto overflow-y-hidden flex flex-col">
+      <div className="flex-1 min-w-0 overflow-x-auto overflow-y-hidden flex flex-col min-h-0">
 
         {/* Headers fijos */}
-        <div className="flex border-b border-slate-100 flex-shrink-0 bg-white/95 backdrop-blur-sm sticky top-0 z-20">
+        <div className="flex border-b border-slate-100 flex-shrink-0 bg-white/95 backdrop-blur-sm z-20">
           {filteredStaff.map((s) => (
             <div key={s.id} className="flex-shrink-0 border-r border-slate-100" style={{ minWidth: MIN_COL_W }}>
               <StaffColumnHeader
@@ -162,7 +162,7 @@ export function ProSchedulerGrid({
         </div>
 
         {/* Cuerpo scrolleable */}
-        <div ref={gridScrollRef} className="flex overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+        <div ref={gridScrollRef} className="flex flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
           {filteredStaff.map((s) => {
             const working = isStaffWorking(s, selectedDate);
             return (

@@ -11,6 +11,7 @@ export const StaffSchema = z.object({
   commissionRate: z.number().min(0).max(100).default(0),
   commissionType: z.enum(["PERCENT","FIXED"]).default("PERCENT"),
   isActive:       z.boolean().default(true),
+  acceptsBookings: z.boolean().optional(),
   avatarUrl:      z.string().url().optional().or(z.literal("")),
 });
 
@@ -55,6 +56,8 @@ export async function getStaffById(businessId: string, id: string) {
 }
 
 export async function createStaff(businessId: string, data: StaffInput) {
+  // Por defecto recepcionista y dueño NO aparecen en la agenda (no atienden clientes)
+  const defaultAccepts = data.role === "RECEPTIONIST" || data.role === "BUSINESS_OWNER" ? false : true;
   return prisma.staffMember.create({
     data: {
       businessId,
@@ -67,6 +70,7 @@ export async function createStaff(businessId: string, data: StaffInput) {
       commissionRate: data.commissionRate,
       commissionType: data.commissionType,
       isActive:       data.isActive,
+      acceptsBookings: data.acceptsBookings ?? defaultAccepts,
       avatarUrl:      data.avatarUrl || null,
     },
   });
@@ -87,6 +91,7 @@ export async function updateStaff(businessId: string, id: string, data: Partial<
       ...(data.commissionRate !== undefined && { commissionRate: data.commissionRate }),
       ...(data.commissionType !== undefined && { commissionType: data.commissionType }),
       ...(data.isActive       !== undefined && { isActive: data.isActive }),
+      ...(data.acceptsBookings !== undefined && { acceptsBookings: data.acceptsBookings }),
       ...(data.avatarUrl      !== undefined && { avatarUrl: data.avatarUrl || null }),
     },
   });

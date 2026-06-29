@@ -15,9 +15,10 @@ const COLORS = ["#6d28d9","#0D1B2A","#6FA89E","#dc2626","#d97706","#059669","#25
 type FormData = {
   name: string; email: string; phone: string; bio: string;
   role: string; color: string; commissionRate: number; commissionType: string;
+  acceptsBookings: boolean;
 };
 
-const EMPTY: FormData = { name: "", email: "", phone: "", bio: "", role: "STAFF", color: "#6d28d9", commissionRate: 0, commissionType: "PERCENT" };
+const EMPTY: FormData = { name: "", email: "", phone: "", bio: "", role: "STAFF", color: "#6d28d9", commissionRate: 0, commissionType: "PERCENT", acceptsBookings: true };
 
 type Props = {
   initial?: Partial<FormData>;
@@ -30,7 +31,7 @@ export function StaffForm({ initial, onSave, onCancel, title = "Nuevo profesiona
   const [form, setForm] = useState<FormData>({ ...EMPTY, ...initial });
   const [saving, setSaving] = useState(false);
 
-  const set = (k: keyof FormData, v: string | number) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k: keyof FormData, v: string | number | boolean) => setForm(f => ({ ...f, [k]: v }));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -104,6 +105,20 @@ export function StaffForm({ initial, onSave, onCancel, title = "Nuevo profesiona
                     style={{ backgroundColor: c, borderColor: form.color === c ? "#0D1B2A" : "transparent" }} />
                 ))}
               </div>
+            </div>
+
+            {/* Atiende clientes — controla si aparece en la agenda */}
+            <div className="sm:col-span-2">
+              <button type="button" onClick={() => set("acceptsBookings", !form.acceptsBookings)}
+                className="w-full flex items-center justify-between gap-3 px-3 py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors text-left">
+                <div>
+                  <p className="text-sm font-sans font-semibold text-brand-navy">Atiende clientes</p>
+                  <p className="text-xs font-body text-slate-400">Aparece en la agenda y puede recibir reservas</p>
+                </div>
+                <span className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${form.acceptsBookings ? "bg-brand-teal" : "bg-slate-300"}`}>
+                  <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${form.acceptsBookings ? "left-[22px]" : "left-0.5"}`} />
+                </span>
+              </button>
             </div>
           </div>
 

@@ -128,7 +128,7 @@ export function AgendaView({ appointments, timeBlocks, businessSlug, staff = [] 
   }
 
   return (
-    <div className={`flex gap-3 ${isFullscreen ? "fixed inset-0 z-50 bg-slate-50 p-4 overflow-hidden" : "h-[calc(100vh-148px)]"}`}>
+    <div className={`flex gap-3 ${isFullscreen ? "fixed inset-0 z-50 bg-slate-50 p-4 overflow-hidden" : "h-full min-h-0"}`}>
 
       {/* ── Sidebar izquierdo (fijo, con scroll propio) ── */}
       <div className="hidden lg:flex flex-col gap-2.5 w-[200px] flex-shrink-0 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent pr-0.5">
