@@ -199,6 +199,13 @@ types/         ← Tipos TypeScript globales
 
 ## Reglas de Deploy, Push y Vercel — OBLIGATORIAS
 
+### Plugin de Vercel — OBLIGATORIO SIEMPRE
+El plugin `vercel-plugin` (instalado con `npx plugins add vercel/vercel-plugin --target claude-code`) es **obligatorio** y debe estar instalado y activo en todo momento. Usar sus comandos para el trabajo de Next.js, AI SDK y despliegues:
+- `/vercel-plugin:nextjs` — guía y best practices de Next.js (usar antes de tocar App Router, RSC, rendering, caching).
+- `/vercel-plugin:ai-sdk` — patrones del Vercel AI SDK (usar para toda feature de IA / Fase 16).
+- `/vercel-plugin:deploy prod` — despliegue a producción.
+Si el plugin no está cargado, instalarlo y reiniciar antes de continuar. No deshabilitarlo.
+
 ### Verificacion antes de push
 Antes de hacer push o abrir PR debe pasar:
 
