@@ -891,6 +891,7 @@ npm install -g @upstash/mcp-server
 13. **`prisma db push`** para schema — nunca `migrate reset` en producción
 14. **RLS activo** en todas las tablas Supabase expuestas
 15. **Rate limiting** en toda ruta pública (Upstash ratelimit)
+16. **Plugin de Vercel OBLIGATORIO SIEMPRE** — `vercel-plugin` debe estar instalado y activo (`npx plugins add vercel/vercel-plugin --target claude-code`). Usar `/vercel-plugin:nextjs` para Next.js, `/vercel-plugin:ai-sdk` para IA, `/vercel-plugin:deploy prod` para desplegar. Nunca deshabilitarlo.
 
 ---
 
