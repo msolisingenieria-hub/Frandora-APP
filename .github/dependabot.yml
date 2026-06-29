@@ -1,0 +1,34 @@
+version: 2
+updates:
+  # Dependencias npm — agrupadas para reducir ruido de PRs
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    groups:
+      # Parches y minors juntos (bajo riesgo)
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # No subir mayores de Next/React sin plan (CLAUDE.md): evita roturas.
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+
+  # Acciones de GitHub (workflows)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "ci"
