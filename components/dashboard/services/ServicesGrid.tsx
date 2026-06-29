@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Clock, Globe, Lock, Pencil, Trash2, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { Plus, Clock, Globe, Lock, Pencil, Trash2, Sparkles, ImageIcon } from "lucide-react";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
@@ -13,11 +14,11 @@ type Mode = "view" | "edit" | "new";
 
 type FormState = {
   name: string; description: string; duration: string;
-  price: string; isOnline: boolean;
+  price: string; isOnline: boolean; imageUrl: string;
 };
 
 const defaultForm: FormState = {
-  name: "", description: "", duration: "30", price: "0", isOnline: true,
+  name: "", description: "", duration: "30", price: "0", isOnline: true, imageUrl: "",
 };
 
 /** Devuelve una de 6 clases de color basada en el nombre del servicio */
@@ -76,6 +77,31 @@ function ServiceForm({ form, onChange, onSave, onCancel, saving, mode }: Service
             />
           </div>
         ))}
+
+        {/* Foto del servicio */}
+        <div>
+          <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+            Foto del servicio
+          </label>
+          <input
+            type="url"
+            value={form.imageUrl}
+            onChange={(e) => onChange({ ...form, imageUrl: e.target.value })}
+            placeholder="https://..."
+            className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal font-body text-brand-navy transition-colors"
+          />
+          {form.imageUrl && (
+            <div className="mt-2 relative h-28 rounded-xl overflow-hidden border border-slate-200">
+              <Image src={form.imageUrl} alt="Vista previa" fill className="object-cover" sizes="400px"
+                onError={() => onChange({ ...form, imageUrl: "" })} />
+            </div>
+          )}
+          {!form.imageUrl && (
+            <p className="mt-1 text-xs font-body text-slate-400">
+              Pega la URL de una foto (JPG, PNG o WebP). Aparece en tu página de reservas.
+            </p>
+          )}
+        </div>
 
         <div>
           <label className="block text-xs font-sans font-semibold text-slate-500 uppercase tracking-wider mb-2">
@@ -156,7 +182,8 @@ export function ServicesGrid() {
   const openEdit = (s: ServiceListItem) => {
     setForm({
       name: s.name, description: s.description ?? "",
-      duration: String(s.duration), price: String(s.price), isOnline: s.isOnline,
+      duration: String(s.duration), price: String(s.price),
+      isOnline: s.isOnline, imageUrl: s.imageUrl ?? "",
     });
     setEditing(s);
     setMode("edit");
@@ -170,6 +197,7 @@ export function ServicesGrid() {
       duration: parseInt(form.duration) || 30,
       price: parseFloat(form.price) || 0,
       isOnline: form.isOnline,
+      imageUrl: form.imageUrl || null,
     };
     try {
       if (mode === "new") {
@@ -290,8 +318,18 @@ export function ServicesGrid() {
             return (
               <div
                 key={s.id}
-                className="bg-white rounded-2xl border border-slate-100 shadow-brand p-5 hover:border-brand-teal/30 transition-all group"
+                className="bg-white rounded-2xl border border-slate-100 shadow-brand overflow-hidden hover:border-brand-teal/30 transition-all group flex flex-col"
               >
+                {/* Foto o franja de color */}
+                {s.imageUrl ? (
+                  <div className="relative h-32 w-full shrink-0">
+                    <Image src={s.imageUrl} alt={s.name} fill className="object-cover" sizes="(max-width:768px) 100vw, 33vw" />
+                  </div>
+                ) : (
+                  <div className={`h-2 w-full shrink-0 ${colorClass.split(" ")[0]}`} />
+                )}
+
+                <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-start justify-between mb-3">
                   {/* Avatar con color basado en nombre */}
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-sans font-bold shrink-0 ${colorClass}`}>
@@ -344,6 +382,13 @@ export function ServicesGrid() {
                       Solo presencial
                     </span>
                   )}
+                </div>
+                {/* Indicador de foto */}
+                {!s.imageUrl && (
+                  <p className="flex items-center gap-1 text-[10px] font-body text-slate-300 mt-1">
+                    <ImageIcon size={10} /> Sin foto
+                  </p>
+                )}
                 </div>
               </div>
             );

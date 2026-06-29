@@ -11,6 +11,7 @@ const updateSchema = z.object({
   price:       z.number().nonnegative().optional(),
   isOnline:    z.boolean().optional(),
   categoryId:  z.string().optional().nullable(),
+  imageUrl:    z.string().url().optional().nullable().or(z.literal("")),
 });
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {

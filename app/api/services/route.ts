@@ -11,6 +11,7 @@ const createSchema = z.object({
   price:       z.number().nonnegative(),
   isOnline:    z.boolean().optional(),
   categoryId:  z.string().optional().nullable(),
+  imageUrl:    z.string().url().optional().nullable().or(z.literal("")),
 });
 
 export async function GET() {

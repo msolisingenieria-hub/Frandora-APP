@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { X } from "lucide-react";
 
 const ROLES = [
@@ -15,10 +16,10 @@ const COLORS = ["#6d28d9","#0D1B2A","#6FA89E","#dc2626","#d97706","#059669","#25
 type FormData = {
   name: string; email: string; phone: string; bio: string;
   role: string; color: string; commissionRate: number; commissionType: string;
-  acceptsBookings: boolean;
+  acceptsBookings: boolean; avatarUrl: string;
 };
 
-const EMPTY: FormData = { name: "", email: "", phone: "", bio: "", role: "STAFF", color: "#6d28d9", commissionRate: 0, commissionType: "PERCENT", acceptsBookings: true };
+const EMPTY: FormData = { name: "", email: "", phone: "", bio: "", role: "STAFF", color: "#6d28d9", commissionRate: 0, commissionType: "PERCENT", acceptsBookings: true, avatarUrl: "" };
 
 type Props = {
   initial?: Partial<FormData>;
@@ -95,6 +96,24 @@ export function StaffForm({ initial, onSave, onCancel, title = "Nuevo profesiona
               <textarea value={form.bio} onChange={e => set("bio", e.target.value)} rows={2}
                 placeholder="Especialidades, años de experiencia, etc."
                 className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-body text-brand-navy bg-slate-50 focus:outline-none focus:border-brand-teal resize-none" />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs font-body text-slate-500 mb-1 block">Foto del profesional</label>
+              <input type="url" value={form.avatarUrl} onChange={e => set("avatarUrl", e.target.value)}
+                placeholder="https://..."
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-body text-brand-navy bg-slate-50 focus:outline-none focus:border-brand-teal" />
+              {form.avatarUrl && (
+                <div className="mt-2 flex items-center gap-3">
+                  <div className="relative w-14 h-14 rounded-xl overflow-hidden border border-slate-200 shrink-0">
+                    <Image src={form.avatarUrl} alt="Vista previa" fill className="object-cover" sizes="56px"
+                      onError={() => set("avatarUrl", "")} />
+                  </div>
+                  <p className="text-xs font-body text-slate-400">Vista previa de la foto</p>
+                </div>
+              )}
+              {!form.avatarUrl && (
+                <p className="mt-1 text-xs font-body text-slate-400">Pega la URL de una foto. Aparece en la página de reservas.</p>
+              )}
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs font-body text-slate-500 mb-2 block">Color en la agenda</label>

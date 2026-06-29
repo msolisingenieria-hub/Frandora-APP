@@ -284,6 +284,7 @@ export function StaffView() {
             commissionRate: editTarget.commissionRate ?? 0,
             commissionType: editTarget.commissionType,
             acceptsBookings: editTarget.acceptsBookings ?? true,
+            avatarUrl: editTarget.avatarUrl ?? "",
           }}
           onSave={data => handleEdit(data as Record<string, unknown>)}
           onCancel={() => setEditTarget(null)}

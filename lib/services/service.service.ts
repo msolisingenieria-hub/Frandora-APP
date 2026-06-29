@@ -8,6 +8,7 @@ export type ServiceListItem = {
   price: number;
   isOnline: boolean;
   categoryName: string | null;
+  imageUrl: string | null;
 };
 
 export type CreateServiceInput = {
@@ -18,6 +19,7 @@ export type CreateServiceInput = {
   price: number;
   isOnline?: boolean;
   categoryId?: string | null;
+  imageUrl?: string | null;
 };
 
 export type UpdateServiceInput = Partial<Omit<CreateServiceInput, "businessId">>;
@@ -37,6 +39,7 @@ export async function getServices(businessId: string): Promise<ServiceListItem[]
     price: Number(s.price),
     isOnline: s.isOnline,
     categoryName: s.category?.name ?? null,
+    imageUrl: s.imageUrl ?? null,
   }));
 }
 
@@ -58,6 +61,7 @@ export async function createService(input: CreateServiceInput) {
       price: input.price,
       isOnline: input.isOnline ?? true,
       categoryId: input.categoryId ?? null,
+      imageUrl: input.imageUrl ?? null,
       isActive: true,
     },
   });
@@ -67,12 +71,13 @@ export async function updateService(id: string, businessId: string, data: Update
   return prisma.service.update({
     where: { id, businessId },
     data: {
-      ...(data.name !== undefined       && { name: data.name }),
+      ...(data.name !== undefined        && { name: data.name }),
       ...(data.description !== undefined && { description: data.description }),
       ...(data.duration !== undefined    && { duration: data.duration }),
       ...(data.price !== undefined       && { price: data.price }),
       ...(data.isOnline !== undefined    && { isOnline: data.isOnline }),
       ...(data.categoryId !== undefined  && { categoryId: data.categoryId }),
+      ...(data.imageUrl !== undefined    && { imageUrl: data.imageUrl || null }),
     },
   });
 }
